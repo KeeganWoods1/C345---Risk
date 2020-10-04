@@ -139,18 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Advanceorder.h" />
-    <ClInclude Include="airliftorder.h" />
-    <ClInclude Include="Blockadeorder.h" />
-    <ClInclude Include="Bomborder.h" />
-    <ClInclude Include="Deployorder.h" />
-    <ClInclude Include="Negotiateorder.h" />
     <ClInclude Include="Order.h" />
     <ClInclude Include="Orderlist.h" />
-    <ClInclude Include="Reinforcementorder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Advanceorder.cpp" />
     <ClCompile Include="Order.cpp" />
     <ClCompile Include="OrderlistDriver.cpp" />
   </ItemGroup>
