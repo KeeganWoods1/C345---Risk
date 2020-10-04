@@ -18,36 +18,12 @@
     <ClInclude Include="Orderlist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Blockadeorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bomborder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Advanceorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="airliftorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Negotiateorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deployorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Reinforcementorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrderlistDriver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Advanceorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Order.cpp">

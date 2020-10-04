@@ -1,6 +1,6 @@
 #include <iostream>;
 #include "Advanceorder.h";
-class Advanceorder {
+class Advanceorder : public Order {
 public:
 	Advanceorder(int i, int& souret, int& destt, int& orderp) {
 		troopnum = new int;
