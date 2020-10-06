@@ -4,6 +4,7 @@ using namespace std;
 class Order {
 public:
 	Order();
+	Order(bool b);
 	virtual bool validate();
 	virtual bool execute();
 	~Order();
@@ -11,7 +12,10 @@ public:
 	Order& operator = (const Order& o);
 	friend istream &operator >> (istream& stream, Order& o);
 	friend ostream& operator << (ostream& out, const Order& o);
+	bool getisnull();
+	void setisnull(bool b);
 private:
+	bool isnull;
 };
 class Advanceorder : public Order {
 public:
