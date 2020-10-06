@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 #include "Map.h"
-#include "Map.cpp"
-
+using namespace std;
 
 class Player 
 {
@@ -22,6 +21,12 @@ class Player
     // default constructor
     Player();
 
+    //copy constructor
+    Player(const Player& copyPlayer);
+     
+    // stream insertion operator
+    friend std::ostream& operator<<(std::ostream&, const Player&);
+
     // method to set the name of player
     void setName(string name); 
     
@@ -35,7 +40,7 @@ class Player
     vector<Territory*> toDefend();
    
     // method to toAttack
-    //  attackterr* toAttack();
+    vector<Territory*> toAttack();
   
     // method 
     // Order issueOrder();
