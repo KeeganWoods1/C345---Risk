@@ -9,3 +9,29 @@
 // and stream insertion operator
 // memory leaks must be avoided
 //
+#ifndef A1_MAPLOADER_H
+#define A1_MAPLOADER_H
+#endif //A1_MAPLOADER_H
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+class MapLoader {
+    public:
+        //default constructor
+        MapLoader();
+
+        //constructor
+        MapLoader(string);
+
+        //copy constructor
+        MapLoader(const MapLoader& copyMapLoader);
+
+    private:
+        //stream insertion operator
+        friend std::ostream& operator<<(std::ostream&, const MapLoader&);
+        std::string map;
+
+};
