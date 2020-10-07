@@ -5,14 +5,14 @@
 #include "Map.h"
 using namespace std;
 
-class Player 
+class Player : public Territory
 {
     private:
     // the number of players playing the game
     int* playerCount;
     
     // name of player
-    std::string name;
+    string* name;
 
     // Collection of territories
     vector<Territory*> territories;
@@ -21,11 +21,14 @@ class Player
     // default constructor
     Player();
 
+    // destructor
+    //~Player();
+
     //copy constructor
     Player(const Player& copyPlayer);
      
     // stream insertion operator
-    friend std::ostream& operator<<(std::ostream&, const Player&);
+    friend std::ostream& operator<<(std::ostream&, const Play
 
     // method to set the name of player
     void setName(string name); 
@@ -45,5 +48,3 @@ class Player
     // method 
     // Order issueOrder();
 };
-
-
