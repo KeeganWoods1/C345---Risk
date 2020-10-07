@@ -32,20 +32,24 @@ private:
 };
 class Advanceorder : public Order {
 public:
-	Advanceorder(int i, int& souret, int& destt, int& orderp): Order(true) {
+	Advanceorder(int i, Player orderp, Territory destt, Territory souret): Order(true) {
 		troopnum = new int;
 		//temporary, replace int with appropriate class
-		*troopnum = i;/*
-		orderplayer = orderp;
-		destinationterritory = destt;
-		sourceterritory = souret;*/
+		*troopnum = i;
+		*orderplayer = orderp;
+		*destinationterritory = destt;
+		*sourceterritory = souret;
 	}
 	bool validate() {
 		// check if two terretories are adjacent and troopnum does not exceed terretories troop count;
 		return true;
 	}
 	bool execute() {
-		return true;
+		if (validate) {
+			cout << this;
+			return true;
+		}
+		return false;
 	};
 	~Advanceorder() {
 		delete troopnum;
@@ -68,14 +72,14 @@ public:
 	}
 private:
 	int* troopnum;
-	int* sourceterritory;
-	int* destinationterritory;
-	int* orderplayer;
+	Territory* sourceterritory;
+	Territory* destinationterritory;
+	Player* orderplayer;
 };
 class airliftorder : public Order {
 public:
 	//will need to add the other pointers to the consturctor and destructor
-	airliftorder(int i, int sourceterritory, int destinationterritory, int orderplayer);
+	airliftorder(int i, Territory sourceterritory, Territory destinationterritory, Player orderplayer);
 	bool validate();
 	bool execute();
 	~airliftorder();
@@ -85,13 +89,13 @@ public:
 	friend ostream& operator << (ostream& out, const airliftorder& o);
 private:
 	int* troopnum;
-	int* sourceterritory;
-	int* destinationterritory;
-	int* orderplayer;
+	Territory* sourceterritory;
+	Territory* destinationterritory;
+	Player* orderplayer;
 	//may also need a pointer to two Territory objects and a player pointer to make sure the player calling the order is the owner of source
 };
 class Blockadeorder : public Order {
-	Blockadeorder(int i, int j);
+	Blockadeorder(Player orderp, Territory destt);
 	bool validate();
 	bool execute();
 	~Blockadeorder();
@@ -100,11 +104,11 @@ class Blockadeorder : public Order {
 	friend istream& operator >> (istream& stream, Blockadeorder& o);
 	friend ostream& operator << (ostream& out, const Blockadeorder& o);
 private:
-	int* orderplayer;
-	int* destinationterritory;
+	Player* orderplayer;
+	Territory* destinationterritory;
 };
 class Bomborder : public Order {
-	Bomborder(int i, int j);
+	Bomborder(Player orderp, Territory destt);
 	bool validate();
 	bool execute();
 	~Bomborder();
@@ -113,11 +117,11 @@ class Bomborder : public Order {
 	friend istream& operator >> (istream& stream, Bomborder& o);
 	friend ostream& operator << (ostream& out, const Bomborder& o);
 private:
-	int* orderplayer;
-	int* destinationterritory;
+	Player* orderplayer;
+	Territory* destinationterritory;
 };
 class Deployorder : public Order {
-	Deployorder(int i, int j);
+	Deployorder(Player orderp, int j, Territory destinationterritory);
 	bool validate();
 	bool execute();
 	~Deployorder();
@@ -126,11 +130,12 @@ class Deployorder : public Order {
 	friend istream& operator >> (istream& stream, Deployorder& o);
 	friend ostream& operator << (ostream& out, const Deployorder& o);
 private:
-	int* orderplayer;
+	Player* orderplayer;
 	int* troopnum;
+	Territory destinationterritory;
 };
 class Negotiateorder : public Order {
-	Negotiateorder(int i, int j);
+	Negotiateorder(Player orderp, Player destp);
 	bool validate();
 	bool execute();
 	~Negotiateorder();
@@ -139,14 +144,14 @@ class Negotiateorder : public Order {
 	friend istream& operator >> (istream& stream, Negotiateorder& o);
 	friend ostream& operator << (ostream& out, const Negotiateorder& o);
 private:
-	int* orderplayer;
-	int* otherplayer;
+	Player* orderplayer;
+	Player* otherplayer;
 
 	//may also need a pointer to two Territory objects and a player pointer to make sure the player calling the order is the owner of source
 };
 class Reinforcementorder : public Order {
 public:
-	Reinforcementorder(int i);
+	Reinforcementorder(Player orderp);
 	bool validate();
 	bool execute();
 	~Reinforcementorder();
@@ -155,7 +160,7 @@ public:
 	friend istream& operator >> (istream& stream, Reinforcementorder& o);
 	friend ostream& operator << (ostream& out, const Reinforcementorder& o);
 private:
-	int* orderplayer;
+	Player* orderplayer;
 
 	//may also need a pointer to two Territory objects and a player pointer to make sure the player calling the order is the owner of source
 };
