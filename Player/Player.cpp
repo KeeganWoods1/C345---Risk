@@ -3,17 +3,28 @@
 #include <string>
 using namespace std;
 
+
+int* playerCount;
 int counter = 0;
-std::string name;
+string* name;
+
 
 // default constructor definition
 Player::Player()
 {
+    name = new string;
+    name = NULL;
     playerCount = new int;
     counter = counter+1;
     // increase number of players
-    playerCount = &counter;	
+    playerCount = &counter;
 }
+
+// destructor definition
+// Player::~Player(){
+    // delete playerCount;
+    // delete name;
+// }
 
 // copy constructor definition
 Player::Player(const Player& copyPlayer) 
@@ -22,22 +33,27 @@ Player::Player(const Player& copyPlayer)
 }
 
 // stream insertion operator
-std::ostream& operator<<(std::ostream&, const Player&){
-}
+//std::ostream& operator<<(std::ostream&, c
+//}
 
 // method to set the name of player
-// void setName(std::string playerName){
-    // 
-    // name = playerName;
-// }
+void Player::setName(string playerName)
+{
+    name = &playerName;
+}
 
-// definition of method to return player count
+// method to return name of player
+string Player::getName(){
+    return *name;
+}
+
+// definition of method to return player co
 int Player::getPlayerCount(){
     return *playerCount;
 }
 
 // definition of method toDefend
-// returning a list of territories to defend
+// returning a list of territories to defen
 vector<Territory*> Territory::toDefend(){
     vector<Territory*> territories;
 
@@ -51,7 +67,7 @@ vector<Territory*> Territory::toDefend(){
         territories.push_back(ob2);
     }   
     return territories;
-   // delete objects to prevent memory leaks
+   // delete objects to prevent memory leak
    for(int j = 0; j <2; j++){
        delete territories.at(j);
    }
@@ -59,7 +75,7 @@ vector<Territory*> Territory::toDefend(){
 }
 
 // definition of method toAttack
-// returning a list of territories to attack
+// returning a list of territories to attac
 vector<Territory*> Territory::toAttack(){
     vector<Territory*> territories;
 
@@ -73,10 +89,9 @@ vector<Territory*> Territory::toAttack(){
         territories.push_back(ob4);
     }   
     return territories;
-   // delete objects to prevent memory leaks
+   // delete objects to prevent memory leak
    for(int j = 0; j <2; j++){
        delete territories.at(j);
    }
    territories.clear();
 }
-
