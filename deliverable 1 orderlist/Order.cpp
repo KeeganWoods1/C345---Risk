@@ -11,7 +11,7 @@ public:
 	virtual bool execute() {
 		return true;
 	}
-	~Order() {};
+	~Order() { isnull = true; };
 	Order(const Order&) {}
 		;
 		Order& operator = (const Order & o) {};
