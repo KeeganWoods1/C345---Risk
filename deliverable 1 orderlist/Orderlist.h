@@ -28,10 +28,10 @@ public:
 	void add(Deployorder& o);
 	void add(Negotiateorder& o);
 	void add(Reinforcementorder& o);
-	vector<Order*>* ptr;
+	//executes all orders in the lsit and then removes them
+	void executelist();
 private:
-	//pointer to object order array
-	///REquires major testing so dont assum this is permanant (should be good after wednesday the 
-	//vector<Order*>* ptr;
+	//pointer to vector  of order pointers
+	vector<Order*>* ptr;
 
 };

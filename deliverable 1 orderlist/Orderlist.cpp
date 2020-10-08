@@ -94,3 +94,12 @@ yet to be tested
 		ptr->push_back(new Reinforcementorder(o));
 
 	}
+	//executes orders and then deletes them all
+	void Orderlist::executelist() {
+		for (int i = 0; i < ptr->size(); i++) {
+			ptr->at(i)->execute();
+		}
+		for (int i = 0; i < ptr->size();) {
+			remove(0);
+		}
+	}
