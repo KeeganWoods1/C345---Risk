@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Orderlist.h"
-#include "Order.cpp"
+#pragma once
 /*
 Orderlist cpp file
 This class holds the implmentation of Orderlist, a list that holds orders.
@@ -11,69 +11,86 @@ yet to be tested
 	//may vary l8r depending on how ptr is decided  for now...
 	//ptr is assigned a static array of Order objects and sets them all to null as you cant remove object antries
 	Orderlist::Orderlist() {
-
-		Order abc[100];
-		ptr = abc;
-		for (int i = 0; i < 100; i++) {
-			if (!(ptr + i)->getisnull() || ptr+1 == NULL)(ptr + i)->setisnull(true);
-		 }
+		ptr = new vector<Order*>();
 	}
 	//destructor for orderlist
 	Orderlist::~Orderlist() {
-		// may cause errors
-		for (int i = 0; i < 100; i++) {
-				delete (ptr + i);
+		if (ptr == NULL) return;
+		for (int i = 0; i < ptr->size(); i++) {
+			delete ptr->at(i);
 		}
-		delete[] ptr;
+		delete ptr;
 	}
 	// copy constructor, should not be used in the context of hte program
 	Orderlist::Orderlist(const Orderlist& ol) {
-		Order temp[100];
-		for (int i = 0; i < 100; i++) {
-			temp[i] = *(ol.ptr + i);
-		}
-		ptr = ol.ptr;
+		
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
-		ptr = o.ptr;
+		
+		
+		return *this;
 	}
 	//stream output operator, will need to be used in driver but not in the program
-	/*
-	friend ostream& Orderlist::operator << (ostream& stream, Orderlist& o) {
+	
+	ostream& operator << (ostream& stream, Orderlist& o) {
 		string s = "the elements in this list are:\n";
 		stream << s;
-		for (int i = 0; i < 100; i++) {
-			 if (!(o.ptr + i)->getisnull()) stream << *(o.ptr + i) << "\n";
+		for (int i = 0; i < o.ptr->size(); i++) {
+			stream << *o.ptr->at(i);
+			stream << "\n";
 		}
 			stream << "that is all the objects in this list\n";
-	}*/
+			return stream;
+	}
 	//removes an object at location i and moves all non null objects ahead
 	bool Orderlist::remove(int i) {
-		if (i < 0 || i > 99) return false;
-		delete (ptr + i);
-		//may be invalid pointer
-		(ptr + i)->setisnull(true);
-		for (int j = i; j < 99; j++) {
-			if (!(ptr + j + 1)->getisnull()) {
-				*(ptr + j) = *(ptr + j + 1);
-				remove(j + 1);
-			}
+		if (i < ptr->size() - 1) {
+			ptr->erase(ptr->begin() + i);
+			return true;
 		}
-		return true;
+		else return false;
 	}
 	//moves an object from position i to position j 
 	//and moves all the ones it displaced back
 	bool Orderlist::move(int i, int location) {
-		if (i < 0 || i > 99) return false;
-		//if ();
+		if (location > ptr->size() - 1 || i > ptr->size() - 1 || i < 0 || location < 0)return false;
+		ptr->insert(ptr->begin() + location, ptr->at(i));
+		ptr->erase(ptr->begin() + i + 1);
+		return true;
 	}
-	//adds an order to the list at the end
-	void Orderlist::add(Order & o) {
-		for (int i = 0; i < 100; i++) {
-			if ((ptr + i)->getisnull()) {
-				*(ptr + i) = o;
-			}
-		}
+	void Orderlist::add(Advanceorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Advanceorder(o));
+
+	}
+	void Orderlist::add(airliftorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new airliftorder(o));
+
+	}
+	void Orderlist::add(Blockadeorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Blockadeorder(o));
+
+	}
+	void Orderlist::add(Bomborder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Bomborder(o));
+
+	}
+	void Orderlist::add(Deployorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Deployorder(o));
+
+	}
+	void Orderlist::add(Negotiateorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Negotiateorder(o));
+
+	}
+	void Orderlist::add(Reinforcementorder& o) {
+		//this calls the copy constructor
+		ptr->push_back(new Reinforcementorder(o));
 
 	}

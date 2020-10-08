@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
-#include "../Player/Player.h"
-#include "../Map/map.h"
+/*#include "../Player/Player.h"
+#include "../Map/map.h"*/
+#include "dummy.h"
 /*
 This is the header file for the orders 
 This class has an abstract orderclass and all its children orders [this is so they all fit in the same list]
@@ -15,9 +16,9 @@ public:
 	//constructor with the isnull parameter initilized
 	Order(bool b);
 	//abstract method for validate
-	virtual bool validate();
+	virtual bool validate() = 0;
 	//abstract method for execute
-	virtual bool execute();
+	virtual bool execute() = 0;
 	//destructor
 	~Order();
 	//copy ocnstructor
@@ -25,10 +26,11 @@ public:
 	//assignment operator
 	Order& operator = (const Order& o);
 	//insertion operator
-	friend istream &operator >> (istream& stream, Order& o);
 	friend ostream& operator << (ostream& out, const Order& o);
 	//getter method
 	bool getisnull();
+	//print method to add polymorphism to operator <<
+	virtual string print()const = 0;
 	//setter method
 	void setisnull(bool b);
 private:
@@ -40,6 +42,7 @@ private:
 class Advanceorder : public Order {
 public:
 	//constructor
+	Advanceorder();
 	Advanceorder(int i, Player orderp, Territory destt, Territory souret);
 	//mehtod to validate if the conditions are met to execute the function
 	bool validate();
@@ -48,12 +51,13 @@ public:
 	//destructor
 	~Advanceorder();
 	//sopy constructor
-	Advanceorder(const Advanceorder&);
+	Advanceorder(const Advanceorder& old);
 	//assignment operator
 	Advanceorder& operator = (const Advanceorder& o);
 	//stream insertion operations
-	friend istream& operator >> (istream& stream, Advanceorder& o);
 	friend ostream& operator << (ostream& out, const Advanceorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	// the nubmer of troops to be moved
 	int* troopnum;
@@ -69,20 +73,21 @@ private:
 class airliftorder : public Order {
 public:
 	//constructor
-	airliftorder(int i, Territory sourceterritory, Territory destinationterritory, Player orderplayer);
+	airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp);
 	//makes sure the terrtories are both owned by the player and the number of troops doest not leave the territory with <1 troops
-	bool validate();
+	bool validate ();
 	//executes the order
 	bool execute();
 	//destructor
 	~airliftorder();
 	//copy constructor
-	airliftorder(const airliftorder&);
+	airliftorder(const airliftorder& old);
 	//assingmnet operator
-	airliftorder& operator = (const airliftorder& o);
+	airliftorder& operator = (const airliftorder& old);
 	//stream insertion override
-	friend istream& operator >> (istream& stream, airliftorder& o);
 	friend ostream& operator << (ostream& out, const airliftorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//# of troops to be moved
 	int* troopnum;
@@ -96,6 +101,7 @@ private:
 };
 //triples army count of owned territory but then turns neutral
 class Blockadeorder : public Order {
+public:
 	//constructor
 	Blockadeorder(Player orderplayer, Territory destt);
 	//makes sure the territory is owned by the player
@@ -105,12 +111,13 @@ class Blockadeorder : public Order {
 	//destructor
 	~Blockadeorder();
 	//copy constructor
-	Blockadeorder(const Blockadeorder&);
+	Blockadeorder(const Blockadeorder& old);
 	//assignment operator
-	Blockadeorder& operator = (const Blockadeorder& o);
+	Blockadeorder& operator = (const Blockadeorder& old);
 	//insertion operators
-	friend istream& operator >> (istream& stream, Blockadeorder& o);
 	friend ostream& operator << (ostream& out, const Blockadeorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//player who initiated the order
 	Player* orderplayer;
@@ -119,6 +126,7 @@ private:
 };
 //country losses half its troops
 class Bomborder : public Order {
+public:
 	//constructor
 	Bomborder(Player orderp, Territory destt);
 	//no real validation, simply halves units rounded down (even if its the players territory)
@@ -128,12 +136,13 @@ class Bomborder : public Order {
 	//destructor
 	~Bomborder();
 	//copy constructor
-	Bomborder(const Bomborder&);
+	Bomborder(const Bomborder& old);
 	//addignment operator
-	Bomborder& operator = (const Bomborder& o);
+	Bomborder& operator = (const Bomborder& old);
 	//insertion operators
-	friend istream& operator >> (istream& stream, Bomborder& o);
 	friend ostream& operator << (ostream& out, const Bomborder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//player who issued the order [may need for console but no validate]
 	Player* orderplayer;
@@ -143,8 +152,9 @@ private:
 //deploys the set ammount of troops the class has to a territory
 //currently cant validate but needs to check the num of available troops
 class Deployorder : public Order {
+public:
 	//constructor
-	Deployorder(Player orderp, int troopnum, Territory destinationterritory);
+	Deployorder(Player orderp, int troopnum, Territory destt);
 	//makes sure the player owns the territory and that the ammount oftroops palced does not exceed the mamount that he has
 	bool validate();
 	//execute order
@@ -152,22 +162,24 @@ class Deployorder : public Order {
 	//destructor
 	~Deployorder();
 	//copy constructor
-	Deployorder(const Deployorder&);
+	Deployorder(const Deployorder& old);
 	//assignment operator
-	Deployorder& operator = (const Deployorder& o);
+	Deployorder& operator = (const Deployorder& old);
 	//insertion operators
-	friend istream& operator >> (istream& stream, Deployorder& o);
 	friend ostream& operator << (ostream& out, const Deployorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//player who issued the order
 	Player* orderplayer;
 	//ammount of troops to be placed
 	int* troopnum;
 	//territory to recieve troops
-	Territory destinationterritory;
+	Territory* destinationterritory;
 };
 //prevents battles between two players (will need to be added to some orders or player class)
 class Negotiateorder : public Order {
+public:
 	//constructor
 	Negotiateorder(Player orderp, Player destp);
 	//makes sure the two players are not the same player
@@ -177,12 +189,13 @@ class Negotiateorder : public Order {
 	//destructor
 	~Negotiateorder();
 	//copy constructor
-	Negotiateorder(const Negotiateorder&);
+	Negotiateorder(const Negotiateorder& old);
 	//assignment operator
-	Negotiateorder& operator = (const Negotiateorder& o);
+	Negotiateorder& operator = (const Negotiateorder& old);
 	//insertion opperators
-	friend istream& operator >> (istream& stream, Negotiateorder& o);
 	friend ostream& operator << (ostream& out, const Negotiateorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//player who issued the order
 	Player* orderplayer;
@@ -202,12 +215,13 @@ public:
 	//destructor
 	~Reinforcementorder();
 	//copy constructor
-	Reinforcementorder(const Reinforcementorder&);
+	Reinforcementorder(const Reinforcementorder& old);
 	//assignment operator
-	Reinforcementorder& operator = (const Reinforcementorder& o);
+	Reinforcementorder& operator = (const Reinforcementorder& old);
 	//insertion operator
-	friend istream& operator >> (istream& stream, Reinforcementorder& o);
 	friend ostream& operator << (ostream& out, const Reinforcementorder& o);
+	//print method to add polymorphism to operator <<
+	string print()const;
 private:
 	//player hwo issued the order
 	Player* orderplayer;
