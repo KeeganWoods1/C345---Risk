@@ -55,7 +55,7 @@
 	}
 	Advanceorder& Advanceorder::operator = (const Advanceorder& old) {
 		cout <<"that is called\n";
-		troopnum = new int(*old.troopnum);
+		troopnum = old.troopnum;
 		sourceterritory = old.sourceterritory;
 		destinationterritory = old.destinationterritory;
 		orderplayer = old.orderplayer;
@@ -98,10 +98,10 @@
 		orderplayer = new Player(* old.orderplayer);
 	}
 	airliftorder& airliftorder::operator = (const airliftorder& old) {
-		troopnum = new int(*old.troopnum);
-		sourceterritory = new Territory(*old.sourceterritory);
-		destinationterritory = new Territory(*old.destinationterritory);
-		orderplayer = new Player(*old.orderplayer);
+		troopnum = old.troopnum;
+		sourceterritory = old.sourceterritory;
+		destinationterritory = old.destinationterritory;
+		orderplayer = old.orderplayer;
 		return *this;
 	}
 	ostream& operator << (ostream& out, airliftorder& o) {
@@ -140,8 +140,8 @@
 		destinationterritory = new Territory(*old.destinationterritory);
 	}
 	Blockadeorder& Blockadeorder::operator = (const Blockadeorder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		orderplayer = old.orderplayer;
+		destinationterritory = old.destinationterritory;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Blockadeorder& o) {
@@ -175,8 +175,8 @@
 		destinationterritory = new Territory(*old.destinationterritory);
 	}
 	Bomborder& Bomborder::operator = (const Bomborder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		orderplayer = old.orderplayer;
+		destinationterritory = old.destinationterritory;
 		return *this;
 
 	}
@@ -215,9 +215,9 @@
 		destinationterritory = new Territory(*old.destinationterritory);
 	}
 	Deployorder& Deployorder::operator = (const Deployorder& old) {
-		troopnum = new int(*old.troopnum);
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		troopnum = old.troopnum;
+		orderplayer = old.orderplayer;
+		destinationterritory = old.destinationterritory;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Deployorder& o) {
@@ -252,8 +252,8 @@
 		otherplayer = new Player(*old.otherplayer);
 	}
 	Negotiateorder& Negotiateorder::operator = (const Negotiateorder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		otherplayer = new Player(*old.otherplayer);
+		orderplayer = old.orderplayer;
+		otherplayer = old.otherplayer;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Negotiateorder& o) {
@@ -284,7 +284,7 @@
 		orderplayer = new Player(*old.orderplayer);
 	}
 	Reinforcementorder& Reinforcementorder::operator = (const Reinforcementorder& old) {
-		orderplayer = new Player(*old.orderplayer);
+		orderplayer = old.orderplayer;
 		return *this;
 
 	}

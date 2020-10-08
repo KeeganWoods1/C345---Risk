@@ -22,12 +22,11 @@ yet to be tested
 	}
 	// copy constructor, should not be used in the context of hte program
 	Orderlist::Orderlist(const Orderlist& ol) {
-		
+		ptr = new vector<Order*> (*ol.ptr);
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
-		
-		
+		ptr = o.ptr;
 		return *this;
 	}
 	//stream output operator, will need to be used in driver but not in the program

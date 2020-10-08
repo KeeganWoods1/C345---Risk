@@ -18,6 +18,8 @@ int main() {
     Negotiateorder o2 = Negotiateorder(b, b11);
     Reinforcementorder r1 = Reinforcementorder(b);
     Orderlist ol = Orderlist();
+    Orderlist ol2;
+    ol2 = ol;
     ol.add(a);
     ol.add(b1);
     ol.add(b2);
@@ -31,6 +33,7 @@ int main() {
     cout <<"\n"<< ol;
     ol.move(4, 2);
     cout << "\n" << ol;
+    cout << "\n\nthis is the assignment\n" << ol2;
     ol.executelist();
     cout << "\n\n" << ol;
     ol.~Orderlist();
