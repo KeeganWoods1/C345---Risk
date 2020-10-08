@@ -23,15 +23,16 @@ int main() {
     ol.add(b2);
     ol.add(b6);
     ol.add(d6);
+    ol.add(d6);
     ol.add(o2);
     ol.add(r1);
-    //THIS DOES NOT WORK!!!
-    //Uncertian on workaround atm;
-   // Advanceorder* b1 = new Advanceorder(a);
-   // cout << *b1;
     cout << ol;
-   // ol.move(3, 0);
-  //  cout << ol;
-    //ol.~Orderlist();
+    ol.remove(4);
+    cout <<"\n"<< ol;
+    ol.move(4, 2);
+    cout << "\n" << ol;
+    ol.executelist();
+    cout << "\n\n" << ol;
+    ol.~Orderlist();
     return 0;
 };

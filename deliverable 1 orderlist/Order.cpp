@@ -32,7 +32,7 @@
 	}
 	bool Advanceorder::execute() {
 		if (validate()) {
-			cout << *troopnum + " units advancing by " + orderplayer->getName() + " to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
 			return true;
 		}
 		return false;
@@ -80,6 +80,7 @@
 	}
 	bool airliftorder::execute() {
 		if (validate()) {
+			cout << "executing airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
 			return true;
 		}
 		else return false;
@@ -124,7 +125,10 @@
 		return true;
 	}
 	bool Blockadeorder::execute() {
-		if (validate())return true;
+		if (validate()) {
+			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getTerritoryName() + "\n";
+			return true;
+		}
 		else return false;
 	}
 	Blockadeorder::~Blockadeorder() {
@@ -156,7 +160,10 @@
 		return true;
 	}
 	bool Bomborder::execute() {
-		if (validate())return true;
+		if (validate()) {
+			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getTerritoryName() + "\n";
+			return true;
+		}
 		else return false;
 	}
 	Bomborder::~Bomborder() {
@@ -191,7 +198,10 @@
 		return true;
 	}
 	bool Deployorder::execute() {
-		if (validate())return true;
+		if (validate()) {
+			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getTerritoryName() + "\n";
+			return true;
+		}
 		else return false;
 	}
 	Deployorder::~Deployorder() {
@@ -227,7 +237,10 @@
 		return true;
 	}
 	bool Negotiateorder::execute() {
-		if (validate())return true;
+		if (validate()) {
+			cout << "executing negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName() + "\n";
+			return true;
+		}
 		else return false;
 	}
 	Negotiateorder::~Negotiateorder() {
@@ -258,7 +271,10 @@
 		return true;
 	}
 	bool Reinforcementorder::execute() {
-		if (validate())return true;
+		if (validate()) {
+			cout<< "executing Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops" + "\n";
+			return true;
+		}
 		else return false;
 	}
 	Reinforcementorder::~Reinforcementorder() {

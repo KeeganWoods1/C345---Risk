@@ -19,7 +19,6 @@ yet to be tested
 		for (int i = 0; i < ptr->size(); i++) {
 			delete ptr->at(i);
 		}
-		delete ptr;
 	}
 	// copy constructor, should not be used in the context of hte program
 	Orderlist::Orderlist(const Orderlist& ol) {
@@ -45,7 +44,7 @@ yet to be tested
 	}
 	//removes an object at location i and moves all non null objects ahead
 	bool Orderlist::remove(int i) {
-		if (i < ptr->size() - 1) {
+		if (i <= ptr->size() - 1) {
 			ptr->erase(ptr->begin() + i);
 			return true;
 		}
@@ -96,10 +95,12 @@ yet to be tested
 	}
 	//executes orders and then deletes them all
 	void Orderlist::executelist() {
+		cout << "\n";
 		for (int i = 0; i < ptr->size(); i++) {
 			ptr->at(i)->execute();
 		}
-		for (int i = 0; i < ptr->size();) {
+		cout << "\n";
+		for (int i = 0; i < ptr->size(); i= i+0) {
 			remove(0);
 		}
 	}
