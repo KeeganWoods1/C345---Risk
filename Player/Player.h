@@ -3,32 +3,46 @@
 #include <string>
 #include <vector>
 #include "Map.h"
+#include "Orderlist.h"
+#include "Card.h"
 using namespace std;
 
-class Player : public Territory
+class Player
 {
     private:
     // the number of players playing the game
-    int* playerCount;
+    int playerCount;
     
     // name of player
-    string* name;
+    string name;
+    
+    // minimum number of armies for a player
+    static const int MINARMIES;
 
-    // Collection of territories
+    // player owns a collection of territories
     vector<Territory*> territories;
+
+    // player owns a hand of cards
+    Hand* playerCards;
+
+    // player's orderlist
+    Orderlist* playerOlist;
 
     public:
     // default constructor
     Player();
 
     // destructor
-    //~Player();
+    ~Player();
 
     //copy constructor
     Player(const Player& copyPlayer);
+
+    // assignment operator
+    Player& operator = (const Player& o);
      
     // stream insertion operator
-    friend std::ostream& operator<<(std::ostream&, const Play
+    friend ostream &operator << (ostream &output, const Player &o);
 
     // method to set the name of player
     void setName(string name); 
@@ -39,12 +53,21 @@ class Player : public Territory
     // get number of players playing the game
     int getPlayerCount(); 
 
-    // method toDefend
+    // get number of territories owned by the player
+    int getNumTerrOwned();
+
+    // method toDefend which returns a list 
+    // of territories to defend
     vector<Territory*> toDefend();
    
-    // method to toAttack
+    // method toAttack which returns a list 
+    // of territories to attack
     vector<Territory*> toAttack();
   
-    // method 
-    // Order issueOrder();
+    // method issueOrder which creates an Order 
+    // object and puts it in the player’s list 
+    // of orders
+    void issueOrder();
 };
+
+
