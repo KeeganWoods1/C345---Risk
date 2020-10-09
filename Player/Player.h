@@ -42,7 +42,7 @@ class Player
     Player& operator = (const Player& o);
      
     // stream insertion operator
-    friend ostream &operator << (ostream &output, const Player &o);
+    friend ostream &operator << (ostream &output, 
 
     // method to set the name of player
     void setName(string name); 
@@ -53,7 +53,7 @@ class Player
     // get number of players playing the game
     int getPlayerCount(); 
 
-    // get number of territories owned by the player
+    // get number of territories owned by the play
     int getNumTerrOwned();
 
     // method toDefend which returns a list 
