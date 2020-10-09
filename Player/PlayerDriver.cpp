@@ -19,7 +19,6 @@ int main() {
     // demonstrating the player owns a collection of territories
     cout << "The current number of territories owned by " << a->getName() << ": " << a->getNumTerrOwned() << endl;
 
-
     // testing toDefend method
     Territory c;
     cout << "Territories to be defended: " << endl;
