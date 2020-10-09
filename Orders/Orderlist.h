@@ -22,7 +22,7 @@ public:
 	bool remove(int i);
 	bool move(int i, int location);
 	void add(Advanceorder& o);
-	void add(airliftorder& o);
+	void add(Airliftorder& o);
 	void add(Blockadeorder& o);
 	void add(Bomborder& o);
 	void add(Deployorder& o);

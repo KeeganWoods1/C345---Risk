@@ -69,23 +69,23 @@ private:
 	Player* orderplayer;
 
 };
-//airlift order, drops a set number troops into a owned territory from another non or adjacent territory
-class airliftorder : public Order {
+//Airlift order, drops a set number troops into a owned territory from another non or adjacent territory
+class Airliftorder : public Order {
 public:
 	//constructor
-	airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp);
+	Airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp);
 	//makes sure the terrtories are both owned by the player and the number of troops doest not leave the territory with <1 troops
 	bool validate ();
 	//executes the order
 	bool execute();
 	//destructor
-	~airliftorder();
+	~Airliftorder();
 	//copy constructor
-	airliftorder(const airliftorder& old);
+	Airliftorder(const Airliftorder& old);
 	//assingmnet operator
-	airliftorder& operator = (const airliftorder& old);
+	Airliftorder& operator = (const Airliftorder& old);
 	//stream insertion override
-	friend ostream& operator << (ostream& out, const airliftorder& o);
+	friend ostream& operator << (ostream& out, const Airliftorder& o);
 	//print method to add polymorphism to operator <<
 	string print()const;
 private:

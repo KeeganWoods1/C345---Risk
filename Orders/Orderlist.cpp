@@ -62,9 +62,9 @@ yet to be tested
 		ptr->push_back(new Advanceorder(o));
 
 	}
-	void Orderlist::add(airliftorder& o) {
+	void Orderlist::add(Airliftorder& o) {
 		//this calls the copy constructor
-		ptr->push_back(new airliftorder(o));
+		ptr->push_back(new Airliftorder(o));
 
 	}
 	void Orderlist::add(Blockadeorder& o) {

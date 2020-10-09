@@ -65,7 +65,7 @@
 		out << o.print();
 		return out;
 	}
-	airliftorder::airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp) {
+	Airliftorder::Airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp) {
 		troopnum = new int(i);
 		//when using map use copy constructors and new
 		sourceterritory = new Territory(sourcet);
@@ -73,43 +73,43 @@
 		orderplayer =new Player(orderp);
 
 	}
-	bool airliftorder::validate() {
+	bool Airliftorder::validate() {
 		//check if both are player owned and match the troop num
 		if (*troopnum < 1)return false;
 		return true;
 	}
-	bool airliftorder::execute() {
+	bool Airliftorder::execute() {
 		if (validate()) {
-			cout << "executing airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
+			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
 			return true;
 		}
 		else return false;
 	}
-	airliftorder::~airliftorder() {
+	Airliftorder::~Airliftorder() {
 		delete troopnum;
 		delete sourceterritory;
 		delete destinationterritory;
 		delete orderplayer;
 	}
-	airliftorder::airliftorder(const airliftorder& old) {
+	Airliftorder::Airliftorder(const Airliftorder& old) {
 		troopnum = new int(*old.troopnum);
 		sourceterritory = new Territory(*old.sourceterritory);
 		destinationterritory = new Territory(*old.destinationterritory);
 		orderplayer = new Player(* old.orderplayer);
 	}
-	airliftorder& airliftorder::operator = (const airliftorder& old) {
+	Airliftorder& Airliftorder::operator = (const Airliftorder& old) {
 		troopnum = old.troopnum;
 		sourceterritory = old.sourceterritory;
 		destinationterritory = old.destinationterritory;
 		orderplayer = old.orderplayer;
 		return *this;
 	}
-	ostream& operator << (ostream& out, airliftorder& o) {
+	ostream& operator << (ostream& out, Airliftorder& o) {
 		out << o.print();
 		return out;
 	}
-	string airliftorder::print() const{
-		string s = "this is an airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+	string Airliftorder::print() const{
+		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
 		return s;
 
 	}

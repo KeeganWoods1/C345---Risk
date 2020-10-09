@@ -11,7 +11,7 @@ int main() {
     Territory c1 = Territory("antartica");
     Territory d1 = Territory("penguin");
     Advanceorder a = Advanceorder(13,b,c,d);
-    airliftorder b1 = airliftorder(6, d, c1, b11);
+    Airliftorder b1 = Airliftorder(6, d, c1, b11);
     Blockadeorder b2 = Blockadeorder(b, c);
     Bomborder b6 = Bomborder(b11, c1);
     Deployorder d6 = Deployorder(b, 23, c);
