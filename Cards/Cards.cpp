@@ -2,9 +2,9 @@
 #include "Cards.h"
 #include <vector>
 #include <stdlib.h>
-#include "../deliverable 1 orderlist/Orderlist.cpp"
-#include "../deliverable 1 orderlist/dummy.cpp"
-#include "../deliverable 1 orderlist/Order.cpp"
+#include "../Orders/Orderlist.cpp"
+#include "../Orders/dummy.cpp"
+#include "../Orders/Order.cpp"
 
 using namespace std;
 
