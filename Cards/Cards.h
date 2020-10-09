@@ -1,9 +1,20 @@
-#include"../Orders & Orderslist/Order.h"
-#include<list>
+#include"../deliverable 1 orderlist/Order.h"
+#include "../deliverable 1 orderlist/dummy.h"
 #include<vector>
 #include<iostream>
 
 //TODO: add stream insertion operators
+
+class Order;
+class Bomborder;
+class Reinforcementorder;
+class Blockadeorder;
+class Negotiateorder;
+class Airliftorder;
+class Orderlist;
+class Deck;
+class Hand;
+
 
 class Card
 {
@@ -13,14 +24,14 @@ public:
     Card();
     Card(string name);
     ~Card();
-    virtual void play(list<Card*>* deck, vector<Card*>* hand);
+    virtual void play(Deck* deck, Hand* hand, Orderlist* orderList);
     string getName();
-    Card* find(vector<Card*> hand, string cardName);
+    Card* find(Hand* hand, string cardName);
     //copy ocnstructor
 	Card(const Card& c);
 	//assignment operator
 	Card& operator = (const Card& o);
-    friend istream &operator >> (istream& stream, Card& o);
+    friend istream &operator >> (istream &stream, Card& o);
     friend ostream &operator << (ostream &out, const Card &o);
 };
 
@@ -31,7 +42,7 @@ private:
 public:
     BombCard(string name);
     ~BombCard();
-    void play(list<Card*>* deck, vector<Card*>* hand);
+    void play(Deck* deck, Hand* hand, Orderlist* orderList);
     //copy ocnstructor
 	BombCard(const BombCard& c);
 	//assignment operator
@@ -45,7 +56,7 @@ private:
 public:
     ReinforcementCard(string name);
     ~ReinforcementCard();
-    void play(list<Card*>* deck, vector<Card*>* hand);
+    void play(Deck* deck, Hand* hand, Orderlist* orderList);
     //copy ocnstructor
 	ReinforcementCard(const ReinforcementCard& c);
 	//assignment operator
@@ -55,11 +66,11 @@ public:
 class BlockadeCard : public Card
 {
 private:
-    Order* blockadeOrderPtr;
+    Blockadeorder* blockadeOrderPtr;
 public:
     BlockadeCard(string name);
     ~BlockadeCard();
-    void play(list<Card*>* deck, vector<Card*>* hand);
+    void play(Deck* deck, Hand* hand, Orderlist* orderList);
     //copy ocnstructor
 	BlockadeCard(const BlockadeCard& c);
 	//assignment operator
@@ -69,11 +80,11 @@ public:
 class AirliftCard : public Card
 {
 private:
-    Order* airliftOrderPtr;
+    airliftorder* airliftOrderPtr;
 public:
     AirliftCard(string name);
     ~AirliftCard();
-    void play(list<Card*>* deck, vector<Card*>* hand);
+    void play(Deck* deck, Hand* hand, Orderlist* orderList);
     //copy ocnstructor
 	AirliftCard(const AirliftCard& c);
 	//assignment operator
@@ -83,11 +94,11 @@ public:
 class DiplomacyCard : public Card
 {
 private:
-    Order* diplomacyOrderPtr;
+    Negotiateorder* diplomacyOrderPtr;
 public:
     DiplomacyCard(string name);
     ~DiplomacyCard();
-    void play(list<Card*>* deck, vector<Card*>* hand);
+    void play(Deck* deck, Hand* hand, Orderlist* orderList);
     //copy ocnstructor
 	DiplomacyCard(const DiplomacyCard& c);
 	//assignment operator
@@ -97,7 +108,7 @@ public:
 class Hand
 {
     private:
-        vector<Card*> handOfCards;
+        vector<Card*>* handOfCardsPtr;
     public:
         Hand();
         ~Hand();
@@ -114,8 +125,8 @@ class Hand
 class Deck
 {
     private: 
-        list<Card*> deckOfCards;
-        list<Card*>::iterator itFront;
+        vector<Card*>* deckOfCardsPtr;
+        vector<Card*>::iterator itFront;
     public:    
         Card* bombCrdPtr;
         Card* reinCrdPtr;
@@ -125,8 +136,8 @@ class Deck
         Deck();
         ~Deck();
         void draw(Hand* hand, Deck* deck);
-        list<Card*> getDeck();
-        void setDeck(list<Card*> h);
+        vector<Card*> getDeck();
+        void setDeck(vector<Card*> h);
         //copy ocnstructor
 	    Deck(const Deck& d);
 	    //assignment operator

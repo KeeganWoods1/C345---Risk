@@ -2,36 +2,55 @@
 #include "Cards.h"
 #include <vector>
 #include <stdlib.h>
+#include "../deliverable 1 orderlist/Orderlist.cpp"
+#include "../deliverable 1 orderlist/dummy.cpp"
+#include "../deliverable 1 orderlist/Order.cpp"
 
 using namespace std;
 
+//Card default constructor
 Card::Card()
 {
     name = "test";
 }
 
+//Card parametrized constructor
 Card::Card(string name) :name(){}
 
+//Card destructor
 Card::~Card(){}
 
-void Card::play(list<Card*>* deck, vector<Card*>* hand){std::cout << "Playing Default Card" << std::endl;}
+//virtual play() method will defer to the play() method of the calling card type
+void Card::play(Deck* deck, Hand* hand, Orderlist* orderlist){std::cout << "Playing Default Card" << std::endl;}
 
+//Accessor
 string Card::getName()
 {
     return this->name;
 }
 
-Card* Card::find(vector<Card*> hand, string cardName)
+/*Find method
+* 
+* Linear search through a small array will
+* return a pointer to the first occurence of the card being searched for.
+*
+* @params: Hand* hand, string name. 
+*/
+Card* Card::find(Hand* hand, string cardName)
 {
-    std::cout << "Finding " << cardName << std::endl;
+    vector<Card*> handContainer = hand->getHand();
 
-    for(int i=0; i<hand.size(); i++)
+    for(int i=0; i<handContainer.size(); i++)
     {
-        if(hand[i]->getName() == cardName)
+        if(handContainer[i]->getName() == cardName)
         {
-            Card* cardToReturn = hand[i];
-            hand.erase(hand.begin() + i);
+            Card* cardToReturn = handContainer[i];
+            handContainer.erase(handContainer.begin() + i);
             
+            hand->setHand(handContainer);
+
+            std::cout << "Playing " << *cardToReturn << std::endl;
+
             return cardToReturn;
         }
     }
@@ -44,7 +63,7 @@ Card::Card(const Card& c) : name(c.name)
     std::cout << "copy construction of Card\n";
 }
 
-//assignmnet operator
+//assignmnet operator overload
 Card &Card::operator = (const Card& o) 
 {
     std::cout << "copy assignment of Card\n";
@@ -65,20 +84,48 @@ ostream &operator << (ostream &out, const Card &o)
     return out;
 }
 
+//Constructor
 BombCard::BombCard(string n)
 {
     name = n;
     cout << "Creating " << name << std::endl;
 }
 
-void BombCard::play(list<Card*>* deck, vector<Card*>* hand)
+//BombCard destructor
+BombCard::~BombCard()
 {
-    //TODO: add to orderList
-    //bombOrderPtr = new Bomborder(1,1);
+    delete(bombOrderPtr);
+    bombOrderPtr = NULL;
+}
+
+/*
+* Play method adds appropriate order to 
+* the orderlist, removes card from hand and 
+* replaces it in the deck
+*
+* @params Deck*, Hand*, Orderlist*
+*/
+void BombCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+{
+    vector<Card*> deckContainer = deck->getDeck();
+    Player* player = new Player("Owner of Bomb Card");
+    Territory* territory = new Territory("User-selected territory");
+
+    //create order and add to orderlist
+    bombOrderPtr = new Bomborder(*player,*territory);
+    orderlist->add(*bombOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deck->push_back(find(*hand, "Bomb Card"));
+    deckContainer.push_back(find(hand, "Bomb Card"));
+    deck->setDeck(deckContainer);
+
+    delete(player);
+    delete(territory);
+    delete(bombOrderPtr);
+    player = NULL;
+    territory = NULL;
+    bombOrderPtr = NULL;
 }
 
 //copy constructor
@@ -96,20 +143,45 @@ BombCard &BombCard::operator = (const BombCard& o)
     return *this;
 }
 
+//constructor
 ReinforcementCard::ReinforcementCard(string n)
 {
     name = n;
     cout << "Creating " << name << std::endl;
 }
-//try friend class with deck/hand instead of params
-void ReinforcementCard::play(list<Card*>* deck, vector<Card*>* hand)
+
+//ReinforcementCard destructor
+ReinforcementCard::~ReinforcementCard()
 {
-    //TODO: add to orderList
-    //reinforcementOrderPtr = new Reinforcementorder(1);
+    delete(reinforcementOrderPtr);
+    reinforcementOrderPtr = NULL;
+}
+
+/*
+* Play method adds appropriate order to 
+* the orderlist, removes card from hand and 
+* replaces it in the deck
+*
+* @params Deck*, Hand*, Orderlist*
+*/
+void ReinforcementCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+{
+    vector<Card*> deckContainer = deck->getDeck();
+    Player* player = new Player("Owner of Reinforcement Card");
+
+    //create order and add to orderlist
+    reinforcementOrderPtr = new Reinforcementorder(*player);
+    orderlist->add(*reinforcementOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deck->push_back(find(*hand, "Reinforcement Card"));
+    deckContainer.push_back(find(hand, "Reinforcement Card"));
+    deck->setDeck(deckContainer);
+
+    delete(player);
+    delete(reinforcementOrderPtr);
+    player =NULL;
+    reinforcementOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -121,26 +193,54 @@ ReinforcementCard::ReinforcementCard(const ReinforcementCard& c) : reinforcement
 //assignment operator
 ReinforcementCard &ReinforcementCard::operator = (const ReinforcementCard& o)
 {
-    std::cout << "copy assignment of BombCard\n";
+    std::cout << "copy assignment of ReinforcementCard\n";
     name = o.name;
     reinforcementOrderPtr = o.reinforcementOrderPtr;
     return *this;
 }
 
+//constructor
 BlockadeCard::BlockadeCard(string n)
 {
     name = n;
     cout << "Creating " << name << std::endl;
 }
 
-void BlockadeCard::play(list<Card*>* deck, vector<Card*>* hand)
+//BlockadeCard destructor
+BlockadeCard::~BlockadeCard()
 {
-    //TODO: add to orderList
-    //blockadeOrderPtr = new Blockadeorder(1,1);
+    delete(blockadeOrderPtr);
+    blockadeOrderPtr = NULL;
+}
+
+/*
+* Play method adds appropriate order to 
+* the orderlist, removes card from hand and 
+* replaces it in the deck
+*
+* @params Deck*, Hand*, Orderlist*
+*/
+void BlockadeCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+{
+    vector<Card*> deckContainer = deck->getDeck();
+    Player* player = new Player("Owner of Blockade Card");
+    Territory* territory = new Territory("User-selected territory");    
+
+    //create order and add to orderlist
+    blockadeOrderPtr = new Blockadeorder(*player, *territory);
+    orderlist->add(*blockadeOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deck->push_back(find(*hand, "Blockade Card"));
+    deckContainer.push_back(find(hand, "Blockade Card"));
+    deck->setDeck(deckContainer);
+
+    delete(player);
+    delete(territory);
+    delete(blockadeOrderPtr);
+    player = NULL;
+    territory = NULL;
+    blockadeOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -152,26 +252,58 @@ BlockadeCard::BlockadeCard(const BlockadeCard& c) : blockadeOrderPtr(c.blockadeO
 //assignment operator
 BlockadeCard &BlockadeCard::operator = (const BlockadeCard& o)
 {
-    std::cout << "copy assignment of BombCard\n";
+    std::cout << "copy assignment of BlockadeCard\n";
     name = o.name;
     blockadeOrderPtr = o.blockadeOrderPtr;
     return *this;
 }
 
+//constructor
 AirliftCard::AirliftCard(string n)
 {
     name = n;
     cout << "Creating " << name << std::endl;
 }
 
-void AirliftCard::play(list<Card*>* deck, vector<Card*>* hand)
+//AirliftCard destructor
+AirliftCard::~AirliftCard()
 {
-    //TODO: add to orderList
-    //airliftOrderPtr = new airliftorder(1,1,1,1);
+    delete(airliftOrderPtr);
+    airliftOrderPtr = NULL;
+}
+
+/*
+* Play method adds appropriate order to 
+* the orderlist, removes card from hand and 
+* replaces it in the deck
+*
+* @params Deck*, Hand*, Orderlist*
+*/
+void AirliftCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+{
+    vector<Card*> deckContainer = deck->getDeck();
+    int i = 1;
+    Player* player = new Player("Owner of Airlift Card");
+    Territory* territorySource = new Territory("User-selected source territory");
+    Territory* territoryDestination = new Territory("User-selected destination territory");
+    
+    //create order and add to orderlist
+    airliftOrderPtr = new airliftorder(i, *territorySource, *territoryDestination, *player);
+    orderlist->add(*airliftOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deck->push_back(find(*hand, "Airlift Card"));    
+    deckContainer.push_back(find(hand, "Airlift Card"));  
+    deck->setDeck(deckContainer);
+
+    delete(player);
+    delete(territorySource);
+    delete(territoryDestination);
+    delete(airliftOrderPtr);
+    player = NULL;
+    territorySource = NULL;
+    territoryDestination = NULL;
+    airliftOrderPtr =NULL;
 }
 
 //copy ocnstructor
@@ -183,26 +315,54 @@ AirliftCard::AirliftCard(const AirliftCard& c) : airliftOrderPtr(c.airliftOrderP
 //assignment operator
 AirliftCard &AirliftCard::operator = (const AirliftCard& o)
 {
-    std::cout << "copy assignment of BombCard\n";
+    std::cout << "copy assignment of AirliftCard\n";
     name = o.name;
     airliftOrderPtr = o.airliftOrderPtr;
     return *this;
 }
 
+//constructor
 DiplomacyCard::DiplomacyCard(string n) 
 {
     name = n;
     cout << "Creating " << name << std::endl;
 }
 
-void DiplomacyCard::play(list<Card*>* deck, vector<Card*>* hand)
+//DiplomacyCard destructor
+DiplomacyCard::~DiplomacyCard()
 {
-    //TODO: add to orderList
-    //diplomacyOrderPtr = new Negotiateorder(1,1);
+    delete(diplomacyOrderPtr);
+    diplomacyOrderPtr = NULL;
+}
+
+/*
+* Play method adds appropriate order to 
+* the orderlist, removes card from hand and 
+* replaces it in the deck
+*
+* @params Deck*, Hand*, Orderlist*
+*/
+void DiplomacyCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+{
+    vector<Card*> deckContainer = deck->getDeck();
+    Player* player = new Player("Owner of Diplomacy Card");
+    Player* targetPlayer = new Player("Player to negotiate with");
+
+    //create order and add to orderlist
+    diplomacyOrderPtr = new Negotiateorder(*player,*targetPlayer);
+    orderlist->add(*diplomacyOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deck->push_back(find(*hand, "Diplomacy Card"));
+    deckContainer.push_back(find(hand, "Diplomacy Card"));
+    deck->setDeck(deckContainer);
+
+    delete(player);
+    delete(targetPlayer);
+    delete(diplomacyOrderPtr);
+    player = NULL;
+    targetPlayer = NULL;
+    diplomacyOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -214,15 +374,18 @@ DiplomacyCard::DiplomacyCard(const DiplomacyCard& c) : diplomacyOrderPtr(c.diplo
 //assignment operator
 DiplomacyCard &DiplomacyCard::operator = (const DiplomacyCard& o)
 {
-    std::cout << "copy assignment of BombCard\n";
+    std::cout << "copy assignment of DiplomacyCard\n";
     name = o.name;
     diplomacyOrderPtr = o.diplomacyOrderPtr;
     return *this;
 }
 
+//constructor
 Deck::Deck()
 {
     cout << "Generating Deck..." << std::endl;
+
+    deckOfCardsPtr = new vector<Card*>();
 
     //Create pointers to card objects 
     bombCrdPtr = new BombCard("Bomb Card");
@@ -232,13 +395,14 @@ Deck::Deck()
     blkdCrdPtr = new BlockadeCard("Blockade Card");
 
     //push 5 cards into the deck
-    deckOfCards.push_back(bombCrdPtr);
-    deckOfCards.push_back(reinCrdPtr);
-    deckOfCards.push_back(alftCrdPtr);
-    deckOfCards.push_back(dpcyCrdPtr);
-    deckOfCards.push_back(blkdCrdPtr);    
+    deckOfCardsPtr->push_back(bombCrdPtr);
+    deckOfCardsPtr->push_back(reinCrdPtr);
+    deckOfCardsPtr->push_back(alftCrdPtr);
+    deckOfCardsPtr->push_back(dpcyCrdPtr);
+    deckOfCardsPtr->push_back(blkdCrdPtr);    
 }
 
+//Destructor
 Deck::~Deck()
 {
     delete(bombCrdPtr);
@@ -254,22 +418,28 @@ Deck::~Deck()
     blkdCrdPtr = NULL;
 }
 
+/*
+* Draw method will randomly pick a card out of a deck structure
+* and place the card at the front of a hand structure. 
+*
+* @Params Deck*, Hand*
+*/
 void Deck::draw(Hand* hand, Deck* deck)
 {
     std::cout << "\nDrawing Card" << std::endl;
     
-    //Define the vector/list arrays containing the hand/deck cards respectively
+    //Define the vector/vector arrays containing the hand/deck cards respectively
     vector<Card*> handContainer = hand->getHand();
-    list<Card*> deckContainer = deck->getDeck();
+    vector<Card*> deckContainer = deck->getDeck();
     
     //Random valid index value to be used to draw cards at random
     int randomDeckIdx = rand() % deckContainer.size();
 
-    //Set iterator pointer to beginning of list and advance by a random number of indices
+    //Set iterator pointer to beginning of vector and advance by a random number of indices
     itFront = deckContainer.begin();
     advance(itFront,randomDeckIdx);
     
-    //Draw a card, push it to the hand object's vector array and remove it from the deck object's list array
+    //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
     Card* drawnCard = *itFront;
     std::cout << "Drawn Card: " << *drawnCard << std::endl;
     handContainer.push_back(drawnCard);
@@ -280,18 +450,20 @@ void Deck::draw(Hand* hand, Deck* deck)
     deck->setDeck(deckContainer);
 }
 
-list<Card*> Deck::getDeck()
+//Accessor
+vector<Card*> Deck::getDeck()
 {
-    return this->deckOfCards;
+    return *this->deckOfCardsPtr;
 }
 
-void Deck::setDeck(list<Card*> d)
+//Mutator
+void Deck::setDeck(vector<Card*> d)
 {
-    deckOfCards = d;
+    *deckOfCardsPtr = d;
 }
 
 //copy ocnstructor
-Deck::Deck(const Deck& d) : deckOfCards(d.deckOfCards), itFront(d.itFront)
+Deck::Deck(const Deck& d) : deckOfCardsPtr(d.deckOfCardsPtr), itFront(d.itFront)
 {
     std::cout << "copy construction of Deck\n";
 }
@@ -300,7 +472,7 @@ Deck::Deck(const Deck& d) : deckOfCards(d.deckOfCards), itFront(d.itFront)
 Deck &Deck::operator = (const Deck& d)
 {
     std::cout << "copy assignment of Deck\n";
-    deckOfCards = d.deckOfCards;
+    deckOfCardsPtr = d.deckOfCardsPtr;
     itFront = d.itFront;
     return *this;
 }
@@ -308,31 +480,61 @@ Deck &Deck::operator = (const Deck& d)
 //stream i/o operator overloads
 istream &operator >> (istream& stream, Deck& o)
 {
+    if(o.deckOfCardsPtr->size() > 0)
+    {
+        for(int i=0; i<o.deckOfCardsPtr->size(); i++)
+        {
+            stream >> *o.deckOfCardsPtr->at(i);
+        } 
+    }
 
+    return stream;
 }
 
 ostream &operator << (ostream &out, const Deck& o)
 {
+    if(o.deckOfCardsPtr->size() > 0)
+    {
+        for(int i=0; i<o.deckOfCardsPtr->size(); i++)
+        {
+            out << *o.deckOfCardsPtr->at(i) << endl;
+        } 
+    }
+    else
+    {
+        out << "Deck is empty" << endl;
+    }
 
+    return out;
 }
 
+//Constructor
 Hand::Hand()
 {
-    vector<Card*> handOfCards;
+    handOfCardsPtr = new vector<Card*>();
 }
 
+//Hand destructor
+Hand::~Hand() 
+{
+    delete(handOfCardsPtr);
+    handOfCardsPtr = NULL;
+}
+
+//Accessor
 vector<Card*> Hand::getHand()
 {
-    return this->handOfCards;
+    return *this->handOfCardsPtr;
 }
 
+//Mutator
 void Hand::setHand(vector<Card*> h)
 {
-    handOfCards = h;
+    *handOfCardsPtr = h;
 }
 
 //copy ocnstructor
-Hand::Hand(const Hand& h) : handOfCards(h.handOfCards)
+Hand::Hand(const Hand& h) : handOfCardsPtr(h.handOfCardsPtr)
 {
     std::cout << "copy construction of Hand\n";
 }
@@ -341,18 +543,38 @@ Hand::Hand(const Hand& h) : handOfCards(h.handOfCards)
 Hand &Hand::operator = (const Hand& h)
 {
     std::cout << "copy assignment of Deck\n";
-    handOfCards = h.handOfCards;
+    handOfCardsPtr = h.handOfCardsPtr;
     return *this;
 }
 
 //stream i/o operator overloads
 istream &operator >> (istream& stream, Hand& o)
 {   
+    if(o.handOfCardsPtr->size() > 0)
+    {
+        for(int i=0; i<o.handOfCardsPtr->size(); i++)
+        {
+            stream >> *o.handOfCardsPtr->at(i);
+        }  
+    }
 
+    return stream;
 }
 
 ostream &operator << (ostream &out, const Hand& o)
 {
+    if(o.handOfCardsPtr->size() > 0)
+    {
+        for(int i=0; i<o.handOfCardsPtr->size(); i++)
+        {
+            out << *o.handOfCardsPtr->at(i) << endl;
+        }  
+    }
+    else
+    {
+        out << "Hand is empty" << endl;
+    }
 
+    return out;
 }
 
