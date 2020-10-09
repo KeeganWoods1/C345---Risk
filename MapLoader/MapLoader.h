@@ -3,35 +3,49 @@
 // 1- read and load any map file
 // 2- Store the map as a graph data structure (Part 1)
 // 3- read any text file (even the ones that do not constitute a valid map)
-//--------------------
-// All data members of user-defined class type must be of pointer type
-// All classes must implement a correct copy constructor, assignment operator,
-// and stream insertion operator
-// memory leaks must be avoided
 //
 #ifndef A1_MAPLOADER_H
 #define A1_MAPLOADER_H
 #endif //A1_MAPLOADER_H
-
-#include <iostream>
-#include <fstream>
 #include <string>
+#include <vector>
 using namespace std;
 
 class MapLoader {
     public:
-        //default constructor
+        //Default constructor
         MapLoader();
 
-        //constructor
+        //Parameterized constructor
         MapLoader(string);
 
-        //copy constructor
-        MapLoader(const MapLoader& copyMapLoader);
+        //Destructor
+        ~MapLoader();
+
+        //Getter
+        string getMap();
+
+        //Copy constructor
+        MapLoader(const MapLoader&);
+
+        //Assignment operator
+        MapLoader& operator = (const MapLoader&);
+
+        //Stream insertion operator (toString method)
+        friend std::ostream& operator<<(std::ostream&, const MapLoader&);
+
+        //to load a map file
+        void loadMap(fstream&);
+
+        //to print out a vector content
+        void printVector(vector<std::string*>);
 
     private:
-        //stream insertion operator
-        friend std::ostream& operator<<(std::ostream&, const MapLoader&);
-        std::string map;
+        //map file
+        string* map;
 
+        //to store the contents from the map file
+        vector<std::string*> continents;
+        vector<std::string*> countries;
+        vector<std::string*> borders;
 };
