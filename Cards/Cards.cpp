@@ -246,7 +246,7 @@ void BlockadeCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
 //copy ocnstructor
 BlockadeCard::BlockadeCard(const BlockadeCard& c) : blockadeOrderPtr(c.blockadeOrderPtr) 
 {
-    std::cout << "copy construction of Card\n";
+    std::cout << "copy construction of BlockadeCard\n";
 }
 
 //assignment operator
@@ -288,7 +288,7 @@ void AirliftCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
     Territory* territoryDestination = new Territory("User-selected destination territory");
     
     //create order and add to orderlist
-    airliftOrderPtr = new airliftorder(i, *territorySource, *territoryDestination, *player);
+    airliftOrderPtr = new Airliftorder(i, *territorySource, *territoryDestination, *player);
     orderlist->add(*airliftOrderPtr);
 
     //remove card from the hand
@@ -309,7 +309,7 @@ void AirliftCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
 //copy ocnstructor
 AirliftCard::AirliftCard(const AirliftCard& c) : airliftOrderPtr(c.airliftOrderPtr) 
 {
-    std::cout << "copy construction of Card\n";
+    std::cout << "copy construction of AirliftCard\n";
 }
 
 //assignment operator
@@ -368,7 +368,7 @@ void DiplomacyCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
 //copy ocnstructor
 DiplomacyCard::DiplomacyCard(const DiplomacyCard& c) : diplomacyOrderPtr(c.diplomacyOrderPtr) 
 {
-    std::cout << "copy construction of Card\n";
+    std::cout << "copy construction of DiplomacyCard\n";
 }
 
 //assignment operator

@@ -80,7 +80,7 @@ public:
 class AirliftCard : public Card
 {
 private:
-    airliftorder* airliftOrderPtr;
+    Airliftorder* airliftOrderPtr;
 public:
     AirliftCard(string name);
     ~AirliftCard();
