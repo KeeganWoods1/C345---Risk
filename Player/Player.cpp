@@ -24,10 +24,6 @@ Player::Player(string playerName)
     // each player owns a hand of cards
     playerCards = new Hand();
 
-    // each player has an orderlist
-    Orderlist* playerOlist;
-    playerOlist = new Orderlist();
-    
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
     
@@ -109,9 +105,9 @@ Hand* Player::getHand()
    return playerCards;
 }
 
-// definition of method to get player's 
-// orderlist
-Orderlist* Player::getPlayerolist()
+// definition of method to get
+// player's orderlist
+Orderlist* Player::getPlayerlist()
 {
     return playerOlist;
 }
@@ -161,9 +157,15 @@ vector<Territory*> Player::toAttack()
 // object and adds it to the player's list of orders
 void Player::issueOrder()
 {
-    Player* p = new Player("p1");
+    Orderlist* playerOlist = new Orderlist();
     Territory* t1 = new Territory("t1");
     Territory* t2 = new Territory("t2");
-    //Advanceorder* o = new Advanceorder(1, *p, *t1, *t2);
-   // playerOlist->add(*o);
+    Advanceorder* o1 = new Advanceorder(1, *t1, *t2);
+    playerOlist->add(*o1);
+    cout << endl << "After adding an order to the orderlist, the size of the list is: " << playerOlist->getPlayerolist()->size() << endl;
+    Territory* t3 = new Territory("t3");
+    Territory* t4 = new Territory("t4");
+    Advanceorder* o2 = new Advanceorder(1, *t3, *t3);
+    playerOlist->add(*o2);
+    cout << "After adding a 2nd order to the orderlist, the size of the list is: " << playerOlist->getPlayerolist()->size() << endl;
 }
