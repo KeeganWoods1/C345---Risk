@@ -4,7 +4,7 @@
 #include <vector>
 #include "Map.h"
 #include "Orderlist.h"
-#include "Card.h"
+#include "Cards.h"
 using namespace std;
 
 class Player
@@ -32,17 +32,20 @@ class Player
     // default constructor
     Player();
 
+    // parametrized constructor
+    Player(string);
+
     // destructor
     ~Player();
 
     //copy constructor
-    Player(const Player& copyPlayer);
+    Player(const Player&);
 
     // assignment operator
     Player& operator = (const Player& o);
      
     // stream insertion operator
-    friend ostream &operator << (ostream &output, 
+    friend ostream &operator << (ostream &output, const Player &o);
 
     // method to set the name of player
     void setName(string name); 
@@ -53,8 +56,14 @@ class Player
     // get number of players playing the game
     int getPlayerCount(); 
 
-    // get number of territories owned by the play
+    // get number of territories owned by the player
     int getNumTerrOwned();
+
+    // get hand owned by player
+    Hand* getHand();
+
+    // get player's orderlist
+    Orderlist* getPlayerolist();
 
     // method toDefend which returns a list 
     // of territories to defend
