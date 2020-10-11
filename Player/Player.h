@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "Map.h"
+#include "Order.h"
 #include "Orderlist.h"
 #include "Cards.h"
 using namespace std;
@@ -63,7 +64,7 @@ class Player
     Hand* getHand();
 
     // get player's orderlist
-    Orderlist* getPlayerolist();
+    Orderlist* getPlayerlist();
 
     // method toDefend which returns a list 
     // of territories to defend
