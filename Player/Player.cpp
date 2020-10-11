@@ -161,7 +161,7 @@ vector<Territory*> Player::toAttack()
 // object and adds it to the player's list of orders
 void Player::issueOrder()
 {
-    Player* p = new Player("X");
+    Player* p = new Player("p1");
     Territory* t1 = new Territory("t1");
     Territory* t2 = new Territory("t2");
     //Advanceorder* o = new Advanceorder(1, *p, *t1, *t2);
