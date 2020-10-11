@@ -6,8 +6,6 @@ using namespace std;
 
 
 int playerCount = 0;
-string name;
-vector<Territory*> territories;
 Hand* playerCards;
 Orderlist* playerOlist;
 
@@ -15,13 +13,24 @@ Orderlist* playerOlist;
 Player::Player()
 {
     name = "";
+}
 
+// parametrized constructor definition
+Player::Player(string playerName)
+{
+    // player's name is set to passed argument
+    name = playerName;
+    
     // each player owns a hand of cards
     playerCards = new Hand();
+
+    // each player has an orderlist
+    Orderlist* playerOlist;
+    playerOlist = new Orderlist();
     
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
-
+    
     // number of territories at the start is 4
     Territory* terr1 = new Territory();
     Territory* terr2 = new Territory();
@@ -31,32 +40,28 @@ Player::Player()
     territories.push_back(terr2);
     territories.push_back(terr3);
     territories.push_back(terr4);
-
     // increase number of players
     playerCount = playerCount + 1;
 }
 
 // destructor definition
-// Player::~Player()
-// {
-   // avoid memory leaks
-    // delete playerCards;
-    // delete terr1;
-    // delete terr2;
-    // delete terr3;
-    // delete terr4;
-    // avoid dangling pointers
-    // playerCards = NULL;
-    // terr1 = NULL;
-    // terr2 = NULL;
-    // terr3 = NULL;
-    // terr4 = NULL;
-// }
+Player::~Player()
+{
+    // avoid memory leaks
+    delete playerCards;
+    delete playerOlist;
+    for(int i = 0; i < territories.size(); i++)
+    {
+        delete territories.at(i);
+        // avoid dangling pointers
+        territories.at(i) = NULL;
+    }
+}
 
 // copy constructor definition
-Player::Player(const Player& copyPlayer) 
+Player::Player(const Player &player) 
 {
-    this->name = copyPlayer.name;
+    name = player.name;
 }
 
 // assignment operator
@@ -75,7 +80,7 @@ ostream &operator << (ostream &output, const Player &o)
 // method to set the name of player
 void Player::setName(string playerName)
 {
-    name = playerName;
+   name = playerName;
 }
 
 // method to return name of player
@@ -97,19 +102,32 @@ int Player::getNumTerrOwned()
     return territories.size();
 }
 
+// definition of method to get hand 
+// owned by player
+Hand* Player::getHand()
+{
+   return playerCards;
+}
+
+// definition of method to get player's 
+// orderlist
+Orderlist* Player::getPlayerolist()
+{
+    return playerOlist;
+}
+
 // definition of method toDefend
 // returning a list of territories to defend
-vector<Territory*> Territory::toDefend()
+vector<Territory*> Player::toDefend()
 {
+    vector<Territory*> territories;
     Territory* ob1 = new Territory();
     Territory* ob2 = new Territory();
-    for(int i = 0; i < 2; i++)
-    {
-        ob1->territory_name = "Canada";
-        ob2->territory_name = "Mexico";
-        territories.push_back(ob1);
-        territories.push_back(ob2);
-    }   
+    ob1->territory_name = "Canada";
+    ob2->territory_name = "Mexico";
+    territories.push_back(ob1);
+    territories.push_back(ob2);
+    
     return territories;
    // delete objects to prevent memory leaks
    for(int j = 0; j < 2; j++){
@@ -120,19 +138,16 @@ vector<Territory*> Territory::toDefend()
 
 // definition of method toAttack
 // returning a list of territories to attack
-vector<Territory*> Territory::toAttack()
+vector<Territory*> Player::toAttack()
 {
     vector<Territory*> territories;
-
     Territory* ob3 = new Territory();
     Territory* ob4 = new Territory();
-    for(int i =0; i < 2; i++)
-    {
-        ob3->territory_name = "France";
-        ob4->territory_name = "Italy";
-        territories.push_back(ob3);
-        territories.push_back(ob4);
-    }   
+    ob3->territory_name = "France";
+    ob4->territory_name = "Italy";
+    territories.push_back(ob3);
+    territories.push_back(ob4);
+
     return territories;
    // delete objects to prevent memory leaks
    for(int j = 0; j <2; j++){
@@ -146,7 +161,9 @@ vector<Territory*> Territory::toAttack()
 // object and adds it to the player's list of orders
 void Player::issueOrder()
 {
-    Order* newOrder;
-    newOrder = new Order;
-    playerOlist->add(*newOrder);
+    Player* p = new Player("X");
+    Territory* t1 = new Territory("t1");
+    Territory* t2 = new Territory("t2");
+    //Advanceorder* o = new Advanceorder(1, *p, *t1, *t2);
+   // playerOlist->add(*o);
 }
