@@ -42,7 +42,5 @@ int main() {
 
     // testing issueOrder method
     a->issueOrder();
-    
-    //cout << "Player's orderlist contains orders " << a->getPlayerolist();
 
 }
