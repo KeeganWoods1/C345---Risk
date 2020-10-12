@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-#include <string>
+#include <iostream>
 using namespace std;
+
 /*manually create territories, and the adjacency between territories,
 * and a way to verify that the map is connected (how?)
 *manually create continents, and check whether they are defined, and create sub-graphs, and each countries belongs to one continent.
@@ -10,117 +10,131 @@ using namespace std;
 * the next one is what continent it belongs to. the other two numbers are the x and y co-ordinates
 * of the circle that will be put on that country
 */
+
+
+/*
+ * manually creating territories, and using the 2d array adjacency array to find whether connected or not.
+ *
+ */
+class Player {
+private:
+    //player name
+    string name;
+
+public:
+    //default constructor
+    Player();
+
+    //one parameter constructor
+    Player(string);
+
+    //copy constructor
+    Player(const Player*);
+
+    //assignment operator
+    Player& operator = (const Player&);
+
+    //destructor
+    ~Player();
+
+    //getter
+    string getName();
+
+    //setter
+    void setName(string);
+};
+
+//declaration of Territory class
 class Territory {
 private:
-    Territory(string territory_name, string cont, int pl, int ar);
+    //continent name of the territory
+    int territory_continent;
 
-    //Territory id
-    int territory_id = 0;
-
-    //Territory name
+    //name of a territory
     string territory_name;
 
-    //Territory continent
-    int territory_continent = 0;
+    //the owner of a territory
+    Player* territory_owner;
 
-    //Territory's number of armies
-    int territory_armycount = 0;
-
-    //Adjacent territories
-    std::vector<Territory *> neighboring_countries;
-
-    /* TODO must have a player (who owns the territory) pointer of type player? */
-    //int territory_player{
-    //};
+    //the amount of army in a territory
+    int territory_armycount;
 
 public:
-    Territory();    //default constructor
-    Territory(int territory_id, string territory_name, int territory_continent);
-    Territory(int,string, int, vector<Territory*>);
-    Territory& operator=(const Territory&); //Assignment operator
-    //NEED PLAYER
+    //default constructor
+    Territory();
 
-    /*TODO need player */
-    //bool   setOwner(Player*);
-    int    getArmies();
-    bool   setArmies(int);
-    int    getContinent();
-    int    getId();
+    //copy constructor
+    Territory(const Territory*);
 
-    /*TODO need player */
-    //Player getOwner();
-    vector<Territory*> getAdjacent();
-    string getTerritoryName();
+    Territory(int, string, Player*, int);
 
-    //This method is used to add a link to a specific territory
-    bool addBorder(Territory*);
-    friend ostream& operator<< (ostream&, const Territory&);
-};
-ostream& operator<< (ostream& stream, const Territory& territory);
+    //assignment operator
+    Territory& operator = (const Territory&);
 
-//continent node [continents]
-//North-America 6 yellow <~~ name of the continent (try keep them in that order if you are doing a map of the
-// "real world" as then the missions work. The number is the army value, and the color does totally nothing
+    //destructor
+    ~Territory();
 
-class Continent {
-private:
-    //Continent id
-    int continent_id = 0;
+    //territory name getter
+    string getterritory_name();
 
-    //Continent name
-    int continent_name = 0;
+    //territory name setter
+    void setterritory_name(string);
 
-    //Adjacent Territories of the same continent
-    std::vector<Territory*> territories;
-    std::vector<Continent*> neighboring_countries;
+    //continent name getter
+    int getterritory_continent();
 
-public:
-    Continent();
-    Continent (int continent_number,  string continent_name, Continent* neighboring_countries);
-    Continent(const Continent&); //copy constructor
-    Continent& operator=(const Continent&); //assignment operator
+    //setter
+    void setterritory_continent(int);
 
-    //Continent(int,int);
-    //Continent(int,int, vector<Territory*>);
-    //Continent(int,string);
-    Continent(int,string, int);
-    //Continent(int,string, int, vector<Territory*>);
-    friend ostream& operator<<(ostream&, const Continent&);
+    //territory owner getter
+    Player* getterritory_owner();
 
-    int  territoriesSize();
-    int  getId();
-    bool addTerritory(Territory*);
-    vector<Territory> getTerritories();
+    //setter
+    void setterritory_owner(Player*);
+
+    //army count getter
+    int getterritory_armycount();
+
+    //army count setter
+    void setterritory_armycount(int);
 
 };
-ostream& operator<<(ostream& stream, const Continent& continent);
 
 
+//declaration of Map class with its members
 class Map {
 private:
-    int numberOfContinents;    //number of continents
-    vector<Continent*> continents; //vector list containing the continents
-    vector<Territory*> territories;//vector list containing the territories
+    //2D boolean matrix to represent Adjancency Matrix
+    bool** adjacent_matrix;
+
+    //int to store number of vertices (territories)
+    int vertices;
 
 public:
-    Map(); //default constructor
-    explicit Map(int i);
-    Map(const Map&); //copy constructor
+    //default constructor
+    Map();
 
-    Map& operator=(const Map&); //Assignment operator
+    //one int parameter constructor
+    Map(int);
 
-    bool addContinent(Continent*); //adds elements to the end of the vector list, then gets a copy of list
-    vector<Continent> getContinents();
+    //copy constructor
+    Map(const Map*);
 
-    bool addTerritory(Territory*); //adds elements to the end of the vector list, then gets a copy of list
-    vector<Territory> getTerritories();
+    //assignment operator
+    Map& operator = (const Map&);
 
-    //map validation needs to validate if
-    bool validate();
-    bool isConnected();
-    bool checkTerritories();
+    //destructor
+    ~Map();
 
-    int getTerritoriesSize();
-    int getContinentsSize();
-    void DFS(Territory* start, vector<bool>& visited);
+    //add an edge between two vertices
+    void addBorder(int, int);
+
+    //display the Adjancency Matrix
+    void toString();
+
+    //traverse the passed graph
+    void transverse(int, bool*);
+
+    //verify a graph whether connected or not
+    bool ValidateGraph();
 };

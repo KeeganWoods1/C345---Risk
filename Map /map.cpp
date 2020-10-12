@@ -1,267 +1,183 @@
-#include <iostream>
+#pragma once
 #include "map.h"
-#include <list>
-using namespace std;
+#include <iostream>
 
-//default constructor
-Territory::Territory() :territory_id(),territory_name(), territory_continent() {
+//constructors
+Player::Player() {
+    name = " - ";
 }
 
-Territory::Territory(int territory_id, string territory_name, int territory_continent)
-        : territory_id(), territory_name(territory_name), territory_continent(territory_continent){
+Player::Player(string player) {
+    name = player;
 }
 
-Territory::Territory(int territory_id,string territory_name, int territory_continent, vector<Territory*> neighboring_countries)
-        :territory_id(), territory_name(territory_name), territory_continent(territory_continent), neighboring_countries(neighboring_countries) {
-}
+Player::Player(const Player* player) {}
 
-Territory& Territory::operator=(const Territory& territory){
-    return *(new Territory(territory));
-}
-
-/* TODO need player class for this */
-
-int Territory::getArmies()
+//assignment operator
+Player& Player::operator=(const Player& player)
 {
-    return territory_armycount;
+    this->name = player.name;
+    return *this;
 }
 
-bool Territory::setArmies(int armies)
-{
-    if (armies >= 0)
-    {
-        territory_armycount = armies;
-        return true;
-    }
-    return false;
+//destructor
+Player::~Player(){}
+
+string Player::getName() {
+    return name;
 }
 
-/*TODO need player who owns the territory (copy constructor)  */
+//sets player
+void Player::setName(string player) {
+    name = player;
+}
 
-//returns continent
-int Territory::getContinent()
+//Class Territory
+//constructors
+Territory::Territory() {
+    territory_name = "default territory";
+    territory_continent = 0;
+    territory_owner = new Player();
+    territory_armycount = 0;
+}
+
+Territory::Territory(const Territory* territory) {
+
+    territory_continent = territory->territory_continent;
+    territory_name = territory->territory_name;
+    territory_owner = territory->territory_owner;
+    territory_armycount = territory->territory_armycount;
+}
+
+Territory::Territory(int continent,string name, Player* player, int army) {
+    territory_continent = continent;
+    territory_name = name;
+    territory_owner = player;
+    territory_armycount= army;
+}
+
+//assignment operator
+Territory& Territory::operator=(const Territory& territory)
 {
+    this->territory_continent = territory.territory_continent;
+    this->territory_name = territory.territory_name;
+    this->territory_owner = territory.territory_owner;
+    this->territory_armycount = territory.territory_armycount;
+    return *this;
+}
+
+//destructor
+Territory::~Territory() {
+    territory_owner = NULL;
+}
+
+//getters
+string Territory::getterritory_name() {
+    return territory_name;
+}
+
+int Territory::getterritory_continent() {
     return territory_continent;
 }
 
-//returns neighbouring country
-vector<Territory*> Territory::getAdjacent()
-{
-    return neighboring_countries;
+Player* Territory::getterritory_owner() {
+    return territory_owner;
 }
 
-//returns what is the country
-int Territory::getId()
-{
-    return territory_id;
+//setters
+int Territory::getterritory_armycount() {
+    return territory_armycount;
 }
 
-//String method for getting country name
-string Territory::getTerritoryName()
-{
-    return string(territory_name);
+//constructors
+Map::Map() {
+    this->adjacent_matrix = 0;
+    this->vertices = 0;
 }
 
-//adds element to the end of the vector neighboring_countries to this specfic territory
-bool Territory::addBorder(Territory* territory)
-{
-    if (territory != NULL && territory->territory_name != "")
-    {
-        neighboring_countries.push_back(territory);
-        return true;
-    }
-    return false;
+Map::Map(const Map *map) {
+    this->adjacent_matrix = map->adjacent_matrix;
+    this->vertices = map->vertices;
 }
 
-/* TODO need player */
-//return territory name and how many armies do they have, and territories
-
-Continent::Continent() :continent_name() {
-}
-
-//copy constructor
-Continent::Continent(const Continent& continent) {
-    this->continent_name = continent.continent_name;
-    for (auto adjNode : continent.territories) {
-        this->territories.push_back(new Territory(*adjNode));
-    }
-    for (auto adjNode : continent.neighboring_countries) {
-        this->neighboring_countries.push_back(new Continent(*adjNode));
+Map::Map(int vertices) {
+    this->vertices = vertices;
+    adjacent_matrix = new bool* [vertices];
+    //initialize the 2d array with false
+    for (int i = 0; i < vertices; i++) {
+        adjacent_matrix[i] = new bool[vertices];
+        for (int j = 0; j < vertices; j++)
+            adjacent_matrix[i][j] = false;
     }
 }
 
 //assignment operator
-Continent& Continent::operator=(const Continent& continent)
+Map& Map::operator=(const Map& map)
 {
-    return *(new Continent(continent));
+    this->adjacent_matrix = map.adjacent_matrix;
+    this->vertices = map.vertices;
+    return *this;
 }
 
-//returns the size of the territories
-int Continent::territoriesSize()
-{
-    return static_cast<int>(territories.size());
+//add an border between two v's
+void Map::addBorder(int i, int j) {
+    adjacent_matrix[i][j] = true;
+    adjacent_matrix[j][i] = true;
 }
 
-//gets continent name
-int Continent::getId()
-{
-    return continent_id;
-}
-
-//adds element to the end of the vector neighboring_countries to this specific continent
-bool Continent::addTerritory(Territory* territory)
-{
-    if (territory != NULL && territory->getTerritoryName() != "")
-    {
-        territories.push_back(territory);
-        return true;
+//to display ythe matrix
+void Map::toString() {
+    std::cout << "                  Output Matrix" << std::endl;
+    std::cout << "     ";
+    for (int x = 0; x < vertices; x++) {
+        std::cout << x << "   ";
     }
-    return false;
-}
-
-//adds element to the end of the vector to this specfic continent
-vector<Territory> Continent::getTerritories()
-{
-    vector<Territory> territories;
-    territories.reserve(territories.size());
-    for (int i = 0; i < territories.size(); i++) {
-        territories.push_back(territories[i]);
-    }
-    return territories;
-}
-
-
-
-
-//default constructors
-Map::Map() = default;
-
-//constructor
-Map::Map(int i) {
-}
-
-//copy constructor
-Map::Map(const Map& map)
-{
-    this-> numberOfContinents = map.numberOfContinents;
-    for (auto continent : map.continents) {
-        this->continents.push_back(new Continent(*continent));
-    }
-    for (auto territory : map.territories) {
-        this->territories.push_back(new Territory(*territory));
+    std::cout << std::endl;
+    for (int i = 0; i < vertices; i++) {
+        if (i>=10){
+            std::cout << " " << i << "   ";
+            for (int j = 0; j < vertices; j++)
+                std::cout << adjacent_matrix[i][j] << "   ";
+            std::cout << "\n";
+        }
+        else{
+            std::cout << "  "<< i << "   ";
+            for (int j = 0; j < vertices; j++)
+                std::cout << adjacent_matrix[i][j] << "   ";
+            std::cout << "\n";
+        }
     }
 }
 
-/* Still unsure about how to implement this, but i'm trying this
- * This method checks whether the Graph is first connected, by Depth First Search
- * Do i do this for every node in this case?
- */
-bool Map::validate()
-{
-    if (!isConnected())
-    {
-        return false;
+//transvering matrix
+void Map::transverse(int u, bool visited[]) {
+    visited[u] = true;
+    for (int v = 0; v < vertices; v++) {
+        if (adjacent_matrix[u][v]) {
+            if (!visited[v])
+                transverse(v, visited);
+        }
     }
-    return true;
 }
 
-//Assignment operator
-Map& Map::operator=(const Map& map){
-    return *(new Map(map));
-}
-
-//checks if continents are empty?
-bool Map::checkTerritories(){
-    list<int> ids;
-
-    for (auto continent : continents) {
-    }
-
-    ids.sort();
-    ids.unique();
-
-    if (ids.size() != territories.size())
-        return 0;
-}
-
-bool Map::isConnected() {
-    //int continents_size = getContinentsSize();
-    int territories_size = getTerritoriesSize();
-
-    for (int i = 0; i < territories_size; ++i){
-        Territory* root_node = territories[i];
-        vector<bool> visited_territories(territories_size, false);
-        DFS(root_node, visited_territories);
-        for (bool vis : visited_territories){
-            if (!vis)
-            {
-                cout << "territories are not connected" << endl;
+//This method verifies whether the map is connected or not
+//checks whether the nodes (transversal) are visible -> true
+//not visible -> false
+bool Map::ValidateGraph() {
+    bool* vis = new bool[vertices];
+    for (int u = 0; u < vertices; u++) {
+        for (int i = 0; i < vertices; i++)
+            vis[i] = false;
+        transverse(u, vis);
+        for (int i = 0; i < vertices; i++) {
+            if (!vis[i]) //if there is a node, not visited by transversal, graph is not connected
                 return false;
-            }
         }
     }
-    cout << "territories are connected" << endl;
     return true;
 }
 
-//checks whether the territory number has been visited before
-void Map::DFS(Territory* startNode, vector<bool>& visited){
-    int number = startNode -> getId();
-    visited[number] = true;
-
-    for (Territory* adj_node : startNode->getAdjacent()){
-        int adj_id = adj_node -> getId();
-        if (!visited[adj_id]){
-            DFS(adj_node, visited);
-        }
-    }
-}
-
-//adds territory to map vector list
-bool Map::addTerritory(Territory* territory) {
-    if (territory != nullptr && territory->getTerritoryName() != "")
-    {
-        territories.push_back(territory);
-        continents[territory->getContinent()]->addTerritory(territory);
-        return true;
-    }
-    return false;
-}
-
-//adds continent to the map vector list
-bool Map::addContinent(Continent* continent) {
-    if (continent != nullptr)
-    {
-        continents.push_back(continent);
-        return true;
-    }
-    return false;
-}
-
-//getter for vector list getTerritories
-vector<Territory> Map::getTerritories() {
-    vector<Territory> territories;
-    for (int i = 0; i<territories.size(); i++) {
-        territories.push_back(*(new Territory(territories[i])));
-    }
-    return territories;
-}
-
-//getter for vector list getContinents
-vector<Continent> Map::getContinents() {
-    vector<Continent> continents;
-    for (int i = 0; i < continents.size(); i++) {
-        continents.push_back(*(new Continent(continents[i])));
-    }
-    return continents;
-}
-
-//how many continents
-int Map::getContinentsSize() {
-    return static_cast<int>(continents.size());
-}
-
-//how many territories
-int Map::getTerritoriesSize() {
-    return static_cast<int>(territories.size());
+//destructor
+Map::~Map() {
+    delete[] adjacent_matrix;
 }
