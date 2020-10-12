@@ -24,7 +24,7 @@ class Player
     vector<Territory*> territories;
 
     // player owns a hand of cards
-    Hand* playerCards;
+    Hand* playerHand;
 
     // player's orderlist
     Orderlist* playerOlist;
@@ -79,5 +79,6 @@ class Player
     // of orders
     void issueOrder();
 };
+
 
 
