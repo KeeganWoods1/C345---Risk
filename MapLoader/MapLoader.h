@@ -7,8 +7,10 @@
 #ifndef A1_MAPLOADER_H
 #define A1_MAPLOADER_H
 #endif //A1_MAPLOADER_H
+#include "map.h"
 #include <string>
 #include <vector>
+#pragma once
 using namespace std;
 
 class MapLoader {
@@ -37,12 +39,17 @@ class MapLoader {
         //to load a map file
         void loadMap(fstream&);
 
+        //to return a map object
+        Map CreateMap(vector<string*>, vector<string*>, vector<string*>);
+
         //to print out a vector content
         void printVector(vector<std::string*>);
 
     private:
         //map file
         string* map;
+        //map object
+        Map* validMap;//map file
 
         //to store the contents from the map file
         vector<std::string*> continents;

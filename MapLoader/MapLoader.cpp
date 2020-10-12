@@ -38,6 +38,10 @@ MapLoader::MapLoader(string mapName) {
 //Destructor
 MapLoader::~MapLoader(){
     delete map;
+    delete validMap;
+    map = nullptr;
+    validMap = nullptr;
+    cout << "End of main(). Deleting members...";
 }
 
 //getter
@@ -49,6 +53,7 @@ std::string MapLoader::getMap() {
 MapLoader::MapLoader(const MapLoader &anotherMap) {
     cout << "Using copy constructor";
     map= anotherMap.map;
+    validMap= anotherMap.validMap;
 }
 
 //Assignment operator
@@ -59,7 +64,7 @@ MapLoader& MapLoader::operator = (const MapLoader& map) {
 
 //Stream insertion operator (toString method)
 std::ostream &operator<<(ostream &out, const MapLoader &map) {
-    out << "Map is: " << *map.map;
+    out << "Map is: " << *map.map << endl;
     return out;
 }
 
@@ -69,6 +74,12 @@ void MapLoader::loadMap(fstream& map_stream) {
     string line;
     int counter;
     string* str;
+    int totalContinents;
+    int totalCountries;
+    int totalBorders;
+    bool continentsFound= false;
+    bool countriesFound= false;
+    bool bordersFound= false;
 
     //while file has a line
     while (!map_stream.eof()){
@@ -78,8 +89,8 @@ void MapLoader::loadMap(fstream& map_stream) {
         //until reaching "[continents]"
         if (line.find("[continents]") != -1){
             cout << "Found [continents]" << endl;
+            continentsFound= true;
             counter= 0;
-            int totalContinents;
 
             //reading until end of continents
             while (line.find("[countries]") == -1){
@@ -99,16 +110,15 @@ void MapLoader::loadMap(fstream& map_stream) {
             cout << "Printing out continents:" << endl;
             cout << "Total number of continents is: " << totalContinents << endl;
             printVector(continents);
-
         }//end of if for continents
 
         counter =-1;
-
         //until reaching "[countries]"
         if (line.find("[countries]") != -1){
             cout << "found [countries]" << endl;
+            countriesFound= true;
             counter= 0;
-            int totalCountries;
+
             //reading until end of countries
             while (line.find("[borders]") == -1){
                 getline(map_stream,line, '\n');
@@ -130,12 +140,11 @@ void MapLoader::loadMap(fstream& map_stream) {
         }//end of if for countries
 
         counter =-1;
-
         //until reaching "[borders]"
         if (line.find("[borders]") != -1){
             cout << "found [borders]" << endl;
+            bordersFound= true;
             counter= 0;
-            int totalBorders;
             //reading until end of borders
             while (!map_stream.eof()){
                 getline(map_stream,line, '\n');
@@ -156,7 +165,14 @@ void MapLoader::loadMap(fstream& map_stream) {
             printVector(borders);
 
         }//end of if for borders
+
     }//end of while for all map file
+    if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
+        cout << "Map is valid. Creating a map object..." << endl;
+        CreateMap(continents, countries, borders);
+    } else {
+        cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
+    }
 
     //to avoid memory leak
     delete (str);
@@ -168,4 +184,10 @@ void MapLoader::printVector(vector<std::string*> aVector) {
     for (auto& vector : aVector){
         std::cout << *vector << ' ' << endl;
     }
+}
+
+//to return a map object
+Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
+    validMap = new Map(continents, countries, borders);
+    return *validMap;
 }

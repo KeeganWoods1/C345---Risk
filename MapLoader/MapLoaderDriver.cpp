@@ -22,8 +22,8 @@ int main() {
     cout << *mapLoader;
 
     //to avoid memory leak
-    delete (mapLoader);
-    mapLoader = nullptr;
+    delete mapLoader;
+    mapLoader= nullptr;
 
     return 0;
 }
