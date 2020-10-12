@@ -434,16 +434,12 @@ void Deck::draw(Hand* hand, Deck* deck)
     
     //Random valid index value to be used to draw cards at random
     int randomDeckIdx = rand() % deckContainer.size();
-
-    //Set iterator pointer to beginning of vector and advance by a random number of indices
-    itFront = deckContainer.begin();
-    advance(itFront,randomDeckIdx);
     
     //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
-    Card* drawnCard = *itFront;
+    Card* drawnCard = deckContainer[randomDeckIdx];
     std::cout << "Drawn Card: " << *drawnCard << std::endl;
     handContainer.push_back(drawnCard);
-    itFront = deckContainer.erase(itFront);
+    deckContainer.erase(deckContainer.begin() + randomDeckIdx);
 
     //Set the hand and deck object's arrays to the post-draw container values
     hand->setHand(handContainer);
