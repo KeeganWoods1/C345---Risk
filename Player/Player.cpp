@@ -1,18 +1,16 @@
 #include "Player.h"
+#include "Map.h"
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 
 
-int playerCount = 0;
-Hand* playerCards;
-Orderlist* playerOlist;
-
 // default constructor definition
 Player::Player()
 {
     name = "";
+    playerCount = 0;
 }
 
 // parametrized constructor definition
@@ -22,7 +20,7 @@ Player::Player(string playerName)
     name = playerName;
     
     // each player owns a hand of cards
-    playerCards = new Hand();
+    playerHand = new Hand();
 
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
@@ -36,6 +34,7 @@ Player::Player(string playerName)
     territories.push_back(terr2);
     territories.push_back(terr3);
     territories.push_back(terr4);
+    
     // increase number of players
     playerCount = playerCount + 1;
 }
@@ -44,14 +43,16 @@ Player::Player(string playerName)
 Player::~Player()
 {
     // avoid memory leaks
-    delete playerCards;
+    delete playerHand;
     delete playerOlist;
+
     for(int i = 0; i < territories.size(); i++)
     {
         delete territories.at(i);
         // avoid dangling pointers
         territories.at(i) = NULL;
     }
+    territories.clear();
 }
 
 // copy constructor definition
@@ -102,7 +103,7 @@ int Player::getNumTerrOwned()
 // owned by player
 Hand* Player::getHand()
 {
-   return playerCards;
+   return playerHand;
 }
 
 // definition of method to get
@@ -116,56 +117,58 @@ Orderlist* Player::getPlayerlist()
 // returning a list of territories to defend
 vector<Territory*> Player::toDefend()
 {
-    vector<Territory*> territories;
-    Territory* ob1 = new Territory();
-    Territory* ob2 = new Territory();
-    ob1->territory_name = "Canada";
-    ob2->territory_name = "Mexico";
-    territories.push_back(ob1);
-    territories.push_back(ob2);
+    territories.at(0)->territory_name = "Canada";
+    territories.at(1)->territory_name = "Mexico";
+    territories.at(2)->territory_name = "Argentina";
+    territories.at(3)->territory_name = "Brazil";
     
     return territories;
-   // delete objects to prevent memory leaks
-   for(int j = 0; j < 2; j++){
-       delete territories.at(j);
-   }
-   territories.clear();
 }
 
 // definition of method toAttack
 // returning a list of territories to attack
 vector<Territory*> Player::toAttack()
 {
-    vector<Territory*> territories;
-    Territory* ob3 = new Territory();
-    Territory* ob4 = new Territory();
-    ob3->territory_name = "France";
-    ob4->territory_name = "Italy";
-    territories.push_back(ob3);
-    territories.push_back(ob4);
-
+    for(int i = 4; i < 8; i++)
+    {
+        Territory* oi = new Territory();
+        territories.push_back(oi);
+    }
+    territories.at(4)->territory_name = "France";
+    territories.at(5)->territory_name = "Italy";
+    territories.at(6)->territory_name = "Greece";
+    territories.at(7)->territory_name = "Australia";
+    
     return territories;
-   // delete objects to prevent memory leaks
-   for(int j = 0; j <2; j++){
-       delete territories.at(j);
-       territories.at(j) = NULL;
-   }
-   territories.clear();
 }
 
-// definition of issueOrder which creates an Order 
+// definition of issueOrder which creates a specific Order 
 // object and adds it to the player's list of orders
 void Player::issueOrder()
 {
-    Orderlist* playerOlist = new Orderlist();
+    playerOlist = new Orderlist();
     Territory* t1 = new Territory("t1");
     Territory* t2 = new Territory("t2");
     Advanceorder* o1 = new Advanceorder(1, *t1, *t2);
     playerOlist->add(*o1);
-    cout << endl << "After adding an order to the orderlist, the size of the list is: " << playerOlist->getPlayerolist()->size() << endl;
+    cout << endl << "After adding an order to the orderlist, the size of the list is: " 
+    << playerOlist->getPlayerolist()->size() << endl;
     Territory* t3 = new Territory("t3");
-    Territory* t4 = new Territory("t4");
-    Advanceorder* o2 = new Advanceorder(1, *t3, *t3);
+    Deployorder* o2 = new Deployorder(1, *t3);
     playerOlist->add(*o2);
-    cout << "After adding a 2nd order to the orderlist, the size of the list is: " << playerOlist->getPlayerolist()->size() << endl;
+    cout << "After adding a 2nd order to the orderlist, the size of the list is: " 
+    << playerOlist->getPlayerolist()->size() << endl << endl;
+    
+    // Avoid memory leaks
+    delete t1;
+    delete t2;
+    delete o1;
+    delete t3;
+    delete o2;
+    // avoid dangling pointers
+    t1 = NULL;
+    t2 = NULL;
+    o1 = NULL;
+    t3 = NULL;
+    o2 = NULL;
 }

@@ -1,7 +1,5 @@
 #pragma once
-#include <iostream>
 #include "Order.h"
-#include "Orderlist.h"
 int main() {
     
     Player *b = new Player("alpha");
