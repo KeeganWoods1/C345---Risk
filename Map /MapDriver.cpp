@@ -1,5 +1,7 @@
 #pragma once
 #include "map.h"
+#include <vector>
+
 using namespace std;
 
 //create new objects (continents, territories, player, armies)
@@ -13,35 +15,35 @@ int main() {
     Player* SalehaTrq = new Player("SalehaTrq");
     Player* KeeganWoods = new Player("salhanyf");
 
-    //Territory(string territory_name, string territory_continent, Player* player, int territory_armycount);
+    //Territory(int continent, string territory_name, string territory_continent, Player* player, int territory_armycount);
     Territory* New_Brunswick = new Territory(1,"New_Brunswick", Samamoun, 15);
-    Territory* Prince_Edward_Island = new Territory(1, "Prince_Edward_Island", salhanyf, 0);
-    Territory* Nova_Scotia = new Territory(1,"Nova_Scotia", Jakelam, 0);
-    Territory* Newfoundland = new Territory(1,"Newfoundland", SalehaTrq, 0);
-    Territory* Labrador = new Territory(1,"Labrador", KeeganWoods, 0);
+    Territory* Prince_Edward_Island = new Territory(1, "Prince_Edward_Island", salhanyf, 12);
+    Territory* Nova_Scotia = new Territory(1,"Nova_Scotia", Jakelam, 10);
+    Territory* Newfoundland = new Territory(1,"Newfoundland", SalehaTrq, 6);
+    Territory* Labrador = new Territory(1,"Labrador", KeeganWoods, 3);
 
     //Ontario_and_Quebec
-    Territory* Quebec_North = new Territory(2,"Quebec-North", new Player(), 0);
-    Territory* Quebec_Central = new Territory(2,"Quebec_Central", new Player(), 0);
-    Territory* Quebec_South = new Territory(2,"Quebec_South", new Player(), 0);
-    Territory* Ontario_South = new Territory(2, "Ontario_South", new Player(), 0);
-    Territory* Ontario_West = new Territory(2, "Ontario_West", new Player(), 0);
-    Territory* Ontario_North = new Territory(2,"Ontario_North",  new Player(), 0);
+    Territory* Quebec_North = new Territory(2,"Quebec-North", new Player(), 20);
+    Territory* Quebec_Central = new Territory(2,"Quebec_Central", new Player(), 30);
+    Territory* Quebec_South = new Territory(2,"Quebec_South", new Player(), 5);
+    Territory* Ontario_South = new Territory(2, "Ontario_South", new Player(), 2);
+    Territory* Ontario_West = new Territory(2, "Ontario_West", new Player(), 5);
+    Territory* Ontario_North = new Territory(2,"Ontario_North",  new Player(), 9);
 
-    //put territory objects into an array arr
-    Territory arr[12]= {*New_Brunswick, *Prince_Edward_Island, *Nova_Scotia,
-                        *Newfoundland,*Labrador, *Quebec_North, *Quebec_Central,
-                        *Quebec_South,*Ontario_South, *Ontario_West, *Ontario_North};
+    //put territory objects into an vector territories
+    vector <Territory> terr ={*New_Brunswick, *Prince_Edward_Island, *Nova_Scotia,
+                              *Newfoundland,*Labrador, *Quebec_North, *Quebec_Central,
+                              *Quebec_South,*Ontario_South, *Ontario_West, *Ontario_North};
 
     std::cout << "\nPrinting all the Countries in Continents..." << std::endl;
-    const int size = 11;
-    for (int i = 0; i < size; i++) {
-        std::cout << "Continent " << arr[i].getterritory_continent()
-                  << ", " << "Country " << arr[i].getterritory_name()
-                  << ", Player: " << arr[i].getterritory_owner()->getName()
-                  << ", Armies:" << arr[i].getterritory_armycount() << std::endl;
+    for (int i = 0; i < terr.size(); i++) {
+        std::cout << "Continent " << terr[i].getterritory_continent()
+                  << ", " << "Country " << terr[i].getterritory_name()
+                  << ", Player: " << terr[i].getterritory_owner()->getName()
+                  << ", Armies:" << terr[i].getterritory_armycount() << std::endl;
     }
     std::cout << "\nNow, to test the whether they are connected or not...\n" << std::endl;
+
 
     //adding the borders
     Map* map = new Map(11);
@@ -79,9 +81,9 @@ int main() {
     //NotConnected->addBorder(9,10);
     NotConnected.toString();
     if (NotConnected.ValidateGraph() == true)
-        std::cout << "OUTPUT:: Continent is Connected\n" << std::endl;
+        std::cout << "OUTPUT:: Continents are Connected\n" << std::endl;
     else
-        std::cout << "OUTPUT:: Continent is NOT Connected\n" << std::endl;
+        std::cout << "OUTPUT:: Continents are NOT Connected\n" << std::endl;
 
     //to prevent memory leaks
     delete Samamoun;delete Jakelam;delete salhanyf;delete SalehaTrq;delete KeeganWoods;

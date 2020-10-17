@@ -2,6 +2,7 @@
 #include "map.h"
 #include <iostream>
 
+
 //constructors
 Player::Player() {
     name = " - ";
@@ -164,13 +165,13 @@ void Map::transverse(int u, bool visited[]) {
 //checks whether the nodes (transversal) are visible -> true
 //not visible -> false
 bool Map::ValidateGraph() {
-    bool* vis = new bool[vertices];
+    bool* visited = new bool[vertices];
     for (int u = 0; u < vertices; u++) {
         for (int i = 0; i < vertices; i++)
-            vis[i] = false;
-        transverse(u, vis);
+            visited[i] = false;
+        transverse(u, visited);
         for (int i = 0; i < vertices; i++) {
-            if (!vis[i]) //if there is a node, not visited by transversal, graph is not connected
+            if (!visited[i]) //if there is a node, not visited by transversal, graph is not connected
                 return false;
         }
     }
