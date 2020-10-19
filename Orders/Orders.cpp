@@ -1,8 +1,14 @@
 #pragma once
+<<<<<<< Updated upstream:Orders/Order.cpp
 #include "Order.h"
+=======
+#include "Orders.h"
+#include <iostream>
+
+>>>>>>> Stashed changes:Orders/Orders.cpp
 // Do to the length of this file all comments will be algorith mrealted. for more general comments check the Order.h file
 // abstract class parent class, no algorithm so for this class all comments are in Order.h
-	Order::Order() { isnull = true; };
+	Order::Order() {};
 	Order::Order(bool b) { isnull = b; };
 	Order::~Order() { isnull = true; };
 	Order::Order(const Order&) { 
@@ -31,7 +37,7 @@
 	}
 	bool Advanceorder::execute() {
 		if (validate()) {
-			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
+			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
 			return true;
 		}
 		return false;
@@ -43,14 +49,13 @@
 		delete orderplayer;
 	}
 	string Advanceorder::print()const {
-		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 	}
 	Advanceorder::Advanceorder(const Advanceorder& old) {
 		troopnum = new int(*old.troopnum);
 		sourceterritory = new Territory(*old.sourceterritory);
 		destinationterritory = new Territory(*old.destinationterritory);
 		orderplayer = new Player(*old.orderplayer);
-		cout << "this called\n";
 	}
 	Advanceorder& Advanceorder::operator = (const Advanceorder& old) {
 		cout <<"that is called\n";
@@ -79,7 +84,7 @@
 	}
 	bool Airliftorder::execute() {
 		if (validate()) {
-			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
+			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
@@ -108,12 +113,12 @@
 		return out;
 	}
 	string Airliftorder::print() const{
-		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 		return s;
 
 	}
 	string Blockadeorder::print()const {
-		string s = "this is a blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getTerritoryName() ;
+		string s = "this is a blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() ;
 		return s;
 	}
 	Blockadeorder::Blockadeorder(Player orderp, Territory destt) {
@@ -125,7 +130,7 @@
 	}
 	bool Blockadeorder::execute() {
 		if (validate()) {
-			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
@@ -148,10 +153,11 @@
 		return out;
 	}
 	string Bomborder::print() const {
-		string s = "this is a bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getTerritoryName();
+		string s = "this is a bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
 			return s;
 	}
 	Bomborder::Bomborder(Player orderp, Territory destt) {
+		cout << "in bomborder constructor";
 		orderplayer = new Player(orderp);
 		destinationterritory = new Territory(destt);
 	}
@@ -160,7 +166,7 @@
 	}
 	bool Bomborder::execute() {
 		if (validate()) {
-			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
@@ -185,7 +191,7 @@
 
 	}
 	string Deployorder::print() const {
-		string s = "this is a deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getTerritoryName();
+		string s = "this is a deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name();
 		return s;
 	}
 	Deployorder::Deployorder(Player orderp, int j, Territory destt) {
@@ -198,7 +204,7 @@
 	}
 	bool Deployorder::execute() {
 		if (validate()) {
-			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
@@ -291,6 +297,10 @@
 		out << o.print();
 		return out;
 	}
+<<<<<<< Updated upstream:Orders/Order.cpp
+=======
+
+>>>>>>> Stashed changes:Orders/Orders.cpp
 	//defualt constructor
 	//may vary l8r depending on how ptr is decided  for now...
 	//ptr is assigned a static array of Order objects and sets them all to null as you cant remove object antries
@@ -306,7 +316,11 @@
 	}
 	// copy constructor, should not be used in the context of hte program
 	Orderlist::Orderlist(const Orderlist& ol) {
+<<<<<<< Updated upstream:Orders/Order.cpp
 		ptr = new vector<Order*>(*ol.ptr);
+=======
+		ptr = new vector<Order*> (*ol.ptr);
+>>>>>>> Stashed changes:Orders/Orders.cpp
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
@@ -314,7 +328,11 @@
 		return *this;
 	}
 	//stream output operator, will need to be used in driver but not in the program
+<<<<<<< Updated upstream:Orders/Order.cpp
 
+=======
+	
+>>>>>>> Stashed changes:Orders/Orders.cpp
 	ostream& operator << (ostream& stream, Orderlist& o) {
 		string s = "the elements in this list are:\n";
 		stream << s;
@@ -322,8 +340,13 @@
 			stream << *o.ptr->at(i);
 			stream << "\n";
 		}
+<<<<<<< Updated upstream:Orders/Order.cpp
 		stream << "that is all the objects in this list\n";
 		return stream;
+=======
+			stream << "that is all the objects in this list\n";
+			return stream;
+>>>>>>> Stashed changes:Orders/Orders.cpp
 	}
 	//removes an object at location i and moves all non null objects ahead
 	bool Orderlist::remove(int i) {
@@ -341,6 +364,7 @@
 		ptr->erase(ptr->begin() + i + 1);
 		return true;
 	}
+<<<<<<< Updated upstream:Orders/Order.cpp
 	void Orderlist::add(Advanceorder& o) {
 		//this calls the copy constructor
 		ptr->push_back(new Advanceorder(o));
@@ -376,6 +400,13 @@
 		ptr->push_back(new Reinforcementorder(o));
 
 	}
+=======
+	void Orderlist::add(Order* o) {
+		//this calls the copy constructor
+		ptr->push_back(o);
+	}
+
+>>>>>>> Stashed changes:Orders/Orders.cpp
 	//executes orders and then deletes them all
 	void Orderlist::executelist() {
 		cout << "\n";
@@ -383,7 +414,11 @@
 			ptr->at(i)->execute();
 		}
 		cout << "\n";
+<<<<<<< Updated upstream:Orders/Order.cpp
 		for (int i = 0; i < ptr->size(); i = i + 0) {
+=======
+		for (int i = 0; i < ptr->size(); i= i+0) {
+>>>>>>> Stashed changes:Orders/Orders.cpp
 			remove(0);
 		}
 	}

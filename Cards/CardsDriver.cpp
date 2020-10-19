@@ -1,10 +1,11 @@
-#include <iostream>
 #include "Cards.cpp"
+#include "../Player/Player.cpp"
+#include "../Orders/Orders.cpp"
+#include "../Map/map.cpp"
+#include <iostream>
 #include <vector>
 #include <stdlib.h>
-#include "../Orders/Orderlist.cpp"
-#include "../Orders/dummy.cpp"
-#include "../Orders/Order.cpp"
+
 
 int main()
 {
@@ -13,6 +14,15 @@ int main()
     
     //Create a hand of cards
     Hand* handPtr = new Hand();
+
+    //create order list
+    Orderlist* orderListPtr = new Orderlist();
+
+    //create player
+    Player* playerPtr = new Player("Jon");
+
+    //create territory
+    Territory* territory = new Territory(1, "t1", playerPtr, 1);
     
     //Show deck contents  
     std::cout << "\nShowing Deck Contents... " << std::endl;
@@ -49,32 +59,12 @@ int main()
     std::cout << "\nShowing Hand Content... " << std::endl;
     std::cout << *handPtr;
 
-    //Play all 5 cards in the hand, showing the card played and the hand/deck sizes after each card played
-    std::cout << "\nPlaying each card in hand... \n" << std::endl;
-    Orderlist* orderListPtr = new Orderlist();
-    for(int i=0; i<5; i++)
-    {
-        handPtr->getHand()[0]->play(deckPtr, handPtr, orderListPtr);
-    }
+    //play the bomb card from hand
+    BombCard* bombCardSelectedByPlayer = new BombCard("Bomb Card");
+    bombCardSelectedByPlayer->play(deckPtr, handPtr, orderListPtr, playerPtr, territory);//problem with arguments! --> seg fault 11
 
-    //Show contents of orders list after cards have been played
-    std:cout << "\nDisplaying Orderlist contents... \n" <<std::endl;
-    std::cout << *orderListPtr;
-
-    //Show deck contents after crads have been played
-    std::cout << "\nShowing Deck Content... \n" << std::endl;
-    std:: cout << *deckPtr;
-
-    //Show hand contents after cards have been played
-    std::cout << "\nShowing hand content...\n" << std::endl;
-    std::cout << *handPtr;
-
-    delete(deckPtr);
-    delete(handPtr);
-    delete(orderListPtr);
-    deckPtr = NULL;
-    handPtr = NULL;
-    orderListPtr = NULL;
+    cout << "Showing orders list contents: ";
+    cout << *orderListPtr;
 
     return 0;
 }

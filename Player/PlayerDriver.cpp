@@ -1,17 +1,19 @@
+#include "Player.cpp"
+#include "../Map/map.cpp"
+#include "../Cards/Cards.cpp"
+#include "../Orders/Orders.cpp"
 #include <iostream> 
 #include <vector>
-#include "Player.cpp"
-#include "Map.cpp"
-#include "Order.cpp"
-#include "Orderlist.cpp"
-#include "Cards.cpp"
-
 using namespace std; 
 
 int main() {
     
     // creating a new player with a name
-    Player* a = new Player("John");
+    Player* a = new Player("John");  
+    Territory* t1 = new Territory(1, "t1", a, 1);
+    Territory* t2 = new Territory(1, "t2", a, 1);  
+    Order* advanceorder = new Advanceorder(1, *a, *t1, *t2);
+    Order* bombOrder = new Bomborder(*a, *t1);
     cout << endl << "The current number of players in the game: " << a->getPlayerCount() <<endl;
     
     // demonstrating the player owns a collection of territories
@@ -31,24 +33,15 @@ int main() {
     
     // testing toDefend method
     cout << "Territories to be defended: " << endl;
-    for(int i =0; i < 4; i++){
-        cout<< a->toDefend().at(i)->getTerritoryName() << endl;
-    }
+    cout << a->toString(a->toDefend()) << endl;
 
     // testing toAttack method
-    cout<< "Territories to be attacked: " << endl;
-    for(int i = 4; i < 8; i++){
-        cout<< a->toAttack().at(i)->getTerritoryName() << endl;
-    }
+    cout << "Territories to be attacked: " << endl;
+    cout << a->toString(a->toAttack()) << endl;
+
+    cout << "\nDone displaying ToAttack/Defend Territories";
 
     // testing issueOrder method
-    a->issueOrder();
-
-    // deleting created objects to prevent 
-    // memory leaks
-    delete(a);
-    delete(deckOfCards);
-    // avoid dangling pointers
-    a = NULL;
-    deckOfCards = NULL;
+    a->issueOrder(t1, t2, bombOrder);
+    a->issueOrder(t1, t2, advanceorder);
 }

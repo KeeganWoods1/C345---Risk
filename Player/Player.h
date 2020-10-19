@@ -1,12 +1,18 @@
 #pragma once
+#include "../Map/map.h"
+#include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Map.h"
-#include "Order.h"
-#include "Orderlist.h"
-#include "Cards.h"
 using namespace std;
+
+class Territory;
+class Order;
+class Orderlist;
+class Advanceorder;
+class Deck;
+class Hand;
 
 class Player
 {
@@ -21,7 +27,8 @@ class Player
     static const int MINARMIES;
 
     // player owns a collection of territories
-    vector<Territory*> territories;
+    vector<Territory*> territoriesToDefend;
+    vector<Territory*> territoriesToAttack;
 
     // player owns a hand of cards
     Hand* playerHand;
@@ -48,6 +55,9 @@ class Player
     // stream insertion operator
     friend ostream &operator << (ostream &output, const Player &o);
 
+    //stream insertion operator overload for printing a vector list of territory references
+    friend ostream& operator << (ostream& out, const vector<Territory*>& t);
+
     // method to set the name of player
     void setName(string name); 
     
@@ -73,11 +83,13 @@ class Player
     // method toAttack which returns a list 
     // of territories to attack
     vector<Territory*> toAttack();
+
+    string toString(vector<Territory*> t);
   
     // method issueOrder which creates an Order 
     // object and puts it in the player’s list 
     // of orders
-    void issueOrder();
+    void issueOrder(Territory* t1, Territory* t2, Order* order);
 };
 
 

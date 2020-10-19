@@ -1,7 +1,14 @@
+<<<<<<< Updated upstream:Map /MapDriver.cpp
 #pragma once
 #include "map.h"
 #include <vector>
 
+=======
+#include "map.cpp"
+#include "../Player/Player.cpp"
+#include "../Cards/Cards.cpp"
+#include "../Orders/Orders.cpp"
+>>>>>>> Stashed changes:Map/MapDriver.cpp
 using namespace std;
 
 //create new objects (continents, territories, player, armies)

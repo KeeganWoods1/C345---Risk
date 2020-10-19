@@ -1,11 +1,8 @@
-#include <iostream>
+#pragma once
 #include "Cards.h"
+#include <iostream>
 #include <vector>
 #include <stdlib.h>
-#include "../Orders/Orderlist.cpp"
-#include "../Orders/dummy.cpp"
-#include "../Orders/Order.cpp"
-
 using namespace std;
 
 //Card default constructor
@@ -105,15 +102,15 @@ BombCard::~BombCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void BombCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+void BombCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory)
 {
     vector<Card*> deckContainer = deck->getDeck();
-    Player* player = new Player("Owner of Bomb Card");
-    Territory* territory = new Territory("User-selected territory");
+    Player* p = new Player(*player);
+    Territory* t = new Territory(territory);
 
     //create order and add to orderlist
-    bombOrderPtr = new Bomborder(*player,*territory);
-    orderlist->add(*bombOrderPtr);
+    bombOrderPtr = new Bomborder(*p, *t);
+    orderlist->add(bombOrderPtr);
 
     //remove card from the hand
     //place card back in deck
@@ -122,10 +119,6 @@ void BombCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
 
     delete(player);
     delete(territory);
-    delete(bombOrderPtr);
-    player = NULL;
-    territory = NULL;
-    bombOrderPtr = NULL;
 }
 
 //copy constructor
@@ -164,14 +157,13 @@ ReinforcementCard::~ReinforcementCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void ReinforcementCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+void ReinforcementCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player)
 {
     vector<Card*> deckContainer = deck->getDeck();
-    Player* player = new Player("Owner of Reinforcement Card");
 
     //create order and add to orderlist
     reinforcementOrderPtr = new Reinforcementorder(*player);
-    orderlist->add(*reinforcementOrderPtr);
+    orderlist->add(reinforcementOrderPtr);
 
     //remove card from the hand
     //place card back in deck
@@ -220,15 +212,13 @@ BlockadeCard::~BlockadeCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void BlockadeCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+void BlockadeCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory)
 {
-    vector<Card*> deckContainer = deck->getDeck();
-    Player* player = new Player("Owner of Blockade Card");
-    Territory* territory = new Territory("User-selected territory");    
+    vector<Card*> deckContainer = deck->getDeck();   
 
     //create order and add to orderlist
     blockadeOrderPtr = new Blockadeorder(*player, *territory);
-    orderlist->add(*blockadeOrderPtr);
+    orderlist->add(blockadeOrderPtr);
 
     //remove card from the hand
     //place card back in deck
@@ -279,17 +269,20 @@ AirliftCard::~AirliftCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void AirliftCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+void AirliftCard::play(
+    Deck* deck, 
+    Hand* hand, 
+    Orderlist* orderlist, 
+    Player* player, 
+    Territory* territorySource, 
+    Territory* territoryDestination,
+    int i)
 {
     vector<Card*> deckContainer = deck->getDeck();
-    int i = 1;
-    Player* player = new Player("Owner of Airlift Card");
-    Territory* territorySource = new Territory("User-selected source territory");
-    Territory* territoryDestination = new Territory("User-selected destination territory");
     
     //create order and add to orderlist
     airliftOrderPtr = new Airliftorder(i, *territorySource, *territoryDestination, *player);
-    orderlist->add(*airliftOrderPtr);
+    orderlist->add(airliftOrderPtr);
 
     //remove card from the hand
     //place card back in deck
@@ -342,15 +335,13 @@ DiplomacyCard::~DiplomacyCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void DiplomacyCard::play(Deck* deck, Hand* hand, Orderlist* orderlist)
+void DiplomacyCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Player* targetPlayer)
 {
     vector<Card*> deckContainer = deck->getDeck();
-    Player* player = new Player("Owner of Diplomacy Card");
-    Player* targetPlayer = new Player("Player to negotiate with");
 
     //create order and add to orderlist
-    diplomacyOrderPtr = new Negotiateorder(*player,*targetPlayer);
-    orderlist->add(*diplomacyOrderPtr);
+    diplomacyOrderPtr = new Negotiateorder(*player, *targetPlayer);
+    orderlist->add(diplomacyOrderPtr);
 
     //remove card from the hand
     //place card back in deck
