@@ -2,20 +2,11 @@
 #include "../Player/Player.h"
 #include "../Map/map.h"
 #include <iostream>
-<<<<<<< Updated upstream:Orders/Order.h
-/*#include "../Player/Player.h"
-#include "../Map/map.h"*/
-#include "dummy.h"
-#include <vector>
-#include <sstream>
-=======
 using namespace std;
-
 
 class Player;
 class Territory;
 
->>>>>>> Stashed changes:Orders/Orders.h
 /*
 This is the header file for the orders 
 This class has an abstract orderclass and all its children orders [this is so they all fit in the same list]
@@ -239,10 +230,6 @@ private:
 	//player hwo issued the order
 	Player* orderplayer;
 };
-<<<<<<< Updated upstream:Orders/Order.h
-=======
-
->>>>>>> Stashed changes:Orders/Orders.h
 /*
 Class orderlist
 holds a list of orders and is able to execute the order, move them around, remove them and add them.
@@ -263,17 +250,7 @@ public:
 	// basic remove, move and add functions
 	bool remove(int i);
 	bool move(int i, int location);
-<<<<<<< Updated upstream:Orders/Order.h
-	void add(Advanceorder& o);
-	void add(Airliftorder& o);
-	void add(Blockadeorder& o);
-	void add(Bomborder& o);
-	void add(Deployorder& o);
-	void add(Negotiateorder& o);
-	void add(Reinforcementorder& o);
-=======
 	void add(Order* o);
->>>>>>> Stashed changes:Orders/Orders.h
 	//executes all orders in the lsit and then removes them
 	void executelist();
 private:

@@ -1,11 +1,7 @@
 #pragma once
-<<<<<<< Updated upstream:Orders/Order.cpp
-#include "Order.h"
-=======
 #include "Orders.h"
 #include <iostream>
 
->>>>>>> Stashed changes:Orders/Orders.cpp
 // Do to the length of this file all comments will be algorith mrealted. for more general comments check the Order.h file
 // abstract class parent class, no algorithm so for this class all comments are in Order.h
 	Order::Order() {};
@@ -297,10 +293,6 @@
 		out << o.print();
 		return out;
 	}
-<<<<<<< Updated upstream:Orders/Order.cpp
-=======
-
->>>>>>> Stashed changes:Orders/Orders.cpp
 	//defualt constructor
 	//may vary l8r depending on how ptr is decided  for now...
 	//ptr is assigned a static array of Order objects and sets them all to null as you cant remove object antries
@@ -316,11 +308,7 @@
 	}
 	// copy constructor, should not be used in the context of hte program
 	Orderlist::Orderlist(const Orderlist& ol) {
-<<<<<<< Updated upstream:Orders/Order.cpp
-		ptr = new vector<Order*>(*ol.ptr);
-=======
 		ptr = new vector<Order*> (*ol.ptr);
->>>>>>> Stashed changes:Orders/Orders.cpp
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
@@ -328,11 +316,7 @@
 		return *this;
 	}
 	//stream output operator, will need to be used in driver but not in the program
-<<<<<<< Updated upstream:Orders/Order.cpp
-
-=======
 	
->>>>>>> Stashed changes:Orders/Orders.cpp
 	ostream& operator << (ostream& stream, Orderlist& o) {
 		string s = "the elements in this list are:\n";
 		stream << s;
@@ -340,13 +324,8 @@
 			stream << *o.ptr->at(i);
 			stream << "\n";
 		}
-<<<<<<< Updated upstream:Orders/Order.cpp
-		stream << "that is all the objects in this list\n";
-		return stream;
-=======
 			stream << "that is all the objects in this list\n";
 			return stream;
->>>>>>> Stashed changes:Orders/Orders.cpp
 	}
 	//removes an object at location i and moves all non null objects ahead
 	bool Orderlist::remove(int i) {
@@ -364,49 +343,11 @@
 		ptr->erase(ptr->begin() + i + 1);
 		return true;
 	}
-<<<<<<< Updated upstream:Orders/Order.cpp
-	void Orderlist::add(Advanceorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Advanceorder(o));
-
-	}
-	void Orderlist::add(Airliftorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Airliftorder(o));
-
-	}
-	void Orderlist::add(Blockadeorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Blockadeorder(o));
-
-	}
-	void Orderlist::add(Bomborder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Bomborder(o));
-
-	}
-	void Orderlist::add(Deployorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Deployorder(o));
-
-	}
-	void Orderlist::add(Negotiateorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Negotiateorder(o));
-
-	}
-	void Orderlist::add(Reinforcementorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Reinforcementorder(o));
-
-	}
-=======
 	void Orderlist::add(Order* o) {
 		//this calls the copy constructor
 		ptr->push_back(o);
 	}
 
->>>>>>> Stashed changes:Orders/Orders.cpp
 	//executes orders and then deletes them all
 	void Orderlist::executelist() {
 		cout << "\n";
@@ -414,11 +355,7 @@
 			ptr->at(i)->execute();
 		}
 		cout << "\n";
-<<<<<<< Updated upstream:Orders/Order.cpp
-		for (int i = 0; i < ptr->size(); i = i + 0) {
-=======
 		for (int i = 0; i < ptr->size(); i= i+0) {
->>>>>>> Stashed changes:Orders/Orders.cpp
 			remove(0);
 		}
 	}

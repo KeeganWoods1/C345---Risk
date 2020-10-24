@@ -2,40 +2,6 @@
 #include "map.h"
 #include <iostream>
 
-<<<<<<< Updated upstream:Map /map.cpp
-
-//constructors
-Player::Player() {
-    name = " - ";
-}
-
-Player::Player(string player) {
-    name = player;
-}
-
-Player::Player(const Player* player) {}
-
-//assignment operator
-Player& Player::operator=(const Player& player)
-{
-    this->name = player.name;
-    return *this;
-}
-
-//destructor
-Player::~Player(){}
-
-string Player::getName() {
-    return name;
-}
-
-//sets player
-void Player::setName(string player) {
-    name = player;
-}
-
-=======
->>>>>>> Stashed changes:Map/map.cpp
 //Class Territory
 //constructors
 Territory::Territory() {

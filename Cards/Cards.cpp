@@ -162,7 +162,7 @@ void ReinforcementCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Playe
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    reinforcementOrderPtr = new Reinforcementorder(*player);
+    reinforcementOrderPtr = new Reinforcementorder(*player);//SEGMENTATION FAULT 11 !!!
     orderlist->add(reinforcementOrderPtr);
 
     //remove card from the hand
