@@ -59,6 +59,9 @@ int main() {
     map->addBorder(9,10);
     map->toString();
 
+    
+            // TODO: change ValidateGraph() function name to validate()  //
+
     //testing Map object
     if (map->ValidateGraph() == true)
         std::cout << "OUTPUT:: The Map is a connected graph.\n" << std::endl;
@@ -80,6 +83,9 @@ int main() {
     //NotConnected->addBorder(8,10);map->addBorder(8,9);
     //NotConnected->addBorder(9,10);
     NotConnected.toString();
+    
+        // TODO: change ValidateGraph() function name to validate()  //
+
     if (NotConnected.ValidateGraph() == true)
         std::cout << "OUTPUT:: Continents are Connected\n" << std::endl;
     else
