@@ -134,6 +134,7 @@ class Deck
         Card* dpcyCrdPtr;
         Card* blkdCrdPtr;
         Deck();
+        Deck(int);
         ~Deck();
         void draw(Hand* hand, Deck* deck);
         vector<Card*> getDeck();

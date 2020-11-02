@@ -358,20 +358,40 @@ Deck::Deck()
     deckOfCardsPtr->push_back(blkdCrdPtr);    
 }
 
+//parametrized constructor
+Deck::Deck(int numOfPlayers)
+{
+    cout << "Generating Deck..." << std::endl;
+
+    deckOfCardsPtr = new vector<Card*>();
+
+    //The more players there are, the larger the deck should be
+    for(int i=0; i<numOfPlayers; i++)
+    {
+        //push 5 cards into the deck
+        deckOfCardsPtr->push_back(new BombCard("Bomb Card"));
+        deckOfCardsPtr->push_back(new ReinforcementCard("Reinforcement Card"));
+        deckOfCardsPtr->push_back(new AirliftCard("Airlift Card"));
+        deckOfCardsPtr->push_back(new DiplomacyCard("Diplomacy Card"));
+        deckOfCardsPtr->push_back(new BlockadeCard("Blockade Card")); 
+    }  
+}
+
 //Destructor
 Deck::~Deck()
 {
-    delete(bombCrdPtr);
-    delete(reinCrdPtr);
-    delete(alftCrdPtr);
-    delete(dpcyCrdPtr);
-    delete(blkdCrdPtr);
+    for(int i=0; i<deckOfCardsPtr->size(); i++)
+    {
+        if(deckOfCardsPtr->at(i) != NULL)
+        {
+            delete(deckOfCardsPtr->at(i));
+        }
+    }
 
-    bombCrdPtr = NULL;
-    reinCrdPtr = NULL;
-    alftCrdPtr = NULL;
-    dpcyCrdPtr = NULL;
-    blkdCrdPtr = NULL;
+    if(deckOfCardsPtr != NULL)
+    {
+        delete(deckOfCardsPtr);
+    }
 }
 
 /*

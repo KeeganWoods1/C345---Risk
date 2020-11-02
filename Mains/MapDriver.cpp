@@ -44,15 +44,21 @@ int main() {
 
     //adding the borders
     Map* map = new Map(11);
-    map->addBorder(0,7); map->addBorder(0,1); map->addBorder(0,2);
+    map->addBorder(0,7); 
+    map->addBorder(0,1); 
+    map->addBorder(0,2);
     map->addBorder(1,2);
     map->addBorder(2,3);
-    map->addBorder(3,4);map->addBorder(3,6);
-    map->addBorder(4,6);map->addBorder(4,5);
+    map->addBorder(3,4);
+    map->addBorder(3,6);
+    map->addBorder(4,6);
+    map->addBorder(4,5);
     map->addBorder(5,6);
-    map->addBorder(6,7);map->addBorder(6,10);
+    map->addBorder(6,7);
+    map->addBorder(6,10);
     map->addBorder(7,8);
-    map->addBorder(8,10);map->addBorder(8,9);
+    map->addBorder(8,10);
+    map->addBorder(8,9);
     map->addBorder(9,10);
     map->toString();
 
@@ -72,10 +78,13 @@ int main() {
     //NotConnected.addBorder(0,7);NotConnected.addBorder(0,1); NotConnected.addBorder(0,2);
     //NotConnected.addBorder(1,2);
     NotConnected.addBorder(2,3);
-    NotConnected.addBorder(3,4);NotConnected.addBorder(3,6);
-    NotConnected.addBorder(4,6);NotConnected.addBorder(4,5);
+    NotConnected.addBorder(3,4);
+    NotConnected.addBorder(3,6);
+    NotConnected.addBorder(4,6);
+    NotConnected.addBorder(4,5);
     NotConnected.addBorder(5,6);
-    NotConnected.addBorder(6,7);NotConnected.addBorder(6,10);
+    NotConnected.addBorder(6,7);
+    NotConnected.addBorder(6,10);
     //NotConnected->addBorder(7,8);
     //NotConnected->addBorder(8,10);map->addBorder(8,9);
     //NotConnected->addBorder(9,10);

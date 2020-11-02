@@ -38,8 +38,8 @@ MapLoader::~MapLoader(){
 }
 
 //getter
-std::string MapLoader::getMap() {
-    return *map;
+Map* MapLoader::getMap() {
+    return validMap;
 }
 
 //Copy constructor
@@ -160,6 +160,7 @@ void MapLoader::loadMap(fstream& map_stream) {
         }//end of if for borders
 
     }//end of while for all map file
+
     if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
         cout << "Map is valid. Creating a map object..." << endl;
         CreateMap(continents, countries, borders);
@@ -181,6 +182,8 @@ void MapLoader::printVector(vector<std::string*> aVector) {
 
 //to return a map object
 Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
-    validMap = new Map();
+    validMap = new Map(countries.size());
+    cout << "************" << endl;
+    cout << *borders[0] << endl;
     return *validMap;
 }

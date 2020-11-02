@@ -19,7 +19,7 @@ class MapLoader {
         ~MapLoader();
 
         //Getter
-        string getMap();
+        Map* getMap();
 
         //Copy constructor
         MapLoader(const MapLoader&);
