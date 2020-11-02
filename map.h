@@ -116,6 +116,8 @@ public:
     //traverse the passed graph
     void transverse(int, bool*);
 
+            // TODO: change ValidateGraph() function name to validate()  //
+
     //verify a graph whether connected or not
     bool ValidateGraph();
 };

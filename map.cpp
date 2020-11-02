@@ -150,6 +150,9 @@ void Map::transverse(int u, bool visited[]) {
 //This method verifies whether the map is connected or not
 //checks whether the nodes (transversal) are visible -> true
 //not visible -> false
+
+        // TODO: change ValidateGraph() function name to validate()  //
+
 bool Map::ValidateGraph() {
     bool* visited = new bool[vertices];
     for (int u = 0; u < vertices; u++) {
