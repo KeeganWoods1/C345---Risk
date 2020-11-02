@@ -1,8 +1,9 @@
-#pragma once
-#include "Order.h"
+#include "Orders.h"
+#include <iostream>
+
 // Do to the length of this file all comments will be algorith mrealted. for more general comments check the Order.h file
 // abstract class parent class, no algorithm so for this class all comments are in Order.h
-	Order::Order() { isnull = true; };
+	Order::Order() {};
 	Order::Order(bool b) { isnull = b; };
 	Order::~Order() { isnull = true; };
 	Order::Order(const Order&) { 
@@ -19,11 +20,11 @@
 	Advanceorder::Advanceorder() {
 
 	}
-	Advanceorder::Advanceorder(int i, Player orderp, Territory destt, Territory souret): Order(true) {
-		troopnum = new int(i);
-		orderplayer = new Player(orderp);
-		destinationterritory = new Territory(destt);
-		sourceterritory = new Territory(souret);
+	Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret): Order(true) {
+		troopnum = i;
+		orderplayer = orderp;
+		destinationterritory = destt;
+		sourceterritory = souret;
 	}
 	bool Advanceorder::validate() {
 		// check if two terretories are adjacent and troopnum does not exceed terretories troop count;
@@ -31,26 +32,21 @@
 	}
 	bool Advanceorder::execute() {
 		if (validate()) {
-			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
+			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
 			return true;
 		}
 		return false;
 	};
 	Advanceorder::~Advanceorder() {
-		delete troopnum;
-		delete sourceterritory;
-		delete destinationterritory;
-		delete orderplayer;
 	}
 	string Advanceorder::print()const {
-		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 	}
 	Advanceorder::Advanceorder(const Advanceorder& old) {
 		troopnum = new int(*old.troopnum);
 		sourceterritory = new Territory(*old.sourceterritory);
 		destinationterritory = new Territory(*old.destinationterritory);
 		orderplayer = new Player(*old.orderplayer);
-		cout << "this called\n";
 	}
 	Advanceorder& Advanceorder::operator = (const Advanceorder& old) {
 		cout <<"that is called\n";
@@ -64,13 +60,11 @@
 		out << o.print();
 		return out;
 	}
-	Airliftorder::Airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp) {
-		troopnum = new int(i);
-		//when using map use copy constructors and new
-		sourceterritory = new Territory(sourcet);
-		destinationterritory = new Territory(destinationt);
-		orderplayer =new Player(orderp);
-
+	Airliftorder::Airliftorder(int* i, Territory* sourcet, Territory* destinationt, Player* orderp) {
+		troopnum = i;
+		sourceterritory = sourcet;
+		destinationterritory = destinationt;
+		orderplayer = orderp;
 	}
 	bool Airliftorder::validate() {
 		//check if both are player owned and match the troop num
@@ -79,16 +73,12 @@
 	}
 	bool Airliftorder::execute() {
 		if (validate()) {
-			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName() + "\n";
+			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
 	}
 	Airliftorder::~Airliftorder() {
-		delete troopnum;
-		delete sourceterritory;
-		delete destinationterritory;
-		delete orderplayer;
 	}
 	Airliftorder::Airliftorder(const Airliftorder& old) {
 		troopnum = new int(*old.troopnum);
@@ -108,31 +98,29 @@
 		return out;
 	}
 	string Airliftorder::print() const{
-		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getTerritoryName() + " from " + sourceterritory->getTerritoryName();
+		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 		return s;
 
 	}
 	string Blockadeorder::print()const {
-		string s = "this is a blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getTerritoryName() ;
+		string s = "this is a blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() ;
 		return s;
 	}
-	Blockadeorder::Blockadeorder(Player orderp, Territory destt) {
-		orderplayer = new Player(orderp);
-		destinationterritory = new Territory(destt);
+	Blockadeorder::Blockadeorder(Player* orderp, Territory* destt) {
+		orderplayer = orderp;
+		destinationterritory = destt;
 	}
 	bool Blockadeorder::validate() {
 		return true;
 	}
 	bool Blockadeorder::execute() {
 		if (validate()) {
-			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
 	}
 	Blockadeorder::~Blockadeorder() {
-		delete orderplayer;
-		delete destinationterritory;
 	}
 	Blockadeorder::Blockadeorder(const Blockadeorder& old) {
 		orderplayer = new Player(*old.orderplayer);
@@ -148,26 +136,26 @@
 		return out;
 	}
 	string Bomborder::print() const {
-		string s = "this is a bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getTerritoryName();
+		string s = "this is a bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
 			return s;
 	}
-	Bomborder::Bomborder(Player orderp, Territory destt) {
-		orderplayer = new Player(orderp);
-		destinationterritory = new Territory(destt);
+	Bomborder::Bomborder(Player* orderp, Territory* destt) {
+		orderplayer = orderp;
+		destinationterritory = destt;
 	}
 	bool Bomborder::validate() {
 		return true;
 	}
 	bool Bomborder::execute() {
 		if (validate()) {
-			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
 	}
 	Bomborder::~Bomborder() {
-		delete orderplayer;
-		delete destinationterritory;
+		if(orderplayer == NULL) {cout << "OrderPlayer is null" << endl;}
+		if(destinationterritory == NULL) {cout << "destinationterritory is null" << endl;}
 	}
 	Bomborder::Bomborder(const Bomborder& old) {
 		orderplayer = new Player(*old.orderplayer);
@@ -185,28 +173,25 @@
 
 	}
 	string Deployorder::print() const {
-		string s = "this is a deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getTerritoryName();
+		string s = "this is a deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name();
 		return s;
 	}
-	Deployorder::Deployorder(Player orderp, int j, Territory destt) {
-		orderplayer = new Player(orderp);
-		troopnum = new int(j);
-		destinationterritory = new Territory(destt);
+	Deployorder::Deployorder(Player* orderp, int* j, Territory* destt) {
+		orderplayer = orderp;
+		troopnum = j;
+		destinationterritory = destt;
 	}
 	bool Deployorder::validate() {
 		return true;
 	}
 	bool Deployorder::execute() {
 		if (validate()) {
-			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getTerritoryName() + "\n";
+			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
 			return true;
 		}
 		else return false;
 	}
 	Deployorder::~Deployorder() {
-		delete troopnum;
-		delete orderplayer;
-		delete destinationterritory;
 	}
 	Deployorder::Deployorder(const Deployorder& old) {
 		troopnum = new int(*old.troopnum);
@@ -228,9 +213,9 @@
 		string s = "this is a negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName();
 		return s;
 	}
-	Negotiateorder::Negotiateorder(Player orderp, Player destp) {
-		orderplayer = new Player(orderp);
-		otherplayer = new Player(destp);
+	Negotiateorder::Negotiateorder(Player* orderp, Player* destp) {
+		orderplayer = orderp;
+		otherplayer = destp;
 	}
 	bool Negotiateorder::validate() {
 		return true;
@@ -243,8 +228,6 @@
 		else return false;
 	}
 	Negotiateorder::~Negotiateorder() {
-		delete orderplayer;
-		delete otherplayer;
 	}
 	Negotiateorder::Negotiateorder(const Negotiateorder& old) {
 		orderplayer = new Player(*old.orderplayer);
@@ -263,8 +246,8 @@
 		string s = "this is a Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops";
 		return s;
 	}
-	Reinforcementorder::Reinforcementorder(Player orderp) {
-		orderplayer = new Player(orderp);
+	Reinforcementorder::Reinforcementorder(Player* orderp) {
+		orderplayer = orderp;
 	}
 	bool Reinforcementorder::validate() {
 		return true;
@@ -277,7 +260,6 @@
 		else return false;
 	}
 	Reinforcementorder::~Reinforcementorder() {
-		delete orderplayer;
 	}
 	Reinforcementorder::Reinforcementorder(const Reinforcementorder& old) {
 		orderplayer = new Player(*old.orderplayer);
@@ -304,9 +286,9 @@
 			delete ptr->at(i);
 		}
 	}
-	// copy constructor, should not be used in the context of hte program
+	// copy constructor, should not be used in the context of the program
 	Orderlist::Orderlist(const Orderlist& ol) {
-		ptr = new vector<Order*>(*ol.ptr);
+		ptr = new vector<Order*> (*ol.ptr);
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
@@ -314,7 +296,7 @@
 		return *this;
 	}
 	//stream output operator, will need to be used in driver but not in the program
-
+	
 	ostream& operator << (ostream& stream, Orderlist& o) {
 		string s = "the elements in this list are:\n";
 		stream << s;
@@ -322,8 +304,8 @@
 			stream << *o.ptr->at(i);
 			stream << "\n";
 		}
-		stream << "that is all the objects in this list\n";
-		return stream;
+			stream << "that is all the objects in this list\n";
+			return stream;
 	}
 	//removes an object at location i and moves all non null objects ahead
 	bool Orderlist::remove(int i) {
@@ -341,41 +323,12 @@
 		ptr->erase(ptr->begin() + i + 1);
 		return true;
 	}
-	void Orderlist::add(Advanceorder& o) {
+	void Orderlist::add(Order* o) {
+		cout << "Adding order to list" << endl;
 		//this calls the copy constructor
-		ptr->push_back(new Advanceorder(o));
-
+		ptr->push_back(o);
 	}
-	void Orderlist::add(Airliftorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Airliftorder(o));
 
-	}
-	void Orderlist::add(Blockadeorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Blockadeorder(o));
-
-	}
-	void Orderlist::add(Bomborder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Bomborder(o));
-
-	}
-	void Orderlist::add(Deployorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Deployorder(o));
-
-	}
-	void Orderlist::add(Negotiateorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Negotiateorder(o));
-
-	}
-	void Orderlist::add(Reinforcementorder& o) {
-		//this calls the copy constructor
-		ptr->push_back(new Reinforcementorder(o));
-
-	}
 	//executes orders and then deletes them all
 	void Orderlist::executelist() {
 		cout << "\n";
@@ -383,7 +336,7 @@
 			ptr->at(i)->execute();
 		}
 		cout << "\n";
-		for (int i = 0; i < ptr->size(); i = i + 0) {
+		for (int i = 0; i < ptr->size(); i= i+0) {
 			remove(0);
 		}
 	}

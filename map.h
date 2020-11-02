@@ -1,4 +1,5 @@
 #pragma once
+#include "Player.h"
 #include <iostream>
 using namespace std;
 
@@ -11,38 +12,12 @@ using namespace std;
 * of the circle that will be put on that country
 */
 
+class Player;
 
 /*
  * manually creating territories, and using the 2d array adjacency array to find whether connected or not.
  *
  */
-class Player {
-private:
-    //player name
-    string name;
-
-public:
-    //default constructor
-    Player();
-
-    //one parameter constructor
-    Player(string);
-
-    //copy constructor
-    Player(const Player*);
-
-    //assignment operator
-    Player& operator = (const Player&);
-
-    //destructor
-    ~Player();
-
-    //getter
-    string getName();
-
-    //setter
-    void setName(string);
-};
 
 //declaration of Territory class
 class Territory {
@@ -60,6 +35,7 @@ private:
     int territory_armycount;
 
 public:
+
     //default constructor
     Territory();
 
@@ -70,6 +46,9 @@ public:
 
     //assignment operator
     Territory& operator = (const Territory&);
+
+    //insertion operator
+    friend ostream& operator << (ostream& out, const Territory& t);
 
     //destructor
     ~Territory();
@@ -97,6 +76,8 @@ public:
 
     //army count setter
     void setterritory_armycount(int);
+
+    string toString();
 
 };
 

@@ -1,19 +1,19 @@
-#include"../Orders/Order.h"
-#include "../Orders/dummy.h"
+#pragma once
+#include "Orders.h"
+#include "Player.h"
+#include "map.h"
 #include<vector>
 #include<iostream>
 
-//TODO: add stream insertion operators
-
-class Order;
-class Bomborder;
-class Reinforcementorder;
-class Blockadeorder;
-class Negotiateorder;
-class Airliftorder;
-class Orderlist;
 class Deck;
 class Hand;
+class Order;
+class Orderlist;
+class Advanceorder;
+class Airliftorder;
+class Bomborder;
+class Blockadeorder;
+class Negotiateorder;
 
 
 class Card
@@ -23,7 +23,7 @@ protected:
 public:
     Card();
     Card(string name);
-    ~Card();
+    virtual ~Card();
     virtual void play(Deck* deck, Hand* hand, Orderlist* orderList);
     string getName();
     Card* find(Hand* hand, string cardName);
@@ -42,7 +42,7 @@ private:
 public:
     BombCard(string name);
     ~BombCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    void play(Deck* deck, Player* player, Territory* territory);
     //copy ocnstructor
 	BombCard(const BombCard& c);
 	//assignment operator
@@ -52,11 +52,11 @@ public:
 class ReinforcementCard : public Card
 {
 private:
-    Reinforcementorder* reinforcementOrderPtr;
+    Order* reinforcementOrderPtr;
 public:
     ReinforcementCard(string name);
     ~ReinforcementCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    void play(Deck* deck, Player* player);
     //copy ocnstructor
 	ReinforcementCard(const ReinforcementCard& c);
 	//assignment operator
@@ -66,11 +66,11 @@ public:
 class BlockadeCard : public Card
 {
 private:
-    Blockadeorder* blockadeOrderPtr;
+    Order* blockadeOrderPtr;
 public:
     BlockadeCard(string name);
     ~BlockadeCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    void play(Deck* deck, Player* player, Territory* territory);
     //copy ocnstructor
 	BlockadeCard(const BlockadeCard& c);
 	//assignment operator
@@ -80,11 +80,11 @@ public:
 class AirliftCard : public Card
 {
 private:
-    Airliftorder* airliftOrderPtr;
+    Order* airliftOrderPtr;
 public:
     AirliftCard(string name);
     ~AirliftCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    void play( Deck* deck, Player* player, Territory* territorySource, Territory* territoryDestination, int* i);
     //copy ocnstructor
 	AirliftCard(const AirliftCard& c);
 	//assignment operator
@@ -94,11 +94,11 @@ public:
 class DiplomacyCard : public Card
 {
 private:
-    Negotiateorder* diplomacyOrderPtr;
+    Order* diplomacyOrderPtr;
 public:
     DiplomacyCard(string name);
     ~DiplomacyCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    void play(Deck* deck, Player* player, Player* targetPlayer);
     //copy ocnstructor
 	DiplomacyCard(const DiplomacyCard& c);
 	//assignment operator
@@ -112,7 +112,7 @@ class Hand
     public:
         Hand();
         ~Hand();
-        vector<Card*> getHand();
+        vector<Card*> getHandContainer();
         void setHand(vector<Card*> h);
         //copy ocnstructor
         Hand(const Hand& h);

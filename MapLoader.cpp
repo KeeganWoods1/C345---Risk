@@ -1,11 +1,4 @@
-//
-// The Map loader should:
-// 1- read and load any map file
-// 2- Store the map as a graph data structure (Part 1)
-// 3- read any text file (even the ones that do not constitute a valid map)
-//
 #include "MapLoader.h"
-#include "../Map/map.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -188,6 +181,6 @@ void MapLoader::printVector(vector<std::string*> aVector) {
 
 //to return a map object
 Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
-    validMap = new Map(continents, countries, borders);
+    validMap = new Map();
     return *validMap;
 }

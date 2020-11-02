@@ -1,37 +1,5 @@
-#pragma once
 #include "map.h"
 #include <iostream>
-
-
-//constructors
-Player::Player() {
-    name = " - ";
-}
-
-Player::Player(string player) {
-    name = player;
-}
-
-Player::Player(const Player* player) {}
-
-//assignment operator
-Player& Player::operator=(const Player& player)
-{
-    this->name = player.name;
-    return *this;
-}
-
-//destructor
-Player::~Player(){}
-
-string Player::getName() {
-    return name;
-}
-
-//sets player
-void Player::setName(string player) {
-    name = player;
-}
 
 //Class Territory
 //constructors
@@ -67,6 +35,14 @@ Territory& Territory::operator=(const Territory& territory)
     return *this;
 }
 
+//Stream insertion operator overload to output a territory
+ostream& operator << (ostream& out, const Territory& t)
+{
+    out << "Territory of " << t.territory_name << endl;
+
+    return out;
+}
+
 //destructor
 Territory::~Territory() {
     territory_owner = NULL;
@@ -85,9 +61,19 @@ Player* Territory::getterritory_owner() {
     return territory_owner;
 }
 
-//setters
+
 int Territory::getterritory_armycount() {
     return territory_armycount;
+}
+
+//setters
+void Territory::setterritory_name(string s) {
+    territory_name = s;
+}
+
+string Territory::toString()
+{
+    return territory_name;
 }
 
 //constructors
@@ -128,7 +114,7 @@ void Map::addBorder(int i, int j) {
 
 //to display ythe matrix
 void Map::toString() {
-    std::cout << "                  Output Matrix" << std::endl;
+    std::cout << "Output Matrix: " << std::endl;
     std::cout << "     ";
     for (int x = 0; x < vertices; x++) {
         std::cout << x << "   ";

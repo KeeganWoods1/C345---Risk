@@ -1,16 +1,18 @@
 #pragma once
+#include "Player.h"
+#include "map.h"
 #include <iostream>
-/*#include "../Player/Player.h"
-#include "../Map/map.h"*/
-#include "dummy.h"
-#include <vector>
-#include <sstream>
+using namespace std;
+
+class Player;
+class Territory;
+
 /*
 This is the header file for the orders 
 This class has an abstract orderclass and all its children orders [this is so they all fit in the same list]
 
 */
-using namespace std;
+
 class Order {
 public:
 	//constructor
@@ -22,7 +24,7 @@ public:
 	//abstract method for execute
 	virtual bool execute() = 0;
 	//destructor
-	~Order();
+	virtual ~Order();
 	//copy ocnstructor
 	Order(const Order&);
 	//assignment operator
@@ -45,7 +47,7 @@ class Advanceorder : public Order {
 public:
 	//constructor
 	Advanceorder();
-	Advanceorder(int i, Player orderp, Territory destt, Territory souret);
+	Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret);
 	//mehtod to validate if the conditions are met to execute the function
 	bool validate();
 	//method to execute the order
@@ -75,7 +77,7 @@ private:
 class Airliftorder : public Order {
 public:
 	//constructor
-	Airliftorder(int i, Territory sourcet, Territory destinationt, Player orderp);
+	Airliftorder(int* i, Territory* sourcet, Territory* destinationt, Player* orderp);
 	//makes sure the terrtories are both owned by the player and the number of troops doest not leave the territory with <1 troops
 	bool validate ();
 	//executes the order
@@ -105,7 +107,7 @@ private:
 class Blockadeorder : public Order {
 public:
 	//constructor
-	Blockadeorder(Player orderplayer, Territory destt);
+	Blockadeorder(Player* orderplayer, Territory* destt);
 	//makes sure the territory is owned by the player
 	bool validate();
 	//executes the order
@@ -130,7 +132,7 @@ private:
 class Bomborder : public Order {
 public:
 	//constructor
-	Bomborder(Player orderp, Territory destt);
+	Bomborder(Player* orderp, Territory* destt);
 	//no real validation, simply halves units rounded down (even if its the players territory)
 	bool validate();
 	//executes order
@@ -156,7 +158,7 @@ private:
 class Deployorder : public Order {
 public:
 	//constructor
-	Deployorder(Player orderp, int troopnum, Territory destt);
+	Deployorder(Player* orderp, int* troopnum, Territory* destt);
 	//makes sure the player owns the territory and that the ammount oftroops palced does not exceed the mamount that he has
 	bool validate();
 	//execute order
@@ -183,7 +185,7 @@ private:
 class Negotiateorder : public Order {
 public:
 	//constructor
-	Negotiateorder(Player orderp, Player destp);
+	Negotiateorder(Player* orderp, Player* destp);
 	//makes sure the two players are not the same player
 	bool validate();
 	//exectues order
@@ -209,7 +211,7 @@ private:
 class Reinforcementorder : public Order {
 public:
 	//constructor
-	Reinforcementorder(Player orderp);
+	Reinforcementorder(Player* orderp);
 	//no validation required
 	bool validate();
 	//excecutes order
@@ -248,13 +250,7 @@ public:
 	// basic remove, move and add functions
 	bool remove(int i);
 	bool move(int i, int location);
-	void add(Advanceorder& o);
-	void add(Airliftorder& o);
-	void add(Blockadeorder& o);
-	void add(Bomborder& o);
-	void add(Deployorder& o);
-	void add(Negotiateorder& o);
-	void add(Reinforcementorder& o);
+	void add(Order* o);
 	//executes all orders in the lsit and then removes them
 	void executelist();
 private:

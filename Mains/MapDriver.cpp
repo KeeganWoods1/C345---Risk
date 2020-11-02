@@ -1,7 +1,4 @@
-#pragma once
 #include "map.h"
-#include <vector>
-
 using namespace std;
 
 //create new objects (continents, territories, player, armies)
