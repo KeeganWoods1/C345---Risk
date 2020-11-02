@@ -1,27 +1,24 @@
-#include "Orders.cpp"
-#include "../Map/map.cpp"
-#include "../Cards/Cards.cpp"
-#include "../Orders/Orders.cpp"
-#include "../Player/Player.cpp"
+#include "Orders.h"
 #include <iostream>
 
 using namespace std;
 
 
 int main() {
+    int* numOfTroops = new int(5);
     Player *player1 = new Player("alpha");
     Player *player2 = new Player("beta");
     Territory *madagascar = new Territory(1, "Madagascar", player1, 1);
     Territory *nile = new Territory(1, "Nile", player1, 1);  
     Territory *antartica = new Territory(1, "antartica", player2, 1);
     Territory *penguin = new Territory(1, "penguin", player2, 1);
-    Advanceorder *advanceOrder = new Advanceorder(13,*player1,*madagascar,*nile);
-    Airliftorder *airliftOrder = new Airliftorder(6, *antartica, *penguin, *player2);
-    Blockadeorder *blockadeOrder = new Blockadeorder(*player1, *antartica);
-    Bomborder *bombOrder = new Bomborder(*player2, *nile);
-    Deployorder *deployOrder = new Deployorder(*player1, 23, *nile);
-    Negotiateorder *negotiateOrder = new Negotiateorder(*player1, *player2);
-    Reinforcementorder *reinfOrder = new Reinforcementorder(*player1);
+    Advanceorder *advanceOrder = new Advanceorder(numOfTroops,player1,madagascar,nile);
+    Airliftorder *airliftOrder = new Airliftorder(numOfTroops, antartica, penguin, player2);
+    Blockadeorder *blockadeOrder = new Blockadeorder(player1, antartica);
+    Bomborder *bombOrder = new Bomborder(player2, nile);
+    Deployorder *deployOrder = new Deployorder(player1, numOfTroops, nile);
+    Negotiateorder *negotiateOrder = new Negotiateorder(player1, player2);
+    Reinforcementorder *reinfOrder = new Reinforcementorder(player1);
     Orderlist *orderList1 = new Orderlist();
     Orderlist *orderList2;
     orderList2 = orderList1;
@@ -41,20 +38,6 @@ int main() {
     cout << "\n\nthis is the assignment\n" << *orderList2;
     orderList1->executelist();
     cout << "\n\n" << *orderList1;
-    delete player1;
-    delete player2;
-    delete madagascar;
-    delete nile;
-    delete antartica;
-    delete penguin;
-    delete advanceOrder;
-    delete airliftOrder;
-    delete bombOrder;
-    delete blockadeOrder;
-    delete negotiateOrder;
-    delete reinfOrder;
-    delete orderList2;
-    delete orderList1;
-    //delete orderList12;
+    
     return 0;
 };

@@ -1,8 +1,4 @@
-#include "MapLoader.cpp"
-#include "../Map/map.cpp"
-#include "../Player/Player.cpp"
-#include "../Cards/Cards.cpp"
-#include "../Orders/Orders.cpp"
+#include "MapLoader.h"
 #include <iostream>
 #include <string>
 using namespace std;

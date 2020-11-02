@@ -1,7 +1,4 @@
-#include "map.cpp"
-#include "../Player/Player.cpp"
-#include "../Cards/Cards.cpp"
-#include "../Orders/Orders.cpp"
+#include "map.h"
 using namespace std;
 
 //create new objects (continents, territories, player, armies)

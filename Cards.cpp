@@ -1,4 +1,3 @@
-#pragma once
 #include "Cards.h"
 #include <iostream>
 #include <vector>
@@ -35,7 +34,7 @@ string Card::getName()
 */
 Card* Card::find(Hand* hand, string cardName)
 {
-    vector<Card*> handContainer = hand->getHand();
+    vector<Card*> handContainer = hand->getHandContainer();
 
     for(int i=0; i<handContainer.size(); i++)
     {
@@ -91,6 +90,7 @@ BombCard::BombCard(string n)
 //BombCard destructor
 BombCard::~BombCard()
 {
+    if (bombOrderPtr == NULL) return;
     delete(bombOrderPtr);
     bombOrderPtr = NULL;
 }
@@ -102,23 +102,19 @@ BombCard::~BombCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void BombCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory)
+void BombCard::play(Deck* deck, Player* player, Territory* territory)
 {
+    cout << "In Play() method" << endl;
     vector<Card*> deckContainer = deck->getDeck();
-    Player* p = new Player(*player);
-    Territory* t = new Territory(territory);
 
     //create order and add to orderlist
-    bombOrderPtr = new Bomborder(*p, *t);
-    orderlist->add(bombOrderPtr);
+    bombOrderPtr = new Bomborder(player, territory);
+    player->getPlayerlist()->add(bombOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deckContainer.push_back(find(hand, "Bomb Card"));
+    deckContainer.push_back(find(player->getHand(), "Bomb Card"));
     deck->setDeck(deckContainer);
-
-    delete(player);
-    delete(territory);
 }
 
 //copy constructor
@@ -146,6 +142,7 @@ ReinforcementCard::ReinforcementCard(string n)
 //ReinforcementCard destructor
 ReinforcementCard::~ReinforcementCard()
 {
+    if (reinforcementOrderPtr == NULL) return;
     delete(reinforcementOrderPtr);
     reinforcementOrderPtr = NULL;
 }
@@ -157,23 +154,18 @@ ReinforcementCard::~ReinforcementCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void ReinforcementCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player)
+void ReinforcementCard::play(Deck* deck, Player* player)
 {
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    reinforcementOrderPtr = new Reinforcementorder(*player);//SEGMENTATION FAULT 11 !!!
-    orderlist->add(reinforcementOrderPtr);
+    reinforcementOrderPtr = new Reinforcementorder(player);
+    player->getPlayerlist()->add(reinforcementOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deckContainer.push_back(find(hand, "Reinforcement Card"));
+    deckContainer.push_back(find(player->getHand(), "Reinforcement Card"));
     deck->setDeck(deckContainer);
-
-    delete(player);
-    delete(reinforcementOrderPtr);
-    player =NULL;
-    reinforcementOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -201,6 +193,7 @@ BlockadeCard::BlockadeCard(string n)
 //BlockadeCard destructor
 BlockadeCard::~BlockadeCard()
 {
+    if (blockadeOrderPtr == NULL) return;
     delete(blockadeOrderPtr);
     blockadeOrderPtr = NULL;
 }
@@ -212,25 +205,18 @@ BlockadeCard::~BlockadeCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void BlockadeCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory)
+void BlockadeCard::play(Deck* deck, Player* player, Territory* territory)
 {
     vector<Card*> deckContainer = deck->getDeck();   
 
     //create order and add to orderlist
-    blockadeOrderPtr = new Blockadeorder(*player, *territory);
-    orderlist->add(blockadeOrderPtr);
+    blockadeOrderPtr = new Blockadeorder(player, territory);
+    player->getPlayerlist()->add(blockadeOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deckContainer.push_back(find(hand, "Blockade Card"));
+    deckContainer.push_back(find(player->getHand(), "Blockade Card"));
     deck->setDeck(deckContainer);
-
-    delete(player);
-    delete(territory);
-    delete(blockadeOrderPtr);
-    player = NULL;
-    territory = NULL;
-    blockadeOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -258,6 +244,7 @@ AirliftCard::AirliftCard(string n)
 //AirliftCard destructor
 AirliftCard::~AirliftCard()
 {
+    if (airliftOrderPtr == NULL) return;
     delete(airliftOrderPtr);
     airliftOrderPtr = NULL;
 }
@@ -269,34 +256,18 @@ AirliftCard::~AirliftCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void AirliftCard::play(
-    Deck* deck, 
-    Hand* hand, 
-    Orderlist* orderlist, 
-    Player* player, 
-    Territory* territorySource, 
-    Territory* territoryDestination,
-    int i)
+void AirliftCard::play( Deck* deck, Player* player, Territory* territorySource, Territory* territoryDestination, int* i)
 {
     vector<Card*> deckContainer = deck->getDeck();
     
     //create order and add to orderlist
-    airliftOrderPtr = new Airliftorder(i, *territorySource, *territoryDestination, *player);
-    orderlist->add(airliftOrderPtr);
+    airliftOrderPtr = new Airliftorder(i, territorySource, territoryDestination, player);
+    player->getPlayerlist()->add(airliftOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deckContainer.push_back(find(hand, "Airlift Card"));  
+    deckContainer.push_back(find(player->getHand(), "Airlift Card"));  
     deck->setDeck(deckContainer);
-
-    delete(player);
-    delete(territorySource);
-    delete(territoryDestination);
-    delete(airliftOrderPtr);
-    player = NULL;
-    territorySource = NULL;
-    territoryDestination = NULL;
-    airliftOrderPtr =NULL;
 }
 
 //copy ocnstructor
@@ -324,6 +295,7 @@ DiplomacyCard::DiplomacyCard(string n)
 //DiplomacyCard destructor
 DiplomacyCard::~DiplomacyCard()
 {
+    if (diplomacyOrderPtr == NULL) return;
     delete(diplomacyOrderPtr);
     diplomacyOrderPtr = NULL;
 }
@@ -335,25 +307,18 @@ DiplomacyCard::~DiplomacyCard()
 *
 * @params Deck*, Hand*, Orderlist*
 */
-void DiplomacyCard::play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Player* targetPlayer)
+void DiplomacyCard::play(Deck* deck, Player* player, Player* targetPlayer)
 {
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    diplomacyOrderPtr = new Negotiateorder(*player, *targetPlayer);
-    orderlist->add(diplomacyOrderPtr);
+    diplomacyOrderPtr = new Negotiateorder(player, targetPlayer);
+    player->getPlayerlist()->add(diplomacyOrderPtr);
 
     //remove card from the hand
     //place card back in deck
-    deckContainer.push_back(find(hand, "Diplomacy Card"));
+    deckContainer.push_back(find(player->getHand(), "Diplomacy Card"));
     deck->setDeck(deckContainer);
-
-    delete(player);
-    delete(targetPlayer);
-    delete(diplomacyOrderPtr);
-    player = NULL;
-    targetPlayer = NULL;
-    diplomacyOrderPtr = NULL;
 }
 
 //copy ocnstructor
@@ -420,7 +385,7 @@ void Deck::draw(Hand* hand, Deck* deck)
     std::cout << "\nDrawing Card" << std::endl;
     
     //Define the vector/vector arrays containing the hand/deck cards respectively
-    vector<Card*> handContainer = hand->getHand();
+    vector<Card*> handContainer = hand->getHandContainer();
     vector<Card*> deckContainer = deck->getDeck();
     
     //Random valid index value to be used to draw cards at random
@@ -509,7 +474,7 @@ Hand::~Hand()
 }
 
 //Accessor
-vector<Card*> Hand::getHand()
+vector<Card*> Hand::getHandContainer()
 {
     return *this->handOfCardsPtr;
 }

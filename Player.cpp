@@ -1,4 +1,3 @@
-#pragma once
 #include "Player.h"
 #include <iostream>
 #include <string>
@@ -166,10 +165,9 @@ vector<Territory*> Player::toAttack()
 
 // definition of issueOrder which creates a specific Order 
 // object and adds it to the player's list of orders
-void Player::issueOrder(Territory* t1, Territory* t2, Order* order)
+void Player::issueOrder(Order* order)
 {
-    //Advanceorder* o1 = new Advanceorder(1, *this,  *t1, *t2);
     playerOlist->add(order);
     cout << endl << "After adding an order to the orderlist, the list is: " << endl;
-    cout << playerOlist << endl;
+    cout << *playerOlist << endl;
 }

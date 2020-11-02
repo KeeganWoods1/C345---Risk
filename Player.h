@@ -1,7 +1,7 @@
 #pragma once
-#include "../Map/map.h"
-#include "../Orders/Orders.h"
-#include "../Cards/Cards.h"
+#include "map.h"
+#include "Orders.h"
+#include "Cards.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -89,7 +89,7 @@ class Player
     // method issueOrder which creates an Order 
     // object and puts it in the player’s list 
     // of orders
-    void issueOrder(Territory* t1, Territory* t2, Order* order);
+    void issueOrder(Order* order);
 };
 
 

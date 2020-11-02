@@ -1,9 +1,9 @@
 #pragma once
-#include"../Orders/Orders.h"
+#include "Orders.h"
+#include "Player.h"
+#include "map.h"
 #include<vector>
 #include<iostream>
-
-//TODO: add stream insertion operators
 
 class Deck;
 class Hand;
@@ -42,7 +42,7 @@ private:
 public:
     BombCard(string name);
     ~BombCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory);
+    void play(Deck* deck, Player* player, Territory* territory);
     //copy ocnstructor
 	BombCard(const BombCard& c);
 	//assignment operator
@@ -56,7 +56,7 @@ private:
 public:
     ReinforcementCard(string name);
     ~ReinforcementCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player);
+    void play(Deck* deck, Player* player);
     //copy ocnstructor
 	ReinforcementCard(const ReinforcementCard& c);
 	//assignment operator
@@ -70,7 +70,7 @@ private:
 public:
     BlockadeCard(string name);
     ~BlockadeCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Territory* territory);
+    void play(Deck* deck, Player* player, Territory* territory);
     //copy ocnstructor
 	BlockadeCard(const BlockadeCard& c);
 	//assignment operator
@@ -84,14 +84,7 @@ private:
 public:
     AirliftCard(string name);
     ~AirliftCard();
-    void play(
-        Deck* deck, 
-        Hand* hand, 
-        Orderlist* orderlist, 
-        Player* player, 
-        Territory* territorySource, 
-        Territory* territoryDestination,
-        int i);
+    void play( Deck* deck, Player* player, Territory* territorySource, Territory* territoryDestination, int* i);
     //copy ocnstructor
 	AirliftCard(const AirliftCard& c);
 	//assignment operator
@@ -105,7 +98,7 @@ private:
 public:
     DiplomacyCard(string name);
     ~DiplomacyCard();
-    void play(Deck* deck, Hand* hand, Orderlist* orderlist, Player* player, Player* targetPlayer);
+    void play(Deck* deck, Player* player, Player* targetPlayer);
     //copy ocnstructor
 	DiplomacyCard(const DiplomacyCard& c);
 	//assignment operator
@@ -119,7 +112,7 @@ class Hand
     public:
         Hand();
         ~Hand();
-        vector<Card*> getHand();
+        vector<Card*> getHandContainer();
         void setHand(vector<Card*> h);
         //copy ocnstructor
         Hand(const Hand& h);

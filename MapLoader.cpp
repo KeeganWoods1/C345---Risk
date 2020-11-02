@@ -1,4 +1,3 @@
-#pragma once
 #include "MapLoader.h"
 #include <iostream>
 #include <fstream>
