@@ -34,7 +34,7 @@ class MapLoader {
         void loadMap(fstream&);
 
         //to return a map object
-        Map CreateMap(vector<string*>, vector<string*>, vector<string*>);
+        Map* CreateMap(vector<string*>, vector<string*>, vector<string*>);
 
         //to print out a vector content
         void printVector(vector<std::string*>);

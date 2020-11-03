@@ -180,7 +180,7 @@ void MapLoader::printVector(vector<std::string*> aVector) {
 }
 
 //to return a map object
-Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
+Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
 
     validMap = new Map(countries.size());
     vector<int> brdrsList;
@@ -206,12 +206,6 @@ Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries
                 brdrsList.push_back(std::stoi(nextBorder, nullptr));
                 nextBorder = ""; 
             }
-            else 
-            {
-                cout << "here";
-                nextBorder = "";
-            }
-
         }
         //add borders to map object
         for( int k =1; k<brdrsList.size(); k++)
@@ -222,5 +216,5 @@ Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries
     }
  
     cout << "************" << endl;
-    return *validMap;
+    return validMap;
 }
