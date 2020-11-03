@@ -17,9 +17,5 @@ int main() {
     //testing toString method
     cout << *mapLoader;
 
-    //to avoid memory leak
-    delete mapLoader;
-    mapLoader= nullptr;
-
     return 0;
 }
