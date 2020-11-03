@@ -90,6 +90,11 @@ private:
 
     //int to store number of vertices (territories)
     int vertices;
+    
+    //int to store number of vertices (continents)
+    int continentVertices;
+
+    vector<Territory>* territoryListPtr;
 
 public:
     //default constructor
@@ -116,8 +121,6 @@ public:
     //traverse the passed graph
     void transverse(int, bool*);
 
-            // TODO: change ValidateGraph() function name to validate()  //
-
     //verify a graph whether connected or not
-    bool ValidateGraph();
+    bool Validate();
 };

@@ -110,7 +110,6 @@ Map& Map::operator=(const Map& map)
 void Map::addBorder(int i, int j) {
     adjacent_matrix[i][j] = true;
     adjacent_matrix[j][i] = true;
-    cout << "done addBoarder()" << endl;
 }
 
 //to display ythe matrix
@@ -152,9 +151,8 @@ void Map::transverse(int u, bool visited[]) {
 //checks whether the nodes (transversal) are visible -> true
 //not visible -> false
 
-        // TODO: change ValidateGraph() function name to validate()  //
-
-bool Map::ValidateGraph() {
+bool Map::Validate() {
+    //Check that territories form a connected graph
     bool* visited = new bool[vertices];
     for (int u = 0; u < vertices; u++) {
         for (int i = 0; i < vertices; i++)
@@ -165,6 +163,9 @@ bool Map::ValidateGraph() {
                 return false;
         }
     }
+    //TODO:check that continents form a connected sub-graph
+    
+
     return true;
 }
 
