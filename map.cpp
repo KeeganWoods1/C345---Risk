@@ -110,6 +110,7 @@ Map& Map::operator=(const Map& map)
 void Map::addBorder(int i, int j) {
     adjacent_matrix[i][j] = true;
     adjacent_matrix[j][i] = true;
+    cout << "done addBoarder()" << endl;
 }
 
 //to display ythe matrix

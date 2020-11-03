@@ -81,26 +81,25 @@ void MapLoader::loadMap(fstream& map_stream) {
 
         //until reaching "[continents]"
         if (line.find("[continents]") != -1){
-            cout << "Found [continents]" << endl;
+            cout << "\nFound [continents]" << endl;
             continentsFound= true;
             counter= 0;
 
             //reading until end of continents
             while (line.find("[countries]") == -1){
                 getline(map_stream,line, '\n');
-                if (line.empty()){
+                if (line.size() <= 1){
                     break;
                 }
+
                 str = new string (line);
                 continents.push_back(str);
-//                    cout << counter+1 << " - " << line << endl;
-
                 //next continent index
                 counter++;
 
             }//end of while loop for continents
-            totalContinents= counter;
-            cout << "Printing out continents:" << endl;
+            totalContinents = counter;
+            cout << "\nPrinting out continents:" << endl;
             cout << "Total number of continents is: " << totalContinents << endl;
             printVector(continents);
         }//end of if for continents
@@ -108,26 +107,26 @@ void MapLoader::loadMap(fstream& map_stream) {
         counter =-1;
         //until reaching "[countries]"
         if (line.find("[countries]") != -1){
-            cout << "found [countries]" << endl;
+            cout << "\nfound [countries]" << endl;
             countriesFound= true;
             counter= 0;
 
             //reading until end of countries
             while (line.find("[borders]") == -1){
                 getline(map_stream,line, '\n');
-                if (line.empty()){
+                if (line.size() <= 1){
                     break;
                 }
+                
                 str = new string (line);
+                cout << "str: " << *str << endl;
                 countries.push_back(str);
-//                    cout << counter+1 << " - " << line << endl;
-
                 //next country index
                 counter++;
 
             }//end of while loop for countries
             totalCountries= counter;
-            cout << "Printing out countries:" << endl;
+            cout << "\nPrinting out countries:" << endl;
             cout << "Total number of countries is: " << totalCountries << endl;
             printVector(countries);
         }//end of if for countries
@@ -135,13 +134,13 @@ void MapLoader::loadMap(fstream& map_stream) {
         counter =-1;
         //until reaching "[borders]"
         if (line.find("[borders]") != -1){
-            cout << "found [borders]" << endl;
+            cout << "\nfound [borders]" << endl;
             bordersFound= true;
             counter= 0;
             //reading until end of borders
             while (!map_stream.eof()){
                 getline(map_stream,line, '\n');
-                if (line.empty()){
+                if (line.size() <= 1){
                     break;
                 }
                 str = new string (line);
@@ -153,7 +152,7 @@ void MapLoader::loadMap(fstream& map_stream) {
 
             }//end of while loop for borders
             totalBorders= counter;
-            cout << "Printing out borders:" << endl;
+            cout << "\nPrinting out borders:" << endl;
             cout << "Total number of borders is: " << totalBorders << endl;
             printVector(borders);
 
@@ -175,15 +174,53 @@ void MapLoader::loadMap(fstream& map_stream) {
 
 //to print out a vector content
 void MapLoader::printVector(vector<std::string*> aVector) {
-    for (auto& vector : aVector){
-        std::cout << *vector << ' ' << endl;
+    for (vector<std::string*>::const_iterator i = aVector.begin(); i != aVector.end(); ++i){
+        std::cout << **i << endl;
     }
 }
 
 //to return a map object
 Map MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
+
     validMap = new Map(countries.size());
+    vector<int> brdrsList;
+    string nextBorder;
+
+    //Add all borders to map object
+    for(int j =0; j<borders.size(); j++)
+    {
+        brdrsList.clear();
+        //convert the string of characters into numbers array
+        for(std::string::iterator it=borders[j]->begin(); it!=borders[j]->end(); ++it)
+        {
+            //Only add numbers delimited by whitespace
+            if(isdigit(*it))
+            {
+                nextBorder.push_back(*it);
+            }
+            //protect against end of lines & trailing spaces on ends of lines
+            else if(nextBorder != "" && it != borders[j]->end())
+            {
+                //convert string to int and clear temp variable nextBorder for next line
+                cout << "next border: " << nextBorder << endl;
+                brdrsList.push_back(std::stoi(nextBorder, nullptr));
+                nextBorder = ""; 
+            }
+            else 
+            {
+                cout << "here";
+                nextBorder = "";
+            }
+
+        }
+        //add borders to map object
+        for( int k =1; k<brdrsList.size(); k++)
+        {
+            cout << brdrsList[0] <<  " : " <<  brdrsList[k] << endl;
+            validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
+        }    
+    }
+ 
     cout << "************" << endl;
-    cout << *borders[0] << endl;
     return *validMap;
 }
