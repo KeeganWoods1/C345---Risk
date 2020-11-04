@@ -15,11 +15,8 @@ int main() {
     PhaseObserver* poPtr = new PhaseObserver();
     StatisticsObserver* soPtr = new StatisticsObserver();
     ObserverToggle* otPtr = new ObserverToggle(poPtr, soPtr);
-    
-    //use user input as parameter to MapLoader() constructor
-    MapLoader* mapLoader = new MapLoader("MapFiles/" + mdiPtr->getSelectedMap());
 
-        //create player objects and add them to the player list
+    //create player objects and add them to the player list
     for (int i= 0; i<pliPtr->getNumOfPlayers(); i++)
     {
         string playerName;
@@ -29,9 +26,6 @@ int main() {
 
         pliPtr->getPlayerList()->push_back(player); 
     }
-
-    //Create deck object
-    Deck* deck = new Deck(pliPtr->getNumOfPlayers());
 
     cout << "\nPrinting Players in the game: " << endl;
 

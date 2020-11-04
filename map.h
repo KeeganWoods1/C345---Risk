@@ -94,14 +94,14 @@ private:
     //int to store number of vertices (continents)
     int continentVertices;
 
-    vector<Territory>* territoryListPtr;
+    vector<Territory*>* territoryListPtr;
 
 public:
     //default constructor
     Map();
 
     //one int parameter constructor
-    Map(int);
+    Map(int, vector<Territory*>*);
 
     //copy constructor
     Map(const Map*);
@@ -111,6 +111,9 @@ public:
 
     //destructor
     ~Map();
+
+    //Access territories in map
+    vector<Territory*>* getTerritories();
 
     //add an edge between two vertices
     void addBorder(int, int);
