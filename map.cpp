@@ -87,7 +87,7 @@ Map::Map(const Map *map) {
     this->vertices = map->vertices;
 }
 
-Map::Map(int vertices) {
+Map::Map(int vertices, vector<Territory*>* territoryList) {
     this->vertices = vertices;
     adjacent_matrix = new bool* [vertices];
     //initialize the 2d array with false
@@ -96,6 +96,8 @@ Map::Map(int vertices) {
         for (int j = 0; j < vertices; j++)
             adjacent_matrix[i][j] = false;
     }
+    //Set the territories list from loaded map file
+    territoryListPtr = territoryList;
 }
 
 //assignment operator
@@ -106,13 +108,18 @@ Map& Map::operator=(const Map& map)
     return *this;
 }
 
+vector<Territory*>* Map::getTerritories()
+{
+    return territoryListPtr;
+}
+
 //add an border between two v's
 void Map::addBorder(int i, int j) {
     adjacent_matrix[i][j] = true;
     adjacent_matrix[j][i] = true;
 }
 
-//to display ythe matrix
+//to display the matrix
 void Map::toString() {
     std::cout << "Output Matrix: " << std::endl;
     std::cout << "     ";

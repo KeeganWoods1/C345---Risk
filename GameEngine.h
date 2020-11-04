@@ -12,14 +12,18 @@ using namespace std;
 class MapDirectoryInit 
 {
     private:
-    string selectedMap;
+    string selectedMapName;
+    Map* gameMap;
 
     public:
     MapDirectoryInit();
     ~MapDirectoryInit();
     //Copy constructor
     MapDirectoryInit(const MapDirectoryInit& md);
-    string getSelectedMap();
+    //Get user selected map file name
+    string getSelectedMapName();
+    //Get Map object created in MapLoader constructor
+    Map* getGameMap();
     //Assignment operator
 	MapDirectoryInit& operator = (const MapDirectoryInit& md);
     //I/O operator overloads
@@ -70,4 +74,44 @@ class ObserverToggle
     //I/O operator overloads
     friend istream &operator >> (istream &stream, ObserverToggle& ot);
     friend ostream &operator << (ostream &out, const ObserverToggle& ot);
+};
+
+class GameInit
+{
+    private:
+    void startupPhase(vector<Player*>*, Map*);
+
+    public:
+    GameInit(vector<Player*>*, Map*);
+    ~GameInit();
+    //copy constructor
+    GameInit(const GameInit& gi);
+    //assignment operator
+    GameInit& operator = (const GameInit& gi);
+    //I/O operator overloads
+    friend istream &operator >> (istream &stream, GameInit& gi);
+    friend ostream &operator << (ostream &out, const GameInit& gi);
+};
+
+class WarzoneGame
+{
+    private:
+
+
+    public:
+    WarzoneGame();
+    WarzoneGame(GameInit);
+    ~WarzoneGame();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
+    void mainGameLoop();
+    //Copy constructor
+    WarzoneGame(const WarzoneGame& wzg);
+    //Assignment operator
+	WarzoneGame& operator = (const WarzoneGame& wzg);
+    //I/O operator overloads
+    friend istream &operator >> (istream &stream, WarzoneGame& wzg);
+    friend ostream &operator << (ostream &out, const WarzoneGame& wzg);
+
 };
