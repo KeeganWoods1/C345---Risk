@@ -17,14 +17,17 @@ class Hand;
 class Player
 {
     private:
-    // the number of players playing the game
-    int playerCount;
-    
+
     // name of player
     string name;
+
+    //Player's reinforcement armies pool
+    int reinforcementPool = 0;
     
     // minimum number of armies for a player
     static const int MINARMIES;
+
+    //
 
     // player owns a collection of territories
     vector<Territory*> territoriesToDefend;
@@ -58,14 +61,17 @@ class Player
     //stream insertion operator overload for printing a vector list of territory references
     friend ostream& operator << (ostream& out, const vector<Territory*>& t);
 
+    //Add reinforcements to pool
+    void addReinforcements(int);
+
+    //get current amount of reinforcements owned by player
+    int getCurrentReinforcements();
+
     // method to set the name of player
     void setName(string name); 
     
     // method to return name of player
     string getName();
-    
-    // get number of players playing the game
-    int getPlayerCount(); 
 
     // get number of territories owned by the player
     int getNumTerrOwned();

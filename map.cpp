@@ -38,7 +38,7 @@ Territory& Territory::operator=(const Territory& territory)
 //Stream insertion operator overload to output a territory
 ostream& operator << (ostream& out, const Territory& t)
 {
-    out << "Territory of " << t.territory_name << endl;
+    out << "Territory of " << t.territory_name << " Owned by: " << *t.territory_owner << endl;
 
     return out;
 }
@@ -69,6 +69,11 @@ int Territory::getterritory_armycount() {
 //setters
 void Territory::setterritory_name(string s) {
     territory_name = s;
+}
+
+void Territory::setterritory_owner(Player* p)
+{
+    territory_owner = p;
 }
 
 string Territory::toString()

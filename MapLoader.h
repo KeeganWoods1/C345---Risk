@@ -21,6 +21,8 @@ class MapLoader {
         //Getter
         Map* getMap();
 
+        bool getStatus();
+
         //Copy constructor
         MapLoader(const MapLoader&);
 
@@ -43,7 +45,9 @@ class MapLoader {
         //map file
         string* map;
         //map object
-        Map* validMap;//map file
+        Map* validMap;
+        //map load status
+        bool isLoaded = false;
 
         //to store the contents from the map file
         vector<std::string*> continents;

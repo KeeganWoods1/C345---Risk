@@ -15,27 +15,14 @@ int main() {
     PhaseObserver* poPtr = new PhaseObserver();
     StatisticsObserver* soPtr = new StatisticsObserver();
     ObserverToggle* otPtr = new ObserverToggle(poPtr, soPtr);
+    //Initialize game start phase
+    GameInit* giPtr = new GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap());
 
-    //create player objects and add them to the player list
-    for (int i= 0; i<pliPtr->getNumOfPlayers(); i++)
+    for (int i=0; i<mdiPtr->getGameMap()->getTerritories()->size(); i++)
     {
-        string playerName;
-        cout << "Please enter player " << i+1 << "'s name"<< endl;
-        cin >> playerName;
-        Player* player = new Player(playerName);
-
-        pliPtr->getPlayerList()->push_back(player); 
+      cout << *mdiPtr->getGameMap()->getTerritories()->at(i) << endl;  
     }
-
-    cout << "\nPrinting Players in the game: " << endl;
-
-    for(int i=0; i< pliPtr->getPlayerList()->size(); i++)
-    {
-        cout << *pliPtr->getPlayerList()->at(i) << endl;
-    }
-
-
     
-
+ 
     return 0;
 }

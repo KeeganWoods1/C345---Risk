@@ -17,7 +17,7 @@ MapLoader::MapLoader(string mapName) {
     map_stream.open(*map, std::fstream::in | std::fstream::out);
     //if map file was found
     if (map_stream.is_open()) {
-        std::cout << "Map file was opened successfully" << std::endl;
+        std::cout << "Map file was opened successfully\n" << std::endl;
         loadMap(map_stream);
 
         //closes the stream
@@ -40,6 +40,11 @@ MapLoader::~MapLoader(){
 //getter
 Map* MapLoader::getMap() {
     return validMap;
+}
+
+bool MapLoader::getStatus()
+{
+    return isLoaded;
 }
 
 //Copy constructor
@@ -81,7 +86,6 @@ void MapLoader::loadMap(fstream& map_stream) {
 
         //until reaching "[continents]"
         if (line.find("[continents]") != -1){
-            cout << "\nFound [continents]" << endl;
             continentsFound= true;
             counter= 0;
 
@@ -99,15 +103,12 @@ void MapLoader::loadMap(fstream& map_stream) {
 
             }//end of while loop for continents
             totalContinents = counter;
-            cout << "\nPrinting out continents:" << endl;
             cout << "Total number of continents is: " << totalContinents << endl;
-            printVector(continents);
         }//end of if for continents
 
         counter =-1;
         //until reaching "[countries]"
         if (line.find("[countries]") != -1){
-            cout << "\nfound [countries]" << endl;
             countriesFound= true;
             counter= 0;
 
@@ -125,15 +126,12 @@ void MapLoader::loadMap(fstream& map_stream) {
 
             }//end of while loop for countries
             totalCountries= counter;
-            cout << "\nPrinting out countries:" << endl;
             cout << "Total number of countries is: " << totalCountries << endl;
-            printVector(countries);
         }//end of if for countries
 
         counter =-1;
         //until reaching "[borders]"
         if (line.find("[borders]") != -1){
-            cout << "\nfound [borders]" << endl;
             bordersFound= true;
             counter= 0;
             //reading until end of borders
@@ -149,20 +147,18 @@ void MapLoader::loadMap(fstream& map_stream) {
 
             }//end of while loop for borders
             totalBorders= counter;
-            cout << "\nPrinting out borders:" << endl;
             cout << "Total number of borders is: " << totalBorders << endl;
-            printVector(borders);
-
         }//end of if for borders
 
     }//end of while for all map file
 
     if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
-        cout << "Map is valid. Creating a map object..." << endl;
+        cout << "Map is valid. Creating a map object...\n" << endl;
         CreateMap(continents, countries, borders);
     } else {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
     }
+    isLoaded = true;
 
     //to avoid memory leak
     delete (str);
@@ -213,12 +209,11 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
                 word = word + nextWord;
             }      
         }
-        cout << "Adding territory: " << name << " Continent: " << continent << endl;
         //create appropriate territory and add to territories list
-        Territory* territory = new Territory(continent, name, NULL, 0);
+        Player* neutralPlayer = new Player("Neutral");
+        Territory* territory = new Territory(continent, name, neutralPlayer, 0);
         territoriesListPtr->push_back(territory);
     }
-
 
     //create map object
     validMap = new Map(countries.size(), territoriesListPtr);
@@ -251,7 +246,5 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }    
     }
- 
-    cout << "************" << endl;
     return validMap;
 }
