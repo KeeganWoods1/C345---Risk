@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <random>
 using namespace std;
 
 //Card default constructor
@@ -84,7 +85,6 @@ ostream &operator << (ostream &out, const Card &o)
 BombCard::BombCard(string n)
 {
     name = n;
-    cout << "Creating " << name << std::endl;
 }
 
 //BombCard destructor
@@ -136,7 +136,6 @@ BombCard &BombCard::operator = (const BombCard& o)
 ReinforcementCard::ReinforcementCard(string n)
 {
     name = n;
-    cout << "Creating " << name << std::endl;
 }
 
 //ReinforcementCard destructor
@@ -187,7 +186,6 @@ ReinforcementCard &ReinforcementCard::operator = (const ReinforcementCard& o)
 BlockadeCard::BlockadeCard(string n)
 {
     name = n;
-    cout << "Creating " << name << std::endl;
 }
 
 //BlockadeCard destructor
@@ -238,7 +236,6 @@ BlockadeCard &BlockadeCard::operator = (const BlockadeCard& o)
 AirliftCard::AirliftCard(string n)
 {
     name = n;
-    cout << "Creating " << name << std::endl;
 }
 
 //AirliftCard destructor
@@ -289,7 +286,6 @@ AirliftCard &AirliftCard::operator = (const AirliftCard& o)
 DiplomacyCard::DiplomacyCard(string n) 
 {
     name = n;
-    cout << "Creating " << name << std::endl;
 }
 
 //DiplomacyCard destructor
@@ -374,7 +370,15 @@ Deck::Deck(int numOfPlayers)
         deckOfCardsPtr->push_back(new AirliftCard("Airlift Card"));
         deckOfCardsPtr->push_back(new DiplomacyCard("Diplomacy Card"));
         deckOfCardsPtr->push_back(new BlockadeCard("Blockade Card")); 
-    }  
+    } 
+    cout << "Shuffling Cards..." << endl;
+    //shuffle deck
+    //rng used as seed for std::mt19337
+    std::random_device rd;
+    //mersenne-twister-engine to ensure high quality "shuffle"
+    std::mt19937 g(rd());
+    //shuffle playerList, play order will be the order in which players appear in the shuffled list
+    std::shuffle(deckOfCardsPtr->begin(), deckOfCardsPtr->end(), g);
 }
 
 //Destructor
@@ -408,14 +412,11 @@ void Deck::draw(Hand* hand, Deck* deck)
     vector<Card*> handContainer = hand->getHandContainer();
     vector<Card*> deckContainer = deck->getDeck();
     
-    //Random valid index value to be used to draw cards at random
-    int randomDeckIdx = rand() % deckContainer.size();
-    
     //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
-    Card* drawnCard = deckContainer[randomDeckIdx];
+    Card* drawnCard = deckContainer.at(0);
     std::cout << "Drawn Card: " << *drawnCard << std::endl;
     handContainer.push_back(drawnCard);
-    deckContainer.erase(deckContainer.begin() + randomDeckIdx);
+    deckContainer.erase(deckContainer.begin());
 
     //Set the hand and deck object's arrays to the post-draw container values
     hand->setHand(handContainer);
@@ -454,9 +455,9 @@ istream &operator >> (istream& stream, Deck& o)
 {
     if(o.deckOfCardsPtr->size() > 0)
     {
-        for(int i=0; i<o.deckOfCardsPtr->size(); i++)
+        for(auto cardPtr : *o.deckOfCardsPtr)
         {
-            stream >> *o.deckOfCardsPtr->at(i);
+            stream >> *cardPtr;
         } 
     }
 
@@ -467,9 +468,9 @@ ostream &operator << (ostream &out, const Deck& o)
 {
     if(o.deckOfCardsPtr->size() > 0)
     {
-        for(int i=0; i<o.deckOfCardsPtr->size(); i++)
+        for(auto cardPtr : *o.deckOfCardsPtr)
         {
-            out << *o.deckOfCardsPtr->at(i) << endl;
+            out << *cardPtr << endl;
         } 
     }
     else

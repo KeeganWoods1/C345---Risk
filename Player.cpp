@@ -9,7 +9,6 @@ using namespace std;
 Player::Player()
 {
     name = "";
-    playerCount = 0;
 }
 
 // parametrized constructor definition
@@ -46,9 +45,6 @@ Player::Player(string playerName)
 
     //initialize player orderlist
     playerOlist = new Orderlist();
-    
-    // increase number of players
-    playerCount = playerCount + 1;
 }
 
 // destructor definition
@@ -90,8 +86,18 @@ Player& Player::operator = (const Player& o)
 // stream insertion operator
 ostream &operator << (ostream &output, const Player &o)
 {
-    output << "Player name: " << o.name;
+    output << o.name;
     return output;
+}
+
+void Player::addReinforcements(int r)
+{
+    reinforcementPool += r;
+}
+
+int Player::getCurrentReinforcements()
+{
+    return reinforcementPool;
 }
 
 //stream insertion operator overload for printing a vector list of territory references
@@ -120,12 +126,6 @@ void Player::setName(string playerName)
 string Player::getName()
 {
     return name;
-}
-
-// definition of method to return player count
-int Player::getPlayerCount()
-{
-    return playerCount;
 }
 
 // definition of method to get number of 
