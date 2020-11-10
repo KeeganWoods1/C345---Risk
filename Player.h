@@ -30,8 +30,8 @@ class Player
     //
 
     // player owns a collection of territories
-    vector<Territory*> territoriesToDefend;
-    vector<Territory*> territoriesToAttack;
+    vector<Territory*>* territoriesToDefend;
+    vector<Territory*>* territoriesToAttack;
 
     // player owns a hand of cards
     Hand* playerHand;
@@ -84,11 +84,11 @@ class Player
 
     // method toDefend which returns a list 
     // of territories to defend
-    vector<Territory*> toDefend();
+    vector<Territory*>* toDefend();
    
     // method toAttack which returns a list 
     // of territories to attack
-    vector<Territory*> toAttack();
+    vector<Territory*>* toAttack();
 
     string toString(vector<Territory*> t);
   

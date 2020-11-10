@@ -22,29 +22,12 @@ Player::Player(string playerName)
 
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
-    
-    // Arbitrary starting list of territories
-    Territory* terr1 = new Territory(1, "Canada", this, 1);
-    Territory* terr2 = new Territory(1, "Mexico", this, 1);
-    Territory* terr3 = new Territory(1, "Argentina", this, 1);
-    Territory* terr4 = new Territory(1, "Brazil", this, 1);
-    territoriesToDefend.push_back(terr1);
-    territoriesToDefend.push_back(terr2);
-    territoriesToDefend.push_back(terr3);
-    territoriesToDefend.push_back(terr4);
-
-    // arbitrary list of territories to attack
-    Territory* terr5 = new Territory(1, "Italy", this, 1);
-    Territory* terr6 = new Territory(1, "Germany", this, 1);
-    Territory* terr7 = new Territory(1, "Norway", this, 1);
-    Territory* terr8 = new Territory(1, "Switzerland", this, 1);
-    territoriesToAttack.push_back(terr5);
-    territoriesToAttack.push_back(terr6);
-    territoriesToAttack.push_back(terr7);
-    territoriesToAttack.push_back(terr8);
 
     //initialize player orderlist
     playerOlist = new Orderlist();
+
+    territoriesToAttack = new vector<Territory*>();
+    territoriesToDefend = new vector<Territory*>();
 }
 
 // destructor definition
@@ -55,19 +38,19 @@ Player::~Player()
     delete playerOlist;
     
     //Clear ToAttack
-    for(int i = 0; i < territoriesToAttack.size(); i++)
+    for(int i = 0; i < territoriesToAttack->size(); i++)
     {
-        delete territoriesToAttack.at(i);
+        delete territoriesToAttack->at(i);
         // avoid dangling pointers
-        territoriesToAttack.at(i) = NULL;
+        territoriesToAttack->at(i) = NULL;
     }
 
     //Clear ToDefend 
-    for(int i = 0; i < territoriesToDefend.size(); i++)
+    for(int i = 0; i < territoriesToDefend->size(); i++)
     {
-        delete territoriesToDefend.at(i);
+        delete territoriesToDefend->at(i);
         // avoid dangling pointers
-        territoriesToDefend.at(i) = NULL;
+        territoriesToDefend->at(i) = NULL;
     }
 }
 
@@ -132,7 +115,7 @@ string Player::getName()
 // territories owned by the player
 int Player::getNumTerrOwned()
 {
-    return territoriesToDefend.size();
+    return territoriesToDefend->size();
 }
 
 // definition of method to get hand 
@@ -151,14 +134,14 @@ Orderlist* Player::getPlayerlist()
 
 // definition of method toDefend
 // returning a list of territories to defend
-vector<Territory*> Player::toDefend()
+vector<Territory*>* Player::toDefend()
 {    
     return territoriesToDefend;
 }
 
 // definition of method toAttack
 // returning a list of territories to attack
-vector<Territory*> Player::toAttack()
+vector<Territory*>* Player::toAttack()
 {   
     return territoriesToAttack;
 }
