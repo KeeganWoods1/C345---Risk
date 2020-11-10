@@ -65,7 +65,9 @@ Player* Territory::getterritory_owner() {
 int Territory::getterritory_armycount() {
     return territory_armycount;
 }
-
+void Territory::setterritory_armycount(int a) {
+    territory_armycount = a;
+}
 //setters
 void Territory::setterritory_name(string s) {
     territory_name = s;
@@ -184,4 +186,14 @@ bool Map::Validate() {
 //destructor
 Map::~Map() {
     delete[] adjacent_matrix;
+}
+bool Map::isAdjacent(Territory a, Territory b) {
+    int indexa;
+    int indexb;
+    for (int i=0; i<territoryListPtr->size(); i++){
+        if (territoryListPtr->at(i)->getterritory_name().compare(a.getterritory_name())==0)indexa = i;
+        if (territoryListPtr->at(i)->getterritory_name().compare(b.getterritory_name())==0)indexb = i;
+    }
+    return(adjacent_matrix[indexa][indexb]);
+
 }

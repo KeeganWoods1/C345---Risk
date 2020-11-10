@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 /*manually create territories, and the adjacency between territories,
@@ -75,7 +76,7 @@ public:
     int getterritory_armycount();
 
     //army count setter
-    void setterritory_armycount(int);
+    void setterritory_armycount(int a);
 
     string toString();
 
@@ -101,7 +102,9 @@ public:
     Map();
 
     //one int parameter constructor
-    Map(int, vector<Territory*>*);
+    Map(int);
+
+    Map(int vertices, vector<Territory*>* territoryList);
 
     //copy constructor
     Map(const Map*);
@@ -111,9 +114,6 @@ public:
 
     //destructor
     ~Map();
-
-    //Access territories in map
-    vector<Territory*>* getTerritories();
 
     //add an edge between two vertices
     void addBorder(int, int);
@@ -126,4 +126,8 @@ public:
 
     //verify a graph whether connected or not
     bool Validate();
+    //Get territories list
+    vector<Territory*>* getTerritories();
+    //Get adjacent method
+    bool isAdjacent(Territory a, Territory b);
 };

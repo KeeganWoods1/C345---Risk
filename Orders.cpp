@@ -20,24 +20,65 @@
 	Advanceorder::Advanceorder() {
 
 	}
-	Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret): Order(true) {
+	Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret, Map *m): Order(true) {
+     //   Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret): Order(true) {
 		troopnum = i;
 		orderplayer = orderp;
 		destinationterritory = destt;
 		sourceterritory = souret;
+		map = m;
 	}
 	bool Advanceorder::validate() {
-		// check if two terretories are adjacent and troopnum does not exceed terretories troop count;
-		return true;
+		if (sourceterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
+        if (sourceterritory->getterritory_armycount()- *troopnum < 1)return false;
+        if (orderplayer->getName().compare(destinationterritory->getterritory_owner()->getName()) != 0)
+            if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))return false;
+       return (map->isAdjacent(sourceterritory,destinationterritory));
 	}
 	bool Advanceorder::execute() {
 		if (validate()) {
-			cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
-			return true;
+			if (sourceterritory->getterritory_owner()->getName().compare(destinationterritory->getterritory_owner()->getName())==0){
+                cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units moving to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
+			    sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
+                destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
+                return true;
+			}
+			else {
+                cout << "executing advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) +
+                        " units attacking " + destinationterritory->getterritory_name() + " from " +
+                        sourceterritory->getterritory_name() + "\n";
+                        int totalattackerDestroyed = 0;
+                        int totaldefenderDestroyed = 0;
+                        while (*troopnum > 0 && destinationterritory->getterritory_armycount() > 0){
+                            int attackerDestroyed = 0;
+                            int defenderDestroyed = 0;
+                            for (int i=0; i<*troopnum; i++){
+                                if (rand() %100 >= 59)defenderDestroyed++;
+                            }
+                            for (int i=0; i<destinationterritory->getterritory_armycount(); i++){
+                                if (rand() %100 >= 69)attackerDestroyed++;
+                            }
+                            *troopnum = *troopnum- attackerDestroyed;
+                            destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()-defenderDestroyed);
+                            totalattackerDestroyed+= attackerDestroyed;
+                            totaldefenderDestroyed+=defenderDestroyed;
+                        }
+                        if (*troopnum < 1){
+                            cout<<"defenders fought back the invasion: denders lost "+ to_string(totaldefenderDestroyed) +" and now " + destinationterritory->getterritory_name()+" has "+to_string(destinationterritory->getterritory_armycount())+ " left \n";
+                        }
+                        else {
+                            destinationterritory->setterritory_armycount(*troopnum);
+                            destinationterritory->setterritory_owner(orderplayer);
+                            orderplayer->setcaptureTerritory(true);
+                            cout<<"attackers won the invasion: attackers lost "+ to_string(totalattackerDestroyed) +" and now " + destinationterritory->getterritory_name()+" has "+to_string(destinationterritory->getterritory_armycount())+ " units occupying \n";
+                        }
+                return true;
+            }
 		}
 		return false;
 	};
 	Advanceorder::~Advanceorder() {
+	    map = NULL;
 	}
 	string Advanceorder::print()const {
 		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
@@ -67,13 +108,17 @@
 		orderplayer = orderp;
 	}
 	bool Airliftorder::validate() {
-		//check if both are player owned and match the troop num
-		if (*troopnum < 1)return false;
+
+		if (*troopnum < 1 || sourceterritory->getterritory_armycount()- *troopnum < 1)return false;
+		if (sourceterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
+        if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
 		return true;
 	}
 	bool Airliftorder::execute() {
 		if (validate()) {
 			cout << "executing Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + "\n";
+			sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
+			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
 			return true;
 		}
 		else return false;
@@ -111,11 +156,13 @@
 		destinationterritory = destt;
 	}
 	bool Blockadeorder::validate() {
+	    if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
 		return true;
 	}
 	bool Blockadeorder::execute() {
 		if (validate()) {
 			cout << "executing blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() + "\n";
+			destinationterritory->setterritory_owner(new Player("Neutral"));
 			return true;
 		}
 		else return false;
@@ -144,11 +191,13 @@
 		destinationterritory = destt;
 	}
 	bool Bomborder::validate() {
+	    if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())==0)return false;
 		return true;
 	}
 	bool Bomborder::execute() {
 		if (validate()) {
 			cout << "executing bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name() + "\n";
+			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()/2);
 			return true;
 		}
 		else return false;
@@ -182,11 +231,15 @@
 		destinationterritory = destt;
 	}
 	bool Deployorder::validate() {
+        if (orderplayer->getCurrentReinforcements()< *troopnum)return false;
+        if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
 		return true;
 	}
 	bool Deployorder::execute() {
 		if (validate()) {
-			cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
+			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
+			orderplayer->setCurrentReinforcements(orderplayer->getCurrentReinforcements()-*troopnum);
+            cout << "executing deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + " new total is : " + to_string(destinationterritory->getterritory_armycount())+"\n";
 			return true;
 		}
 		else return false;
@@ -218,11 +271,14 @@
 		otherplayer = destp;
 	}
 	bool Negotiateorder::validate() {
+	    if (orderplayer->getName().compare(otherplayer->getName())==0)return false;
 		return true;
 	}
 	bool Negotiateorder::execute() {
 		if (validate()) {
 			cout << "executing negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName() + "\n";
+			orderplayer->addnegotiateFriends(otherplayer->getName());
+			otherplayer->addnegotiateFriends(orderplayer->getName());
 			return true;
 		}
 		else return false;
