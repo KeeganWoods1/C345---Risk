@@ -184,7 +184,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         int continent; 
         int wordCount = 1;
         string word = "";
-        //There are 5 words(includes spaces) in every line of countries vector, we need name/continent or words 2/3
+        //There are 5 words(excludes spaces) in every line of countries vector, we need name/continent or words 2&3
         for(auto nextWord : *countries[j])
         {
             if(nextWord == ' ' && wordCount == 2)
@@ -231,6 +231,14 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             if(isdigit(*it))
             {
                 nextBorder.push_back(*it);
+
+                //If this is the last number on the line -> push to borders
+                if(it == borders[j]->end()-1)
+                {
+                    //convert string to int and clear temp variable nextBorder for next line
+                    brdrsList.push_back(std::stoi(nextBorder, nullptr));
+                    nextBorder = ""; 
+                }
             }
             //protect against end of lines & trailing spaces on ends of lines
             else if(nextBorder != "" && it != borders[j]->end())
@@ -244,7 +252,9 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         for( int k =1; k<brdrsList.size(); k++)
         {
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
-        }    
+        }   
     }
+
+
     return validMap;
 }

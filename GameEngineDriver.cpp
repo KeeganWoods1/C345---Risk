@@ -17,11 +17,13 @@ int main() {
     ObserverToggle* otPtr = new ObserverToggle(poPtr, soPtr);
     //Initialize game start phase
     GameInit* giPtr = new GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap());
-
+    //Display territories and their owners
     for (int i=0; i<mdiPtr->getGameMap()->getTerritories()->size(); i++)
     {
       cout << *mdiPtr->getGameMap()->getTerritories()->at(i) << endl;  
     }
+    //Start GameLoop
+    WarzoneGame* wzgPtr = new WarzoneGame(giPtr);
     
  
     return 0;

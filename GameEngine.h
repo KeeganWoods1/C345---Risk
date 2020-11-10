@@ -13,7 +13,7 @@ class MapDirectoryInit
 {
     private:
     string selectedMapName;
-    Map* gameMap;
+    Map* gameMapPtr;
 
     public:
     MapDirectoryInit();
@@ -36,7 +36,7 @@ class PlayerListInit
 {
     private:
     int numOfPlayers;
-    vector<Player*>* playerList;
+    vector<Player*>* playerListPtr;
     Deck* deckPtr;
 
     public:
@@ -79,11 +79,15 @@ class ObserverToggle
 class GameInit
 {
     private:
+    vector<Player*>* playerListPtr;
+    Map* gameMapPtr;
     void startupPhase(vector<Player*>*, Map*);
 
     public:
     GameInit(vector<Player*>*, Map*);
     ~GameInit();
+    vector<Player*>* getPlayerListPtr();
+    Map* getGameMapPtr();
     //copy constructor
     GameInit(const GameInit& gi);
     //assignment operator
@@ -96,11 +100,11 @@ class GameInit
 class WarzoneGame
 {
     private:
-
+    vector<Player*>* playerListPtr;
+    Map* gameMapPtr;
 
     public:
-    WarzoneGame();
-    WarzoneGame(GameInit);
+    WarzoneGame(GameInit*);
     ~WarzoneGame();
     void reinforcementPhase();
     void issueOrdersPhase();
