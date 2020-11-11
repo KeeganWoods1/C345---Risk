@@ -1,4 +1,4 @@
-#include "MapLoader.h"
+/*#include "MapLoader.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -18,4 +18,4 @@ int main() {
     cout << *mapLoader;
 
     return 0;
-}
+}*/
