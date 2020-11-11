@@ -111,8 +111,11 @@ public:
     void clearnegotiateFriends();
     //checks if a name is in the list
     bool isNegotiatedFriend(string s);
+//method that updates the list of territories that the player owns UNTESTED
     void updateToDefend(Map m);
+    //method that updates the list of territories that the player can attack UNTESTED
     void updateToAttack(Map m);
+    //For a given territory on a map returns all surrounding territories
     vector<Territory*>* surroundingterritories(Map& m,Territory l);
 
 };

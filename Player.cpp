@@ -170,12 +170,13 @@ void Player::issueOrder(Order* order)
     cout << endl << "After adding an order to the orderlist, the list is: " << endl;
     cout << *playerOlist << endl;
 }
+//returns the Boolean value fi the players has captured a territory
 bool Player::getcaptureTerritory() {return *capturedTerritory;}
-
+//setter method for boolean value of capture territory
 void Player::setcaptureTerritory(bool b) {*capturedTerritory = b;}
-//adds a friedn to the negotiated list
+//adds a friend to the negotiated list
 void Player::addnegotiateFriends(string s) {negotiatedFriends->push_back(new string(s));}
-//clkears the list (used at the end of each round)
+//clears the list (used at the end of each round)
 void  Player::clearnegotiateFriends() {
     for (int i=0; i<negotiatedFriends->size(); i++){
         delete negotiatedFriends->at(i);
@@ -190,6 +191,7 @@ bool Player::isNegotiatedFriend(string s) {
     return false;
 
 }
+//method that updates the list of territories that the player owns UNTESTED
 void Player::updateToDefend(Map m){
     delete [] territoriesToDefend;
     vector<Territory*>* terr = m.getTerritories();
@@ -197,6 +199,7 @@ void Player::updateToDefend(Map m){
         if (terr->at(i)->getterritory_owner()->getName().compare(name)==0)territoriesToDefend->push_back(terr->at(i));
     }
 }
+//method that updates the list of territories that the player can attack UNTESTED
 void Player::updateToAttack(Map m) {
     delete [] territoriesToAttack;
     vector<Territory*>* terr = m.getTerritories();
@@ -206,6 +209,7 @@ void Player::updateToAttack(Map m) {
         }
     }
 }
+//For a given territory on a map returns all surrounding territories
 vector<Territory*>* Player::surroundingterritories(Map& m, Territory l) {
     vector<Territory*>* terr = new vector<Territory*>;
     for (int i=0; i<m.getTerritories()->size(); i++){
