@@ -205,7 +205,7 @@ void Player::updateToAttack(Map m) {
     vector<Territory*>* terr = m.getTerritories();
     for (int i=0; i<territoriesToDefend->size(); i++){
         for (int k = 0; k<terr->size();k++){
-            if (m.isAdjacent(terr->at(k),territoriesToDefend->at(i)))territoriesToAttack->push_back(terr->at(k));
+            if (m.isAdjacent(terr->at(k),territoriesToDefend->at(i)) && terr->at(k)->getterritory_owner()->getName().compare(territoriesToDefend->at(0)->getterritory_owner()->getName())!=0)territoriesToAttack->push_back(terr->at(k));
         }
     }
 }
