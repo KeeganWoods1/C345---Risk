@@ -41,6 +41,7 @@ class MapLoader {
         //to print out a vector content
         void printVector(vector<std::string*>);
 
+
     private:
         //map file
         string* map;

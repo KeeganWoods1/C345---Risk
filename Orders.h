@@ -2,10 +2,12 @@
 #include "Player.h"
 #include "map.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Player;
 class Territory;
+class Map;
 
 /*
 This is the header file for the orders 
@@ -47,7 +49,7 @@ class Advanceorder : public Order {
 public:
 	//constructor
 	Advanceorder();
-	Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret);
+	Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret, Map* m);
 	//mehtod to validate if the conditions are met to execute the function
 	bool validate();
 	//method to execute the order
@@ -71,6 +73,7 @@ private:
 	Territory* destinationterritory;
 	//the player that orderd it [important for blockade and making sure they are ordering their own troops]
 	Player* orderplayer;
+	Map* map;
 
 };
 //Airlift order, drops a set number troops into a owned territory from another non or adjacent territory

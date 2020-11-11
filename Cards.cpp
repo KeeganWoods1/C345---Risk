@@ -3,6 +3,8 @@
 #include <vector>
 #include <stdlib.h>
 #include <random>
+#include <algorithm>
+
 using namespace std;
 
 //Card default constructor
