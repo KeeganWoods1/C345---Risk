@@ -388,11 +388,10 @@
 	//executes orders and then deletes them all
 	void Orderlist::executelist() {
 		cout << "\n";
-		for (int i = 0; i < ptr->size(); i++) {
-			ptr->at(i)->execute();
-		}
-		cout << "\n";
-		for (int i = 0; i < ptr->size(); i= i+0) {
-			remove(0);
+		while(!ptr->empty()) {
+			ptr->at(0)->execute();
+            remove(0);
 		}
 	}
+
+vector<Order*>* Orderlist::retirevelist(){return ptr;}

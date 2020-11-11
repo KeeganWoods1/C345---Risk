@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <string>
 #include <random>
+#include <algorithm>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -175,10 +176,10 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     vector<int> playerListIndices;
     vector<Territory*>* territoriesPtr = gameMapPtr->getTerritories();
 
-    //lists of indices to shuffle, of same size as territoryList
     for(int i=0; i<gameMapPtr->getTerritories()->size(); i++)
     {
         territoryIndices.push_back(i);
+        //lists of indices to shuffle, of same size as territoryList
     }
     //list of indices for the playerList
     for(int i=0; i<playerListPtr->size(); i++)
@@ -200,7 +201,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
                 //set territory owner
                 territoriesPtr->at(territoryIndices.at(j+k))->setterritory_owner(playerListPtr->at(k)); 
                 //add territory to player's toDefend list
-                playerListPtr->at(k)->toDefend()->push_back(territoriesPtr->at(territoryIndices.at(j+k)));
+                playerListPtr->at(k)->gettoDefend()->push_back(territoriesPtr->at(territoryIndices.at(j+k)));
             }
         }     
     }
@@ -281,9 +282,56 @@ void WarzoneGame::issueOrdersPhase()
     cout << "Beginning issue orders phase." << endl;
 }
 
-void WarzoneGame::executeOrdersPhase()
+void WarzoneGame::executeOrdersPhase(vector<Player*> &pl)
 {
     cout << "Beginning execute orders phase." << endl;
+    for (int k = 0; k< pl.size(); k++){
+        vector<Order*>* ol = pl.at(k)->getOrderList();
+        int priority = 99;
+        int index = -1;
+
+        for (int i = 0; i < ol->size(); i++){
+            Deployorder* o  = dynamic_cast<Deployorder*> (ol->at(i));
+            Advanceorder* o1  = dynamic_cast<Advanceorder*> (ol->at(i));
+            Airliftorder* o2  = dynamic_cast<Airliftorder*> (ol->at(i));
+            Blockadeorder* o3  = dynamic_cast<Blockadeorder*> (ol->at(i));
+            Bomborder* o4  = dynamic_cast<Bomborder*> (ol->at(i));
+            Negotiateorder* o5  = dynamic_cast<Negotiateorder*> (ol->at(i));
+            Reinforcementorder* o6  = dynamic_cast<Reinforcementorder*> (ol->at(i));
+            if (o!=NULL){
+                priority = 1;
+                index = i;
+                break;
+            }
+            if (o1!=NULL && priority >4){
+                priority = 4;
+                index = i;
+            }
+            if (o2!=NULL && priority >2){
+                priority = 2;
+                index = i;
+            }
+            if (o3!=NULL && priority >3){
+                priority = 3;
+                index = i;
+            }
+            if (o4!=NULL && priority >4){
+                priority = 4;
+                index = i;
+            }
+            if (o5!=NULL && priority >4){
+                priority = 4;
+                index = i;
+            }
+            if (o6!=NULL && priority >4){
+                priority = 4;
+                index = i;
+            }
+        }
+        ol->at(index)->execute();
+        ol->erase(ol->cbegin()+index);
+    }
+
 }
 
 void WarzoneGame::mainGameLoop()
@@ -305,7 +353,7 @@ void WarzoneGame::mainGameLoop()
             cout << *player << ", Terrirtories owned: " << player->getNumTerrOwned() << endl;
             reinforcementPhase();
             issueOrdersPhase();
-            executeOrdersPhase();
+            executeOrdersPhase(*playerListPtr);
             //Pause the loop. For debug purposes only
             int a;
             cin >> a;

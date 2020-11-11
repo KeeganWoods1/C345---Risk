@@ -256,6 +256,8 @@ public:
 	void add(Order* o);
 	//executes all orders in the lsit and then removes them
 	void executelist();
+	//returns the actual list
+    vector<Order*>* retirevelist();
 private:
 	//pointer to vector  of order pointers
 	vector<Order*>* ptr;

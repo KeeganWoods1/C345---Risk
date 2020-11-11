@@ -34,7 +34,6 @@ private:
 
     // player owns a collection of territories
     vector<Territory*>* territoriesToDefend;
-    vector<Territory*>* territoriesToAttack;
 
     // player owns a hand of cards
     Hand* playerHand;
@@ -89,11 +88,13 @@ public:
 
     // method toDefend which returns a list
     // of territories to defend
-    vector<Territory*>* toDefend();
+    vector<Territory*>* toDefend(Map &m);
+    //returns the todefend list
+    vector<Territory*>* gettoDefend();
 
     // method toAttack which returns a list
     // of territories to attack
-    vector<Territory*>* toAttack();
+    vector<Territory*>* toAttack(Map &m,Territory& t);
 
     string toString(vector<Territory*> t);
 
@@ -111,11 +112,10 @@ public:
     void clearnegotiateFriends();
     //checks if a name is in the list
     bool isNegotiatedFriend(string s);
-//method that updates the list of territories that the player owns UNTESTED
-    void updateToDefend(Map m);
-    //method that updates the list of territories that the player can attack UNTESTED
-    void updateToAttack(Map m);
     //For a given territory on a map returns all surrounding territories
-    vector<Territory*>* surroundingterritories(Map& m,Territory l);
+    static vector<Territory*>* surroundingterritories(Map& m,Territory &l);
+    //updates the lsit of territories to defend
+    void updatetoDefend(Map &m);
+    vector<Order*>* getOrderList();
 
 };
