@@ -108,7 +108,7 @@ class WarzoneGame
     ~WarzoneGame();
     void reinforcementPhase();
     void issueOrdersPhase();
-    void executeOrdersPhase();
+    void executeOrdersPhase(vector<Player*> &pl);
     void mainGameLoop();
     //Copy constructor
     WarzoneGame(const WarzoneGame& wzg);
