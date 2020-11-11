@@ -328,6 +328,7 @@ void WarzoneGame::executeOrdersPhase(vector<Player*> &pl)
                 index = i;
             }
         }
+        if (ol->empty())continue;
         ol->at(index)->execute();
         ol->erase(ol->cbegin()+index);
     }
@@ -336,6 +337,18 @@ void WarzoneGame::executeOrdersPhase(vector<Player*> &pl)
 
 void WarzoneGame::mainGameLoop()
 {
+    Map* m = gameMapPtr;
+    vector<Player*>* pliPtr = playerListPtr;
+    pliPtr->at(0)->issueOrder(new Deployorder(pliPtr->at(0),new int (3),pliPtr->at(0)->gettoDefend()->at(0)));
+    pliPtr->at(0)->issueOrder(new Deployorder(pliPtr->at(1),new int (3),pliPtr->at(1)->gettoDefend()->at(0)));
+    Territory *attack = pliPtr->at(0)->toAttack(*m, *pliPtr->at(0)->gettoDefend()->at(0))->at(0);
+    Territory *defend = pliPtr->at(0)->toDefend(*m)->at(0);
+    pliPtr->at(0)->issueOrder(new Advanceorder(new int(1),pliPtr->at(0),attack,defend,m));
+    pliPtr->at(0)->issueOrder(new Airliftorder(new int (1),pliPtr->at(0)->gettoDefend()->at(1),pliPtr->at(0)->gettoDefend()->at(0),pliPtr->at(0)));
+    pliPtr->at(0)->issueOrder(new Bomborder(pliPtr->at(0),pliPtr->at(1)->gettoDefend()->at(3)));
+    pliPtr->at(0)->issueOrder(new Blockadeorder(pliPtr->at(0),pliPtr->at(0)->gettoDefend()->at(3)));
+    pliPtr->at(0)->issueOrder(new Negotiateorder(pliPtr->at(0),pliPtr->at(1)));
+    pliPtr->at(0)->issueOrder(new Advanceorder(new int(1),pliPtr->at(0),attack,defend,m));
     while(playerListPtr->size()>1)
     {
         //Remove players who own no territories
