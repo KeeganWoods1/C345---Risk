@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
+
 using namespace std;
 
 
@@ -30,7 +32,6 @@ Player::Player(string playerName)
     //initialize player orderlist
     playerOlist = new Orderlist();
     territoriesToDefend = new vector<Territory*>;
-    territoriesToAttack = new vector<Territory*>();
 }
 
 // destructor definition
@@ -49,13 +50,6 @@ Player::~Player()
     delete negotiatedFriends;
     negotiatedFriends = NULL;
 
-    //Clear ToAttack
-    for(int i = 0; i < territoriesToAttack->size(); i++)
-    {
-        delete territoriesToAttack->at(i);
-        // avoid dangling pointers
-        territoriesToAttack->at(i) = NULL;
-    }
 
     //Clear ToDefend
     for(int i = 0; i < territoriesToDefend->size(); i++)
@@ -147,19 +141,73 @@ Orderlist* Player::getPlayerlist()
 {
     return playerOlist;
 }
-
+vector<Territory*>* Player::gettoDefend() {return territoriesToDefend;}
+//new method updates the todefend list with all new territories
+    void Player::updatetoDefend(Map &m){
+    vector<Territory*>* terr2def = new vector<Territory*>;
+        vector<Territory*>* terrall = m.getTerritories();
+    for (int i =0; i < terrall->size(); i++){
+        if (terrall->at(i)->getterritory_owner()->getName().compare(name)==0)terr2def->push_back(terrall->at(i));
+    }
+    territoriesToDefend = terr2def;
+    terr2def = NULL;
+}
 // definition of method toDefend
 // returning a list of territories to defend
-vector<Territory*>* Player::toDefend()
+vector<Territory*>* Player::toDefend(Map &m)
 {
-    return territoriesToDefend;
+    vector<Territory *> *terr2 = new vector<Territory *>;
+    for (int j =0; j<territoriesToDefend->size(); j++) {
+        Territory t = territoriesToDefend->at(j);
+        vector<Territory *> *terr = surroundingterritories(m, t);
+        for (int i = 0; i < terr->size(); i++) {
+            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0)
+                terr2->push_back(territoriesToDefend->at(j));
+        }
+    }
+    vector<Territory *>* terr = new vector<Territory*>();
+    int initialsize = terr2->size();
+    for (int k = 0; k<initialsize; k++) {
+        int min = 100000;
+        int index = -1;
+        for (int i = 0; i < terr2->size(); i++) {
+            if (terr2->at(i)->getterritory_armycount() < min) {
+                min = terr2->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        terr->push_back(terr2->at(index));
+        terr2->erase(terr2->cbegin() + index);
+
+    }
+    return  terr;
 }
 
 // definition of method toAttack
 // returning a list of territories to attack
-vector<Territory*>* Player::toAttack()
+vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
-    return territoriesToAttack;
+    vector<Territory*>* terr = surroundingterritories(m,t);
+    vector<Territory*>* terr2 = new vector<Territory*>;
+    for (int i=0; i <terr->size(); i++){
+        if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName())!=0)terr2->push_back(terr->at(i));
+    }
+    terr = new vector<Territory*>();
+    int initialsize = terr2->size();
+    for (int k = 0; k<initialsize; k++) {
+        int min = 100000;
+        int index = -1;
+        for (int i = 0; i < terr2->size(); i++) {
+            if (terr2->at(i)->getterritory_armycount() < min) {
+                min = terr2->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        terr->push_back(terr2->at(index));
+        terr2->erase(terr2->cbegin() + index);
+
+    }
+    return  terr;
 }
 
 // definition of issueOrder which creates a specific Order
@@ -191,26 +239,8 @@ bool Player::isNegotiatedFriend(string s) {
     return false;
 
 }
-//method that updates the list of territories that the player owns UNTESTED
-void Player::updateToDefend(Map m){
-    delete [] territoriesToDefend;
-    vector<Territory*>* terr = m.getTerritories();
-    for (int i=0; i <terr->size();i++){
-        if (terr->at(i)->getterritory_owner()->getName().compare(name)==0)territoriesToDefend->push_back(terr->at(i));
-    }
-}
-//method that updates the list of territories that the player can attack UNTESTED
-void Player::updateToAttack(Map m) {
-    delete [] territoriesToAttack;
-    vector<Territory*>* terr = m.getTerritories();
-    for (int i=0; i<territoriesToDefend->size(); i++){
-        for (int k = 0; k<terr->size();k++){
-            if (m.isAdjacent(terr->at(k),territoriesToDefend->at(i)) && terr->at(k)->getterritory_owner()->getName().compare(territoriesToDefend->at(0)->getterritory_owner()->getName())!=0)territoriesToAttack->push_back(terr->at(k));
-        }
-    }
-}
 //For a given territory on a map returns all surrounding territories
-vector<Territory*>* Player::surroundingterritories(Map& m, Territory l) {
+vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
     vector<Territory*>* terr = new vector<Territory*>;
     for (int i=0; i<m.getTerritories()->size(); i++){
         if(m.isAdjacent(m.getTerritories()->at(i),l)) terr->push_back(m.getTerritories()->at(i));

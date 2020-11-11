@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <string>
 #include <random>
+#include <algorithm>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -175,10 +176,10 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     vector<int> playerListIndices;
     vector<Territory*>* territoriesPtr = gameMapPtr->getTerritories();
 
-    //lists of indices to shuffle, of same size as territoryList
     for(int i=0; i<gameMapPtr->getTerritories()->size(); i++)
     {
         territoryIndices.push_back(i);
+        //lists of indices to shuffle, of same size as territoryList
     }
     //list of indices for the playerList
     for(int i=0; i<playerListPtr->size(); i++)
@@ -200,7 +201,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
                 //set territory owner
                 territoriesPtr->at(territoryIndices.at(j+k))->setterritory_owner(playerListPtr->at(k)); 
                 //add territory to player's toDefend list
-                playerListPtr->at(k)->toDefend()->push_back(territoriesPtr->at(territoryIndices.at(j+k)));
+                playerListPtr->at(k)->gettoDefend()->push_back(territoriesPtr->at(territoryIndices.at(j+k)));
             }
         }     
     }
