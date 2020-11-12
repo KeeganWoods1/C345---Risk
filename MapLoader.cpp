@@ -153,7 +153,7 @@ void MapLoader::loadMap(fstream& map_stream) {
     }//end of while for all map file
 
     if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
-        cout << "Map is valid. Creating a map object...\n" << endl;
+        cout << "Map is valid.\nCreating a map object...\n" << endl;
         CreateMap(continents, countries, borders);
     } else {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
