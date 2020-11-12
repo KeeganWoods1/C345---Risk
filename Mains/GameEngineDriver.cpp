@@ -1,4 +1,4 @@
-/*#include "GameEngine.h"
+#include "GameEngine.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -21,8 +21,11 @@ int main() {
     for (int i=0; i<mdiPtr->getGameMap()->getTerritories()->size(); i++)
     {
       cout << *mdiPtr->getGameMap()->getTerritories()->at(i) << endl;  
+      mdiPtr->getGameMap()->getTerritories()->at(i)->setterritory_armycount(6);
+
     }
-    //pliPtr->getPlayerList()->at(0)->issueOrder(new Deployorder())
  
+    WarzoneGame* g = new WarzoneGame(giPtr);
+
     return 0;
-}*/
+}
