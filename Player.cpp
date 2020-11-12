@@ -215,8 +215,6 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 void Player::issueOrder(Order* order)
 {
     playerOlist->add(order);
-    cout << endl << "After adding an order to the orderlist, the list is: " << endl;
-    cout << *playerOlist << endl;
 }
 //returns the Boolean value fi the players has captured a territory
 bool Player::getcaptureTerritory() {return *capturedTerritory;}

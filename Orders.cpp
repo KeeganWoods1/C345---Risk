@@ -81,7 +81,7 @@
 	    map = NULL;
 	}
 	string Advanceorder::print()const {
-		return "this is an advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
+		return "Advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 	}
 	Advanceorder::Advanceorder(const Advanceorder& old) {
 		troopnum = new int(*old.troopnum);
@@ -143,12 +143,12 @@
 		return out;
 	}
 	string Airliftorder::print() const{
-		string s = "this is an Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
+		string s = "Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 		return s;
 
 	}
 	string Blockadeorder::print()const {
-		string s = "this is a blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() ;
+		string s = "Blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() ;
 		return s;
 	}
 	Blockadeorder::Blockadeorder(Player* orderp, Territory* destt) {
@@ -183,7 +183,7 @@
 		return out;
 	}
 	string Bomborder::print() const {
-		string s = "this is a bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
+		string s = "bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
 			return s;
 	}
 	Bomborder::Bomborder(Player* orderp, Territory* destt) {
@@ -222,7 +222,7 @@
 
 	}
 	string Deployorder::print() const {
-		string s = "this is a deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name();
+		string s = "Deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name();
 		return s;
 	}
 	Deployorder::Deployorder(Player* orderp, int* j, Territory* destt) {
@@ -263,7 +263,7 @@
 
 	}
 	string Negotiateorder::print() const {
-		string s = "this is a negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName();
+		string s = "Negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName();
 		return s;
 	}
 	Negotiateorder::Negotiateorder(Player* orderp, Player* destp) {
@@ -299,7 +299,7 @@
 		return out;
 	}
 	string Reinforcementorder::print() const {
-		string s = "this is a Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops";
+		string s = "Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops";
 		return s;
 	}
 	Reinforcementorder::Reinforcementorder(Player* orderp) {
@@ -354,8 +354,7 @@
 	//stream output operator, will need to be used in driver but not in the program
 	
 	ostream& operator << (ostream& stream, Orderlist& o) {
-		string s = "the elements in this list are:\n";
-		stream << s;
+		
 		for (int i = 0; i < o.ptr->size(); i++) {
 			stream << *o.ptr->at(i);
 			stream << "\n";

@@ -272,83 +272,118 @@ WarzoneGame::WarzoneGame(GameInit* gi)
 
 }
 
+bool WarzoneGame::ordersRemain()
+{
+    for(Player* player : *playerListPtr)
+    {
+        if(!player->getOrderList()->empty())
+        {
+            return false;
+            break;
+        }
+    }
+    return true;
+}
+
 void WarzoneGame::reinforcementPhase()
 {
-    cout << "Beginning reinforcement phase." << endl;
+    cout << "\n****************************************************************************************************" << endl;
+    cout << "Beginning reinforcement phase.\n" << endl;
 }
 
-void WarzoneGame::issueOrdersPhase()
+void WarzoneGame::issueOrdersPhase(Player* player)
 {
-    cout << "Beginning issue orders phase." << endl;
-}
+    cout << "\n****************************************************************************************************" << endl;
+    cout << "Beginning issue orders phase.\n" << endl;
 
-void WarzoneGame::executeOrdersPhase(vector<Player*> &pl)
-{
-    cout << "Beginning execute orders phase." << endl;
-    for (int k = 0; k< pl.size(); k++){
-        vector<Order*>* ol = pl.at(k)->getOrderList();
-        int priority = 99;
-        int index = -1;
-
-        for (int i = 0; i < ol->size(); i++){
-            Deployorder* o  = dynamic_cast<Deployorder*> (ol->at(i));
-            Advanceorder* o1  = dynamic_cast<Advanceorder*> (ol->at(i));
-            Airliftorder* o2  = dynamic_cast<Airliftorder*> (ol->at(i));
-            Blockadeorder* o3  = dynamic_cast<Blockadeorder*> (ol->at(i));
-            Bomborder* o4  = dynamic_cast<Bomborder*> (ol->at(i));
-            Negotiateorder* o5  = dynamic_cast<Negotiateorder*> (ol->at(i));
-            Reinforcementorder* o6  = dynamic_cast<Reinforcementorder*> (ol->at(i));
-            if (o!=NULL){
-                priority = 1;
-                index = i;
-                break;
-            }
-            if (o1!=NULL && priority >4){
-                priority = 4;
-                index = i;
-            }
-            if (o2!=NULL && priority >2){
-                priority = 2;
-                index = i;
-            }
-            if (o3!=NULL && priority >3){
-                priority = 3;
-                index = i;
-            }
-            if (o4!=NULL && priority >4){
-                priority = 4;
-                index = i;
-            }
-            if (o5!=NULL && priority >4){
-                priority = 4;
-                index = i;
-            }
-            if (o6!=NULL && priority >4){
-                priority = 4;
-                index = i;
-            }
+    //**NOTE: This is for testing part 3: Execute orders Only! Remove this and implement full issue orders method**
+    Player* player2;
+    for(Player* pl : *playerListPtr)
+    {
+        if(player->getName() != pl->getName())
+        {
+            player2 = pl;
+            break;
         }
-        if (ol->empty())continue;
-        ol->at(index)->execute();
-        ol->erase(ol->cbegin()+index);
     }
+
+    player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(0)));
+    player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(1)));
+    Territory *attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->at(0);
+    Territory *defend = player->toDefend(*gameMapPtr)->at(0);
+    player->issueOrder(new Advanceorder(new int(1),player,attack,defend,gameMapPtr));
+    player->issueOrder(new Airliftorder(new int (1),player->gettoDefend()->at(1),player->gettoDefend()->at(0),player));
+    player->issueOrder(new Bomborder(player,player2->gettoDefend()->at(0)));
+    player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(0)));
+    player->issueOrder(new Negotiateorder(player,player2));
+    player->issueOrder(new Advanceorder(new int(1),player,attack,defend,gameMapPtr));
+
+    cout << "\nOrders Issued: \n" << endl;
+    cout << *player->getPlayerlist() << endl;
+
+}
+
+void WarzoneGame::executeOrdersPhase()
+{
+    cout << "\n****************************************************************************************************" << endl;
+    cout << "Beginning execute orders phase.\n" << endl;
+
+    while(!this->ordersRemain())
+    {
+        for (int k = 0; k< playerListPtr->size(); k++){
+            vector<Order*>* ol = playerListPtr->at(k)->getOrderList();
+            int priority = 99;
+            int index = -1;
+
+            for (int i = 0; i < ol->size(); i++){
+                Deployorder* o  = dynamic_cast<Deployorder*> (ol->at(i));
+                Advanceorder* o1  = dynamic_cast<Advanceorder*> (ol->at(i));
+                Airliftorder* o2  = dynamic_cast<Airliftorder*> (ol->at(i));
+                Blockadeorder* o3  = dynamic_cast<Blockadeorder*> (ol->at(i));
+                Bomborder* o4  = dynamic_cast<Bomborder*> (ol->at(i));
+                Negotiateorder* o5  = dynamic_cast<Negotiateorder*> (ol->at(i));
+                Reinforcementorder* o6  = dynamic_cast<Reinforcementorder*> (ol->at(i));
+                if (o!=NULL){
+                    priority = 1;
+                    index = i;
+                    break;
+                }
+                if (o1!=NULL && priority >4){
+                    priority = 4;
+                    index = i;
+                }
+                if (o2!=NULL && priority >2){
+                    priority = 2;
+                    index = i;
+                }
+                if (o3!=NULL && priority >3){
+                    priority = 3;
+                    index = i;
+                }
+                if (o4!=NULL && priority >4){
+                    priority = 4;
+                    index = i;
+                }
+                if (o5!=NULL && priority >4){
+                    priority = 4;
+                    index = i;
+                }
+                if (o6!=NULL && priority >4){
+                    priority = 4;
+                    index = i;
+                }
+            }
+            if (ol->empty())continue;
+            ol->at(index)->execute();
+            ol->erase(ol->cbegin()+index);
+        }    
+    }
+
 
 }
 
 void WarzoneGame::mainGameLoop()
 {
-    Map* m = gameMapPtr;
-    vector<Player*>* pliPtr = playerListPtr;
-    pliPtr->at(0)->issueOrder(new Deployorder(pliPtr->at(0),new int (3),pliPtr->at(0)->gettoDefend()->at(0)));
-    pliPtr->at(0)->issueOrder(new Deployorder(pliPtr->at(1),new int (3),pliPtr->at(1)->gettoDefend()->at(0)));
-    Territory *attack = pliPtr->at(0)->toAttack(*m, *pliPtr->at(0)->gettoDefend()->at(0))->at(0);
-    Territory *defend = pliPtr->at(0)->toDefend(*m)->at(0);
-    pliPtr->at(0)->issueOrder(new Advanceorder(new int(1),pliPtr->at(0),attack,defend,m));
-    pliPtr->at(0)->issueOrder(new Airliftorder(new int (1),pliPtr->at(0)->gettoDefend()->at(1),pliPtr->at(0)->gettoDefend()->at(0),pliPtr->at(0)));
-    pliPtr->at(0)->issueOrder(new Bomborder(pliPtr->at(0),pliPtr->at(1)->gettoDefend()->at(3)));
-    pliPtr->at(0)->issueOrder(new Blockadeorder(pliPtr->at(0),pliPtr->at(0)->gettoDefend()->at(3)));
-    pliPtr->at(0)->issueOrder(new Negotiateorder(pliPtr->at(0),pliPtr->at(1)));
-    pliPtr->at(0)->issueOrder(new Advanceorder(new int(1),pliPtr->at(0),attack,defend,m));
     while(playerListPtr->size()>1)
     {
         //Remove players who own no territories
@@ -363,15 +398,25 @@ void WarzoneGame::mainGameLoop()
         //Each player gets their turn according to the playerList order (from startup phase)
         for(Player* player : *playerListPtr)
         {
-            cout << *player << ", Terrirtories owned: " << player->getNumTerrOwned() << endl;
+            //Players Assign Reinforcements and Issue Orders
+            cout << *player << "'s Turn, Terrirtories owned: " << player->getNumTerrOwned() << endl;
             reinforcementPhase();
-            issueOrdersPhase();
-            executeOrdersPhase(*playerListPtr);
+            issueOrdersPhase(player);
             //Pause the loop. For debug purposes only
             int a;
             cin >> a;
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
+        //All players are done issuing orders, execution of orders can begin
+        executeOrdersPhase();
+
+        cout << "\n****************************************************************************************************" << endl;
+        cout << "\n\nEND OF TURN\n" << endl;
+
+        int a;
+        cin >> a;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }

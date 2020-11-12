@@ -106,9 +106,10 @@ class WarzoneGame
     public:
     WarzoneGame(GameInit*);
     ~WarzoneGame();
+    bool ordersRemain();
     void reinforcementPhase();
-    void issueOrdersPhase();
-    void executeOrdersPhase(vector<Player*> &pl);
+    void issueOrdersPhase(Player*);
+    void executeOrdersPhase();
     void mainGameLoop();
     //Copy constructor
     WarzoneGame(const WarzoneGame& wzg);
