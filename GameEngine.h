@@ -81,13 +81,15 @@ class GameInit
     private:
     vector<Player*>* playerListPtr;
     Map* gameMapPtr;
+    Deck* gameDeckPtr;
     void startupPhase(vector<Player*>*, Map*);
 
     public:
-    GameInit(vector<Player*>*, Map*);
+    GameInit(vector<Player*>*, Map*, Deck*);
     ~GameInit();
     vector<Player*>* getPlayerListPtr();
     Map* getGameMapPtr();
+    Deck* getGameDeckPtr();
     //copy constructor
     GameInit(const GameInit& gi);
     //assignment operator
@@ -102,6 +104,7 @@ class WarzoneGame
     private:
     vector<Player*>* playerListPtr;
     Map* gameMapPtr;
+    Deck* gameDeckPtr;
 
     public:
     WarzoneGame(GameInit*);

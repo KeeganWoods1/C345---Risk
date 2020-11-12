@@ -136,7 +136,7 @@ class Deck
         Deck();
         Deck(int);
         ~Deck();
-        void draw(Hand* hand, Deck* deck);
+        void draw(Hand* hand);
         vector<Card*> getDeck();
         void setDeck(vector<Card*> h);
         //copy ocnstructor

@@ -110,8 +110,7 @@ void BombCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    bombOrderPtr = new Bomborder(player, territory);
-    player->getPlayerlist()->add(bombOrderPtr);
+    player->issueOrder(new Bomborder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -160,8 +159,7 @@ void ReinforcementCard::play(Deck* deck, Player* player)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    reinforcementOrderPtr = new Reinforcementorder(player);
-    player->getPlayerlist()->add(reinforcementOrderPtr);
+    player->issueOrder(new Reinforcementorder(player));
 
     //remove card from the hand
     //place card back in deck
@@ -210,8 +208,7 @@ void BlockadeCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();   
 
     //create order and add to orderlist
-    blockadeOrderPtr = new Blockadeorder(player, territory);
-    player->getPlayerlist()->add(blockadeOrderPtr);
+    player->issueOrder(new Blockadeorder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -260,8 +257,7 @@ void AirliftCard::play( Deck* deck, Player* player, Territory* territorySource, 
     vector<Card*> deckContainer = deck->getDeck();
     
     //create order and add to orderlist
-    airliftOrderPtr = new Airliftorder(i, territorySource, territoryDestination, player);
-    player->getPlayerlist()->add(airliftOrderPtr);
+    player->issueOrder(new Airliftorder(i, territorySource, territoryDestination, player));
 
     //remove card from the hand
     //place card back in deck
@@ -310,8 +306,7 @@ void DiplomacyCard::play(Deck* deck, Player* player, Player* targetPlayer)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    diplomacyOrderPtr = new Negotiateorder(player, targetPlayer);
-    player->getPlayerlist()->add(diplomacyOrderPtr);
+    player->issueOrder(new Negotiateorder(player, targetPlayer));
 
     //remove card from the hand
     //place card back in deck
@@ -406,13 +401,13 @@ Deck::~Deck()
 *
 * @Params Deck*, Hand*
 */
-void Deck::draw(Hand* hand, Deck* deck)
+void Deck::draw(Hand* hand)
 {
     std::cout << "\nDrawing Card" << std::endl;
     
     //Define the vector/vector arrays containing the hand/deck cards respectively
     vector<Card*> handContainer = hand->getHandContainer();
-    vector<Card*> deckContainer = deck->getDeck();
+    vector<Card*> deckContainer = this->getDeck();
     
     //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
     Card* drawnCard = deckContainer.at(0);
@@ -422,7 +417,7 @@ void Deck::draw(Hand* hand, Deck* deck)
 
     //Set the hand and deck object's arrays to the post-draw container values
     hand->setHand(handContainer);
-    deck->setDeck(deckContainer);
+    this->setDeck(deckContainer);
 }
 
 //Accessor

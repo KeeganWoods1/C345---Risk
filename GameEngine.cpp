@@ -147,10 +147,11 @@ void ObserverToggle::toggle(StatisticsObserver* so)
     //so.remove();
 }
 
-GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr)
+GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, Deck* gdPtr)
 {
     playerListPtr = plPtr;
     gameMapPtr = gmPtr;
+    gameDeckPtr = gdPtr;
     startupPhase(playerListPtr, gameMapPtr);
 }
 
@@ -264,10 +265,16 @@ Map* GameInit::getGameMapPtr()
     return gameMapPtr;
 }
 
+Deck* GameInit::getGameDeckPtr()
+{
+    return gameDeckPtr;
+}
+
 WarzoneGame::WarzoneGame(GameInit* gi)
 {
     playerListPtr = gi->getPlayerListPtr();
     gameMapPtr = gi->getGameMapPtr();
+    gameDeckPtr = gi->getGameDeckPtr();
     mainGameLoop();
 
 }
@@ -317,6 +324,29 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(0)));
     player->issueOrder(new Negotiateorder(player,player2));
     player->issueOrder(new Advanceorder(new int(1),player,attack,defend,gameMapPtr));
+
+    Card* card = player->getHand()->getHandContainer().at(0);
+
+    if(card->getName() == "Bomb Card")
+    {
+        dynamic_cast<BombCard*>(card)->play(gameDeckPtr, player, player2->gettoDefend()->at(0));
+    }
+    else if(card->getName() == "Reinfocement Card")
+    {
+        dynamic_cast<ReinforcementCard*>(card)->play(gameDeckPtr, player);
+    }
+    else if(card->getName() == "Blockade Card")
+    {
+        dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend()->at(0));
+    }
+    else if(card->getName() == "Airlift Card")
+    {
+        dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend()->at(1),player->gettoDefend()->at(0), new int(1));
+    }
+    else if(card->getName() == "Diplomacy Card")
+    {
+        dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
+    }
 
     cout << "\nOrders Issued: \n" << endl;
     cout << *player->getPlayerlist() << endl;
@@ -400,6 +430,9 @@ void WarzoneGame::mainGameLoop()
         {
             //Players Assign Reinforcements and Issue Orders
             cout << *player << "'s Turn, Terrirtories owned: " << player->getNumTerrOwned() << endl;
+            //Draw a card
+            gameDeckPtr->draw(player->getHand());
+
             reinforcementPhase();
             issueOrdersPhase(player);
             //Pause the loop. For debug purposes only

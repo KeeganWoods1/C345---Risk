@@ -25,13 +25,10 @@ class Territory {
 private:
     //continent name of the territory
     int territory_continent;
-
     //name of a territory
     string territory_name;
-
     //the owner of a territory
     Player* territory_owner;
-
     //the amount of army in a territory
     int territory_armycount;
 
@@ -88,13 +85,11 @@ class Map {
 private:
     //2D boolean matrix to represent Adjancency Matrix
     bool** adjacent_matrix;
-
     //int to store number of vertices (territories)
     int vertices;
-    
     //int to store number of vertices (continents)
     int continentVertices;
-
+    
     vector<Territory*>* territoryListPtr;
 
 public:

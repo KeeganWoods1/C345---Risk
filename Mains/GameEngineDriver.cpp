@@ -16,7 +16,7 @@ int main() {
     StatisticsObserver* soPtr = new StatisticsObserver();
     ObserverToggle* otPtr = new ObserverToggle(poPtr, soPtr);
     //Initialize game start phase
-    GameInit* giPtr = new GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap());
+    GameInit* giPtr = new GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap(), pliPtr->getDeckPtr());
 
     for (int i=0; i<mdiPtr->getGameMap()->getTerritories()->size(); i++)
     {

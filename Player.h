@@ -20,24 +20,18 @@ private:
 
     // name of player
     string name;
-
     //Player's reinforcement armies pool
     int reinforcementPool = 0;
-
     // minimum number of armies for a player
     static const int MINARMIES;
-
     // captured a territory boolean (for card distribution after teh round);
     bool* capturedTerritory;
 
     vector<string*>* negotiatedFriends;
-
     // player owns a collection of territories
     vector<Territory*>* territoriesToDefend;
-
     // player owns a hand of cards
     Hand* playerHand;
-
     // player's orderlist
     Orderlist* playerOlist;
 

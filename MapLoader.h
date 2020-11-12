@@ -49,7 +49,6 @@ class MapLoader {
         Map* validMap;
         //map load status
         bool isLoaded = false;
-
         //to store the contents from the map file
         vector<std::string*> continents;
         vector<std::string*> countries;
