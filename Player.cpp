@@ -94,20 +94,21 @@ void Player::setCurrentReinforcements(int i){
 }
 
 //stream insertion operator overload for printing a vector list of territory references
-string Player::toString(vector<Territory*> t)
+string Player::toString(vector<Territory*>* t)
 {
     string list = "Territories: \n";
 
-    if(t.size() > 0)
+    if(t->size() > 0)
     {
-        for(int i=0; i<t.size(); i++)
+        for(int i=0; i<t->size(); i++)
         {
-            list.append(t[i]->getterritory_name() + "\n");
+            list.append(t->at(i)->getterritory_name() + "\n");
         }
     }
 
     return list;
 }
+
 
 // method to set the name of player
 void Player::setName(string playerName)
