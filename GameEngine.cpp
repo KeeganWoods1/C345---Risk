@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include <iostream>
+#include <fstream>
 #include <filesystem>
 #include <string>
 #include <random>
@@ -60,9 +61,10 @@ PlayerListInit::PlayerListInit()
     //set number of players
     while(!validEntry)
     {
-        cout << "Please enter the number of players in the game (2-5): " << endl;
+        cout << "\nPlease enter the number of players in the game (2-5): " << endl; 
         if((cin >> numOfPlayers) && numOfPlayers >= 2 && numOfPlayers <= 5)
         {
+            cout << "" << endl;
             validEntry = true;
         }
         else
@@ -251,7 +253,6 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
         cout << *playerListPtr->at(i) << ": Available reinforcements: " 
         << playerListPtr->at(i)->getCurrentReinforcements() << endl;
     }
-    cout << "" << endl;
 }
 
 vector<Player*>* GameInit::getPlayerListPtr()
@@ -285,31 +286,16 @@ bool WarzoneGame::ordersRemain()
         if(!player->getOrderList()->empty())
         {
             return false;
+            break;
         }
     }
     return true;
 }
 
-void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
+void WarzoneGame::reinforcementPhase()
 {
     cout << "\n****************************************************************************************************" << endl;
     cout << "Beginning reinforcement phase.\n" << endl;
-    const int MIN_REINFORCEMENT = 3;
-    int reinforcement = 0;
-
-    reinforcement += player->getNumTerrOwned() / 3;
-
-    //to make sure that the player has the minimum reinforcement
-    if (reinforcement < MIN_REINFORCEMENT) {
-        reinforcement = MIN_REINFORCEMENT;
-    }
-    //Place the reinforcements in the players' pools.
-    player->addReinforcements(reinforcement);
-
-    //display player reinforcement pools
-    cout << "Printing current reinforcement pool: " << endl;
-    cout << *player << ": Available reinforcements: "
-         << player->getCurrentReinforcements() << endl;
 }
 
 void WarzoneGame::issueOrdersPhase(Player* player)
@@ -330,15 +316,14 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(0)));
     player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(1)));
-    Territory *attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->at(0);
-    Territory *defend = player->toDefend(*gameMapPtr)->at(0);
-    player->issueOrder(new Advanceorder(new int(1),player,attack,defend,gameMapPtr));
+    vector<Territory*>* attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0));
+    vector<Territory*>* defend = player->toDefend(*gameMapPtr);
+    if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
     player->issueOrder(new Airliftorder(new int (1),player->gettoDefend()->at(1),player->gettoDefend()->at(0),player));
     player->issueOrder(new Bomborder(player,player2->gettoDefend()->at(0)));
-    player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(0)));
+    player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(3)));
     player->issueOrder(new Negotiateorder(player,player2));
-    player->issueOrder(new Advanceorder(new int(1),player,attack,defend,gameMapPtr));
-
+    if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
     Card* card = player->getHand()->getHandContainer().at(0);
 
     if(card->getName() == "Bomb Card")
@@ -361,7 +346,6 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     {
         dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
     }
-
     cout << "\nOrders Issued: \n" << endl;
     cout << *player->getPlayerlist() << endl;
 
@@ -446,8 +430,11 @@ void WarzoneGame::mainGameLoop()
             cout << *player << "'s Turn, Terrirtories owned: " << player->getNumTerrOwned() << endl;
             //Draw a card
             gameDeckPtr->draw(player->getHand());
-
-            reinforcementPhase(player, player->getNumTerrOwned());
+            if (player->getName().compare("Neutral")!=0 && player->getcaptureTerritory()){
+                gameDeckPtr->draw(player->getHand());
+                player->setcaptureTerritory(false);
+            }
+            reinforcementPhase();
             issueOrdersPhase(player);
             //Pause the loop. For debug purposes only
             int a;

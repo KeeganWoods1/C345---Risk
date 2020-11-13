@@ -332,7 +332,7 @@ DiplomacyCard &DiplomacyCard::operator = (const DiplomacyCard& o)
 //constructor
 Deck::Deck()
 {
-    cout << "\nGenerating Deck..." << std::endl;
+    cout << "Generating Deck..." << std::endl;
 
     deckOfCardsPtr = new vector<Card*>();
 
@@ -354,7 +354,7 @@ Deck::Deck()
 //parametrized constructor
 Deck::Deck(int numOfPlayers)
 {
-    cout << "\nGenerating Deck..." << std::endl;
+    cout << "Generating Deck..." << std::endl;
 
     deckOfCardsPtr = new vector<Card*>();
 
@@ -408,7 +408,10 @@ void Deck::draw(Hand* hand)
     //Define the vector/vector arrays containing the hand/deck cards respectively
     vector<Card*> handContainer = hand->getHandContainer();
     vector<Card*> deckContainer = this->getDeck();
-    
+    if (deckContainer.size() ==0){
+        cout<<"sorry the deck is empty! please play more cards";
+        return;
+    }
     //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
     Card* drawnCard = deckContainer.at(0);
     std::cout << "Drawn Card: " << *drawnCard << std::endl;

@@ -203,6 +203,7 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
                 index = i;
             }
         }
+        if (index == -1)cout<<"error here";
         terr->push_back(terr2->at(index));
         terr2->erase(terr2->cbegin() + index);
 

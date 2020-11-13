@@ -110,7 +110,7 @@ class WarzoneGame
     WarzoneGame(GameInit*);
     ~WarzoneGame();
     bool ordersRemain();
-    void reinforcementPhase(Player *player, int numTerrOwned);
+    void reinforcementPhase();
     void issueOrdersPhase(Player*);
     void executeOrdersPhase();
     void mainGameLoop();
