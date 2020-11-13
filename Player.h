@@ -89,6 +89,10 @@ public:
     // method toAttack which returns a list
     // of territories to attack
     vector<Territory*>* toAttack(Map &m,Territory& t);
+//returns all possible territories to attack
+    vector<Territory*>* toAttack(Map &m);
+//returns all enemy territories
+    vector<Territory*>* allnonFriendlies(Map &m);
 
     string toString(vector<Territory*> t);
 

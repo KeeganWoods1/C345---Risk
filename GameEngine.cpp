@@ -318,6 +318,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(1)));
     vector<Territory*>* attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0));
     vector<Territory*>* defend = player->toDefend(*gameMapPtr);
+    vector<Territory*>* attackall = player->toAttack(*gameMapPtr);
     if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
     player->issueOrder(new Airliftorder(new int (1),player->gettoDefend()->at(1),player->gettoDefend()->at(0),player));
     player->issueOrder(new Bomborder(player,player2->gettoDefend()->at(0)));

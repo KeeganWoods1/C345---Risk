@@ -210,6 +210,39 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
     }
     return  terr;
 }
+vector<Territory*>* Player::toAttack(Map &m){
+
+    vector<Territory*>* result = new vector<Territory*>();
+    for (int i=0; i<territoriesToDefend->size(); i++) {
+        vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
+        for (int i = 0; i < terr->size(); i++) {
+            if (terr->at(i)->getterritory_owner()->getName().compare(
+                    territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
+                bool exists = false;
+                for (int k = 0; k < result->size(); k++) {
+                    if (terr->at(i)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
+                }
+                if (!exists)result->push_back(terr->at(i));
+            }
+        }
+    }
+    for (int k = 0; k<result->size(); k++) {
+        int max = -1;
+        int index = -1;
+        int i = k;
+        for ( ;i < result->size(); i++) {
+            if (result->at(i)->getterritory_armycount() > max) {
+                max = result->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        if (index!= k){
+            iter_swap(result->begin()+index,result->begin()+k);
+        }
+    }
+    return result;
+
+}
 
 // definition of issueOrder which creates a specific Order
 // object and adds it to the player's list of orders
@@ -248,4 +281,12 @@ vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
 }
 vector<Order*>* Player::getOrderList(){
    return(playerOlist->retirevelist());
+}
+vector<Territory*>* Player::allnonFriendlies(Map &m){
+    vector<Territory*>* result = new vector<Territory*>;
+    vector<Territory*>* terr = m.getTerritories();
+    for (int i=0; i<terr->size(); i++){
+        if (terr->at(i)->getterritory_owner()->getName().compare(name)!=0) result->push_back(terr->at(i));
+    }
+    return result;
 }
