@@ -94,7 +94,7 @@ public:
 //returns all enemy territories
     vector<Territory*>* allnonFriendlies(Map &m);
 
-    string toString(vector<Territory*> t);
+    string toString(vector<Territory*>* t);
 
     // method issueOrder which creates an Order
     // object and puts it in the player’s list
