@@ -332,7 +332,7 @@ DiplomacyCard &DiplomacyCard::operator = (const DiplomacyCard& o)
 //constructor
 Deck::Deck()
 {
-    cout << "Generating Deck..." << std::endl;
+    cout << "\nGenerating Deck..." << std::endl;
 
     deckOfCardsPtr = new vector<Card*>();
 
@@ -354,7 +354,7 @@ Deck::Deck()
 //parametrized constructor
 Deck::Deck(int numOfPlayers)
 {
-    cout << "Generating Deck..." << std::endl;
+    cout << "\nGenerating Deck..." << std::endl;
 
     deckOfCardsPtr = new vector<Card*>();
 

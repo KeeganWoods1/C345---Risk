@@ -61,10 +61,9 @@ PlayerListInit::PlayerListInit()
     //set number of players
     while(!validEntry)
     {
-        cout << "\nPlease enter the number of players in the game (2-5): " << endl; 
+        cout << "Please enter the number of players in the game (2-5): " << endl;
         if((cin >> numOfPlayers) && numOfPlayers >= 2 && numOfPlayers <= 5)
         {
-            cout << "" << endl;
             validEntry = true;
         }
         else
@@ -253,6 +252,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
         cout << *playerListPtr->at(i) << ": Available reinforcements: " 
         << playerListPtr->at(i)->getCurrentReinforcements() << endl;
     }
+    cout << "" << endl;
 }
 
 vector<Player*>* GameInit::getPlayerListPtr()
@@ -286,16 +286,31 @@ bool WarzoneGame::ordersRemain()
         if(!player->getOrderList()->empty())
         {
             return false;
-            break;
         }
     }
     return true;
 }
 
-void WarzoneGame::reinforcementPhase()
+void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
 {
     cout << "\n****************************************************************************************************" << endl;
     cout << "Beginning reinforcement phase.\n" << endl;
+    const int MIN_REINFORCEMENT = 3;
+    int reinforcement = 0;
+
+    reinforcement += player->getNumTerrOwned() / 3;
+
+    //to make sure that the player has the minimum reinforcement
+    if (reinforcement < MIN_REINFORCEMENT) {
+        reinforcement = MIN_REINFORCEMENT;
+    }
+    //Place the reinforcements in the players' pools.
+    player->addReinforcements(reinforcement);
+
+    //display player reinforcement pools
+    cout << "Printing current reinforcement pool: " << endl;
+    cout << *player << ": Available reinforcements: "
+         << player->getCurrentReinforcements() << endl;
 }
 
 void WarzoneGame::issueOrdersPhase(Player* player)
@@ -435,7 +450,7 @@ void WarzoneGame::mainGameLoop()
                 gameDeckPtr->draw(player->getHand());
                 player->setcaptureTerritory(false);
             }
-            reinforcementPhase();
+            reinforcementPhase(player, player->getNumTerrOwned());
             issueOrdersPhase(player);
             //Pause the loop. For debug purposes only
             int a;
