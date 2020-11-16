@@ -212,18 +212,22 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
     return  terr;
 }
 vector<Territory*>* Player::toAttack(Map &m){
-
+    cout << "1" << endl;
     vector<Territory*>* result = new vector<Territory*>();
     for (int i=0; i<territoriesToDefend->size(); i++) {
+    cout << "2" << endl;
         vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
-        for (int i = 0; i < terr->size(); i++) {
-            if (terr->at(i)->getterritory_owner()->getName().compare(
-                    territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
+        for (int j = 0; j < terr->size(); j++) {
+        cout << "3" << endl;
+            if (terr->at(j)->getterritory_owner()->getName().compare(territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
+                cout << "4" << endl;
                 bool exists = false;
                 for (int k = 0; k < result->size(); k++) {
-                    if (terr->at(i)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
+                cout << "5" << endl;
+                    if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
                 }
-                if (!exists)result->push_back(terr->at(i));
+                if (!exists)result->push_back(terr->at(j));
+                cout << "6" << endl;
             }
         }
     }

@@ -403,8 +403,6 @@ Deck::~Deck()
 */
 void Deck::draw(Hand* hand)
 {
-    std::cout << "\nDrawing Card" << std::endl;
-    
     //Define the vector/vector arrays containing the hand/deck cards respectively
     vector<Card*> handContainer = hand->getHandContainer();
     vector<Card*> deckContainer = this->getDeck();
@@ -414,7 +412,6 @@ void Deck::draw(Hand* hand)
     }
     //Draw a card, push it to the hand object's vector array and remove it from the deck object's vector array
     Card* drawnCard = deckContainer.at(0);
-    std::cout << "Drawn Card: " << *drawnCard << std::endl;
     handContainer.push_back(drawnCard);
     deckContainer.erase(deckContainer.begin());
 

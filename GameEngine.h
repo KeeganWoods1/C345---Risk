@@ -6,8 +6,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 
 using namespace std;
+
+class Subject;
 
 class MapDirectoryInit 
 {
@@ -55,27 +58,6 @@ class PlayerListInit
     friend ostream &operator << (ostream &out, const PlayerListInit& pl);
 };
 
-class ObserverToggle
-{
-    private:
-    PhaseObserver* phaseObserver;
-    StatisticsObserver* statsObserver;
-
-    public:
-    ObserverToggle();
-    ObserverToggle(PhaseObserver*, StatisticsObserver*);
-    ~ObserverToggle();
-    void toggle(PhaseObserver*);
-    void toggle(StatisticsObserver*);
-    //Copy constructor
-    ObserverToggle(const ObserverToggle& ot);
-    //Assignment operator
-	ObserverToggle& operator = (const ObserverToggle& ot);
-    //I/O operator overloads
-    friend istream &operator >> (istream &stream, ObserverToggle& ot);
-    friend ostream &operator << (ostream &out, const ObserverToggle& ot);
-};
-
 class GameInit
 {
     private:
@@ -99,12 +81,13 @@ class GameInit
     friend ostream &operator << (ostream &out, const GameInit& gi);
 };
 
-class WarzoneGame
+class WarzoneGame : public Subject
 {
     private:
     vector<Player*>* playerListPtr;
     Map* gameMapPtr;
     Deck* gameDeckPtr;
+    Player* currentPlayer;
 
     public:
     WarzoneGame(GameInit*);
@@ -113,7 +96,10 @@ class WarzoneGame
     void reinforcementPhase(Player *player, int numTerrOwned);
     void issueOrdersPhase(Player*);
     void executeOrdersPhase();
-    void mainGameLoop();
+    void mainGameLoop(); 
+    Player* getCurrentPlayer();
+    void setCurrentPlayer(Player*);
+    Map* getGameMap();
     //Copy constructor
     WarzoneGame(const WarzoneGame& wzg);
     //Assignment operator
