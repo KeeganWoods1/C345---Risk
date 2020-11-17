@@ -34,7 +34,21 @@ MapLoader::~MapLoader(){
     delete validMap;
     map = nullptr;
     validMap = nullptr;
-    cout << "End of main(). Deleting members...";
+    for (int i = 0; i < continents.size(); i++) {
+        delete continents.at(i);
+    }
+    continents.clear();
+    for (int i = 0; i < countries.size(); i++) {
+        delete countries.at(i);
+    }
+    countries.clear();
+    if (borders.size() >= 1)
+    for (int i = 0; i < borders.size(); i++) {
+        if (!borders.at(i)->empty())delete borders.at(i);
+    }
+
+    map = NULL;
+    validMap = NULL;
 }
 
 //getter
@@ -71,7 +85,7 @@ void MapLoader::loadMap(fstream& map_stream) {
 
     string line;
     int counter;
-    string* str;
+    string* str = NULL;
     int totalContinents;
     int totalCountries;
     int totalBorders;
@@ -161,7 +175,6 @@ void MapLoader::loadMap(fstream& map_stream) {
     isLoaded = true;
 
     //to avoid memory leak
-    delete (str);
     str = nullptr;
 }//end of load map
 
@@ -177,6 +190,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
 
     //create territories list object
     vector<Territory*>* territoriesListPtr = new vector<Territory*>();
+    Player* neutralPlayer = new Player("Neutral");
     //args of territory = int continent, string name, player* owner, int armies.
     for(int j=0; j<countries.size(); j++)
     {
@@ -210,7 +224,6 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }      
         }
         //create appropriate territory and add to territories list
-        Player* neutralPlayer = new Player("Neutral");
         Territory* territory = new Territory(continent, name, neutralPlayer, 0);
         territoriesListPtr->push_back(territory);
     }
@@ -254,7 +267,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
     }
-
+    delete territoriesListPtr;
 
     return validMap;
 }
