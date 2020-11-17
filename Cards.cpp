@@ -4,14 +4,7 @@
 #include <stdlib.h>
 #include <random>
 #include <algorithm>
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-// allocations to be of _CLIENT_BLOCK type
-#else
-#define DBG_NEW new
-#endif
+
 using namespace std;
 
 //Card default constructor
@@ -66,11 +59,13 @@ Card* Card::find(Hand* hand, string cardName)
 //copy constructor
 Card::Card(const Card& c) : name(c.name) 
 {
+    std::cout << "copy construction of Card\n";
 }
 
 //assignmnet operator overload
 Card &Card::operator = (const Card& o) 
 {
+    std::cout << "copy assignment of Card\n";
     name = o.name;
     return *this;
 }
@@ -92,7 +87,6 @@ ostream &operator << (ostream &out, const Card &o)
 BombCard::BombCard(string n)
 {
     name = n;
-    bombOrderPtr = NULL;
 }
 
 //BombCard destructor
@@ -116,7 +110,7 @@ void BombCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Bomborder(player, territory));
+    player->issueOrder(new Bomborder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -143,7 +137,6 @@ BombCard &BombCard::operator = (const BombCard& o)
 ReinforcementCard::ReinforcementCard(string n)
 {
     name = n;
-    reinforcementOrderPtr = NULL;
 }
 
 //ReinforcementCard destructor
@@ -166,7 +159,7 @@ void ReinforcementCard::play(Deck* deck, Player* player)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Reinforcementorder(player));
+    player->issueOrder(new Reinforcementorder(player));
 
     //remove card from the hand
     //place card back in deck
@@ -193,7 +186,6 @@ ReinforcementCard &ReinforcementCard::operator = (const ReinforcementCard& o)
 BlockadeCard::BlockadeCard(string n)
 {
     name = n;
-    blockadeOrderPtr = NULL;
 }
 
 //BlockadeCard destructor
@@ -216,7 +208,7 @@ void BlockadeCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();   
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Blockadeorder(player, territory));
+    player->issueOrder(new Blockadeorder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -243,7 +235,6 @@ BlockadeCard &BlockadeCard::operator = (const BlockadeCard& o)
 AirliftCard::AirliftCard(string n)
 {
     name = n;
-    airliftOrderPtr = NULL;
 }
 
 //AirliftCard destructor
@@ -266,7 +257,7 @@ void AirliftCard::play( Deck* deck, Player* player, Territory* territorySource, 
     vector<Card*> deckContainer = deck->getDeck();
     
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Airliftorder(i, territorySource, territoryDestination, player));
+    player->issueOrder(new Airliftorder(i, territorySource, territoryDestination, player));
 
     //remove card from the hand
     //place card back in deck
@@ -293,7 +284,6 @@ AirliftCard &AirliftCard::operator = (const AirliftCard& o)
 DiplomacyCard::DiplomacyCard(string n) 
 {
     name = n;
-    diplomacyOrderPtr = NULL;
 }
 
 //DiplomacyCard destructor
@@ -316,7 +306,7 @@ void DiplomacyCard::play(Deck* deck, Player* player, Player* targetPlayer)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Negotiateorder(player, targetPlayer));
+    player->issueOrder(new Negotiateorder(player, targetPlayer));
 
     //remove card from the hand
     //place card back in deck
@@ -344,14 +334,14 @@ Deck::Deck()
 {
     cout << "\nGenerating Deck..." << std::endl;
 
-    deckOfCardsPtr = DBG_NEW vector<Card*>();
+    deckOfCardsPtr = new vector<Card*>();
 
     //Create pointers to card objects 
-    bombCrdPtr = DBG_NEW BombCard("Bomb Card");
-    reinCrdPtr = DBG_NEW ReinforcementCard("Reinforcement Card");
-    alftCrdPtr = DBG_NEW AirliftCard("Airlift Card");
-    dpcyCrdPtr = DBG_NEW DiplomacyCard("Diplomacy Card");
-    blkdCrdPtr = DBG_NEW BlockadeCard("Blockade Card");
+    bombCrdPtr = new BombCard("Bomb Card");
+    reinCrdPtr = new ReinforcementCard("Reinforcement Card");
+    alftCrdPtr = new AirliftCard("Airlift Card");
+    dpcyCrdPtr = new DiplomacyCard("Diplomacy Card");
+    blkdCrdPtr = new BlockadeCard("Blockade Card");
 
     //push 5 cards into the deck
     deckOfCardsPtr->push_back(bombCrdPtr);
@@ -366,17 +356,17 @@ Deck::Deck(int numOfPlayers)
 {
     cout << "\nGenerating Deck..." << std::endl;
 
-    deckOfCardsPtr = DBG_NEW vector<Card*>();
+    deckOfCardsPtr = new vector<Card*>();
 
     //The more players there are, the larger the deck should be
     for(int i=0; i<numOfPlayers; i++)
     {
         //push 5 cards into the deck
-        deckOfCardsPtr->push_back(DBG_NEW BombCard("Bomb Card"));
-        deckOfCardsPtr->push_back(DBG_NEW ReinforcementCard("Reinforcement Card"));
-        deckOfCardsPtr->push_back(DBG_NEW AirliftCard("Airlift Card"));
-        deckOfCardsPtr->push_back(DBG_NEW DiplomacyCard("Diplomacy Card"));
-        deckOfCardsPtr->push_back(DBG_NEW BlockadeCard("Blockade Card"));
+        deckOfCardsPtr->push_back(new BombCard("Bomb Card"));
+        deckOfCardsPtr->push_back(new ReinforcementCard("Reinforcement Card"));
+        deckOfCardsPtr->push_back(new AirliftCard("Airlift Card"));
+        deckOfCardsPtr->push_back(new DiplomacyCard("Diplomacy Card"));
+        deckOfCardsPtr->push_back(new BlockadeCard("Blockade Card")); 
     } 
     cout << "Shuffling Cards..." << endl;
     //shuffle deck
@@ -396,7 +386,6 @@ Deck::~Deck()
         if(deckOfCardsPtr->at(i) != NULL)
         {
             delete(deckOfCardsPtr->at(i));
-            deckOfCardsPtr->at(i) = NULL;
         }
     }
 
@@ -444,17 +433,15 @@ void Deck::setDeck(vector<Card*> d)
 }
 
 //copy ocnstructor
-Deck::Deck(const Deck& d) 
+Deck::Deck(const Deck& d) : deckOfCardsPtr(d.deckOfCardsPtr), itFront(d.itFront)
 {
-    deckOfCardsPtr = DBG_NEW vector<Card*>;
-    for (int i = 0; i < d.deckOfCardsPtr->size(); i++) {
-        deckOfCardsPtr->push_back(DBG_NEW Card(*d.deckOfCardsPtr->at(i)));
-    }
+    std::cout << "copy construction of Deck\n";
 }
 
 //assignment operator
 Deck &Deck::operator = (const Deck& d)
 {
+    std::cout << "copy assignment of Deck\n";
     deckOfCardsPtr = d.deckOfCardsPtr;
     itFront = d.itFront;
     return *this;
@@ -494,13 +481,13 @@ ostream &operator << (ostream &out, const Deck& o)
 //Constructor
 Hand::Hand()
 {
-    handOfCardsPtr = DBG_NEW vector<Card*>();
+    handOfCardsPtr = new vector<Card*>();
 }
 
 //Hand destructor
 Hand::~Hand() 
 {
-    delete handOfCardsPtr;
+    delete(handOfCardsPtr);
     handOfCardsPtr = NULL;
 }
 
@@ -517,12 +504,9 @@ void Hand::setHand(vector<Card*> h)
 }
 
 //copy ocnstructor
-Hand::Hand(const Hand& h) 
+Hand::Hand(const Hand& h) : handOfCardsPtr(h.handOfCardsPtr)
 {
-    handOfCardsPtr = DBG_NEW vector<Card*>;
-    for (int i = 0; i < h.handOfCardsPtr->size(); i++) {
-        handOfCardsPtr->push_back(new Card(*h.handOfCardsPtr->at(i)));
-    }
+    std::cout << "copy construction of Hand\n";
 }
 
 //assignment operator
