@@ -2,10 +2,12 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <crtdbg.h>
 
 
 int main()
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     //Create a deck of 10 cards
     Deck* deckPtr = new Deck();
 
@@ -30,26 +32,25 @@ int main()
 
     //Show hand and deck sizes
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
-    std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
     //Draw 5 cards at random places in the deck, showing the deck/hand sizes after each draw
-    deckPtr->draw(playerPtr->getHand(), deckPtr);
+    deckPtr->draw(playerPtr->getHand());
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
     std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
-    deckPtr->draw(playerPtr->getHand(), deckPtr);
+    deckPtr->draw(playerPtr->getHand());
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
     std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
-    deckPtr->draw(playerPtr->getHand(), deckPtr);
+    deckPtr->draw(playerPtr->getHand());
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
     std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
-    deckPtr->draw(playerPtr->getHand(), deckPtr);
+    deckPtr->draw(playerPtr->getHand());
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
     std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
-    deckPtr->draw(playerPtr->getHand(), deckPtr);
+    deckPtr->draw(playerPtr->getHand());
     std::cout << "Hand Size: " << playerPtr->getHand()->getHandContainer().size() << std::endl;
     std::cout << "Deck Size: " << deckPtr->getDeck().size() << std::endl;
 
@@ -114,6 +115,12 @@ int main()
 
     cout << "Showing Hand Content:" << endl;
     cout << *playerPtr->getHand();
-
+    delete deckPtr;
+    delete orderListPtr;
+    delete playerPtr;
+    delete player2Ptr;
+    delete territoryPtr;
+    delete territory2Ptr;
+    delete numOfUnits;
     return 0;
 }

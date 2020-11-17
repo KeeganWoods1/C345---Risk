@@ -16,9 +16,11 @@ int main() {
     GameInit* giPtr = new GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap(), pliPtr->getDeckPtr());
  
     WarzoneGame* model = new WarzoneGame(giPtr);
+    
+    StatsScreen* statsView = new StatsScreen(model);
     GameScreen* view = new GameScreen(model);
-
-    GameController* controller = new GameController(view, model);
+    
+    GameController* controller = new GameController(view, statsView, model);
 
     controller->controlGame();
 

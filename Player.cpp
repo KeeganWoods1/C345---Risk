@@ -142,9 +142,14 @@ Orderlist* Player::getPlayerlist()
 {
     return playerOlist;
 }
-vector<Territory*>* Player::gettoDefend() {return territoriesToDefend;}
+
+vector<Territory*>* Player::gettoDefend() 
+{
+    return territoriesToDefend;
+}
+
 //new method updates the todefend list with all new territories
-    void Player::updatetoDefend(Map &m){
+void Player::updatetoDefend(Map &m){
     vector<Territory*>* terr2def = new vector<Territory*>;
         vector<Territory*>* terrall = m.getTerritories();
     for (int i =0; i < terrall->size(); i++){
@@ -158,6 +163,7 @@ vector<Territory*>* Player::gettoDefend() {return territoriesToDefend;}
 vector<Territory*>* Player::toDefend(Map &m)
 {
     vector<Territory *> *terr2 = new vector<Territory *>;
+
     for (int j =0; j<territoriesToDefend->size(); j++) {
         Territory t = territoriesToDefend->at(j);
         vector<Territory *> *terr = surroundingterritories(m, t);
@@ -212,22 +218,16 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
     return  terr;
 }
 vector<Territory*>* Player::toAttack(Map &m){
-    cout << "1" << endl;
     vector<Territory*>* result = new vector<Territory*>();
     for (int i=0; i<territoriesToDefend->size(); i++) {
-    cout << "2" << endl;
         vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
         for (int j = 0; j < terr->size(); j++) {
-        cout << "3" << endl;
             if (terr->at(j)->getterritory_owner()->getName().compare(territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
-                cout << "4" << endl;
                 bool exists = false;
                 for (int k = 0; k < result->size(); k++) {
-                cout << "5" << endl;
                     if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
                 }
                 if (!exists)result->push_back(terr->at(j));
-                cout << "6" << endl;
             }
         }
     }
@@ -294,4 +294,16 @@ vector<Territory*>* Player::allnonFriendlies(Map &m){
         if (terr->at(i)->getterritory_owner()->getName().compare(name)!=0) result->push_back(terr->at(i));
     }
     return result;
+}
+
+void Player::remove(Territory* t)
+{
+    vector<Territory*>::iterator it = territoriesToDefend->begin();
+    for (; it!=territoriesToDefend->end(); it++)
+    {
+        if((*it)->getterritory_name() == t->getterritory_name())
+        {
+            territoriesToDefend->erase(it);
+        }
+    }
 }

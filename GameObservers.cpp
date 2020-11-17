@@ -29,21 +29,12 @@ void Subject::Detach(Observer* o)
     _observers->remove(o);
 }
 
-void Subject::NotifyPhase(int n)
+void Subject::Notify()
 {
     std::list<Observer*>::iterator i = _observers->begin();
     for(; i != _observers->end(); i++)
     {
-        (*i)->updatePhase(n);
-    }
-}
-
-void Subject::NotifyStats()
-{
-    std::list<Observer*>::iterator i = _observers->begin();
-    for(; i != _observers->end(); i++)
-    {
-        (*i)->updateStats();
+        (*i)->Update();
     }
 }
 
@@ -60,8 +51,10 @@ GameScreen::~GameScreen()
     _subject->Detach(this);
 }
 
-void GameScreen::updatePhase(int n)
+void GameScreen::Update()
 {
+    int n = _subject->getCurrentPhase();
+
     switch(n)
     {
         case 0:
@@ -82,11 +75,6 @@ void GameScreen::updatePhase(int n)
     }
 }
 
-void GameScreen::updateStats()
-{
-    displayStats();
-}
-
 void GameScreen::displayReinforcementPhase()
 {
     cout << "************************************************************" << endl;
@@ -94,10 +82,10 @@ void GameScreen::displayReinforcementPhase()
     cout << "Reinforcements Available: " << _subject->getCurrentPlayer()->getCurrentReinforcements() << endl;
     cout << "Continent Bonus: " << endl;
     cout << "************************************************************" << flush;
-    
-    string x;
-    cin >> x;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    cout << "\nPress any key to continue " << flush;
+    cin.get();
+    cin.get();
     clearScreen();
 }
 
@@ -107,7 +95,7 @@ void GameScreen::displayIssuOrdersPhase()
     cout << "Displaying Issue Orders Phase Info for " << *_subject->getCurrentPlayer() << ":" << endl;
     cout << "Reinforcements Available:" << _subject->getCurrentPlayer()->getCurrentReinforcements() << endl;
     cout << "\nTerritories To Defend:" << endl;
-    for (Territory* territory : *_subject->getCurrentPlayer()->toDefend(*_subject->getGameMap()))
+    for (Territory* territory : *_subject->getCurrentPlayer()->gettoDefend())
     {
         cout << *territory << endl; 
     }
@@ -122,21 +110,33 @@ void GameScreen::displayIssuOrdersPhase()
     cout << *_subject->getCurrentPlayer()->getPlayerlist();
     cout << "************************************************************" << flush;
 
-    string x;
-    cin >> x;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cout << "\nPress any key to continue " << flush;
+    cin.get();
+    cin.get();
     clearScreen();
 }
 
 void GameScreen::displayExecuteOrdersPhase()
 {
-    cout << "Displaying Execute Orders Phase Info for " << *_subject->getCurrentPlayer() << endl;
+    bool hasWon = _subject->getHasWon();
+    
+    if(!hasWon){
+    cout << "************************************************************" << endl;
+    cout << "Displaying Execute Orders Phase Info " << endl;
+    cout << "Executing..." << endl;
+    for(Order* order : _subject->getExecutionQueue())
+    {
+        cout << *order << endl;
+    }
+    cout << "************************************************************" << flush;
+
+    cout << "\nPress any key to continue " << flush;
+    cin.get();
+    cin.get(); 
+    clearScreen();
+    }
 }
 
-void GameScreen::displayStats()
-{
-    cout << "Displaying Stats Info" << endl;
-}
 //pathetic implementation to clear the output window, better than calling 'system' and suitable for program of this size.
 void GameScreen::clearScreen()
 {
@@ -146,9 +146,66 @@ void GameScreen::clearScreen()
     }
 }
 
-GameController::GameController(GameScreen* newView, WarzoneGame* newModel)
+StatsScreen::StatsScreen() {}
+
+StatsScreen::StatsScreen(WarzoneGame* s) 
+{
+    _subject = s;
+    _subject->Attach(this);
+}
+
+StatsScreen::~StatsScreen()
+{
+    _subject->Detach(this);
+}
+
+void StatsScreen::Update()
+{
+    bool hasWon = _subject->getHasWon();
+
+    if(!hasWon)
+    {
+        Display();
+    }
+    else
+    {
+        displayWin();
+    }   
+}
+
+void StatsScreen::Display()
+{
+    cout << "************************************************************" << endl;
+    cout << "World Domination Status:\n" << endl;
+    for(Player* player : _subject->getPlayerList())
+    {
+        float percentOwned = ((float)player->gettoDefend()->size()/(float)_subject->getGameMap()->getTerritories()->size()) * 100;
+        cout << "Player: " << player->getName() << " -> Dominating ";
+        cout << std::setprecision(2) << percentOwned <<"% of the map.\n"<< endl;
+    }
+    cout << "************************************************************\n" << endl;
+
+}
+
+void StatsScreen::displayWin()
+{
+    clearScreen();
+    cout << "YOU WIN!!" << endl;
+}
+
+//pathetic implementation to clear the output window, better than calling 'system' and suitable for program of this size.
+void StatsScreen::clearScreen()
+{
+    for(int i =0; i<10; i++)
+    {
+        cout << "\n\n\n\n\n\n\n\n\n\n"; 
+    }
+}
+
+GameController::GameController(GameScreen* newView, StatsScreen* otherView, WarzoneGame* newModel)
 {
     gameView = newView;
+    statsView = otherView;
     gameModel = newModel;
 }
 

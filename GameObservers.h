@@ -7,8 +7,7 @@ class WarzoneGame;
 class Observer
 {
     public:
-        virtual void updatePhase(int) =0;
-        virtual void updateStats() =0;
+        virtual void Update() =0;
         ~Observer();
     protected:
         Observer();
@@ -19,27 +18,37 @@ class Subject
     public:
         virtual void Attach(Observer* o);
         virtual void Detach(Observer* o);
-        virtual void NotifyPhase(int);
-        virtual void NotifyStats();
+        virtual void Notify();
         Subject();
         ~Subject();
     private:
         std::list<Observer*>* _observers;
 };
-
-//view
+//phase view
 class GameScreen : public Observer
 {
     public:
         GameScreen();
         GameScreen(WarzoneGame* s);
         ~GameScreen();
-        void updatePhase(int);
-        void updateStats();
+        void Update();
         void displayReinforcementPhase();
         void displayIssuOrdersPhase();
         void displayExecuteOrdersPhase();
-        void displayStats();
+        void clearScreen();
+    private:
+        WarzoneGame* _subject;
+};
+//stats view
+class StatsScreen : public Observer
+{
+    public:
+        StatsScreen();
+        StatsScreen(WarzoneGame* s);
+        ~StatsScreen();
+        void Update();
+        void Display();
+        void displayWin();
         void clearScreen();
     private:
         WarzoneGame* _subject;
@@ -48,9 +57,10 @@ class GameScreen : public Observer
 class GameController
 {
     public:
-        GameController(GameScreen* newView, WarzoneGame* newModel);
+        GameController(GameScreen* newView, StatsScreen* otherView, WarzoneGame* newModel);
         void controlGame();
     private:
         GameScreen* gameView;
+        StatsScreen* statsView;
         WarzoneGame* gameModel;
 };

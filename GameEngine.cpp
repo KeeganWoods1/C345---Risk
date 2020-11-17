@@ -236,6 +236,7 @@ WarzoneGame::WarzoneGame(GameInit* gi)
     playerListPtr = gi->getPlayerListPtr();
     gameMapPtr = gi->getGameMapPtr();
     gameDeckPtr = gi->getGameDeckPtr();
+    hasWon = false;
 }
 
 bool WarzoneGame::ordersRemain()
@@ -252,6 +253,8 @@ bool WarzoneGame::ordersRemain()
 
 void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
 {
+    setCurrentPhase(0);
+
     const int MIN_REINFORCEMENT = 3;
     int reinforcement = 0;
 
@@ -265,14 +268,13 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
     player->addReinforcements(reinforcement);
 
     //notify subscribers of change of phase to display the troops that were added on turn start.
-    NotifyPhase(0);
+    Notify();
 
 }
 
 void WarzoneGame::issueOrdersPhase(Player* player)
 {
-    //notify subscribers of change of phase.
-    NotifyPhase(1);
+    setCurrentPhase(1);
 
     //**NOTE: This is for testing part 3: Execute orders Only! Remove this and implement full issue orders method**
     Player* player2;
@@ -286,23 +288,24 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     }
 
     player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(0)));
-    NotifyPhase(1);
     player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(1)));
-    NotifyPhase(1);
+
     vector<Territory*>* attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0));
     vector<Territory*>* defend = player->toDefend(*gameMapPtr);
     vector<Territory*>* attackall = player->toAttack(*gameMapPtr);
+
     if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
-    NotifyPhase(1);
+
     player->issueOrder(new Airliftorder(new int (1),player->gettoDefend()->at(1),player->gettoDefend()->at(0),player));
-    NotifyPhase(1);
     player->issueOrder(new Bomborder(player,player2->gettoDefend()->at(0)));
-    NotifyPhase(1);
     player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(3)));
-    NotifyPhase(1);
     player->issueOrder(new Negotiateorder(player,player2));
-    NotifyPhase(1);
-    if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
+
+    if (attack->size()>0 && defend->size() > 0)
+    {
+        player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
+    }    
+
     Card* card = player->getHand()->getHandContainer().at(0);
 
     if(card->getName() == "Bomb Card")
@@ -326,14 +329,90 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
     }
 
-    NotifyPhase(1);
+    Notify();
 
 }
 
 void WarzoneGame::executeOrdersPhase()
 {
-    //notify subscribers of change of phase.
-    NotifyPhase(2);
+    setCurrentPhase(2);
+
+    setExecutionQueue();
+
+    for(Order* order : executionQueue)
+    {
+        if(dynamic_cast<Advanceorder*>(order))
+        {
+            if(order->execute())
+            {
+                //Notify as soon as a territory is conquered
+                Notify();
+            }   
+        }
+        else
+        {
+            order->execute();    
+        }         
+    }
+    Notify();
+}
+
+void WarzoneGame::mainGameLoop()
+{
+    while(playerListPtr->size()>1)
+    {
+        //Remove players who own no territories
+        for(int i=0; i<playerListPtr->size(); i++)
+        {
+            if(playerListPtr->at(i)->getNumTerrOwned()<=0)
+            {
+                playerListPtr->erase(playerListPtr->begin()+i); 
+                //update the observers with new playerlist  
+                Notify();
+            }
+        }
+        //Each player gets their turn according to the playerList order (from startup phase)
+        for(Player* player : *playerListPtr)
+        {
+            setCurrentPlayer(player);
+            //Draw a card
+            gameDeckPtr->draw(player->getHand());
+
+            if (player->getName().compare("Neutral")!=0 && player->getcaptureTerritory()){
+                gameDeckPtr->draw(player->getHand());
+                player->setcaptureTerritory(false);
+            }
+
+            reinforcementPhase(player, player->getNumTerrOwned());
+            issueOrdersPhase(player);
+        }
+
+        //All players are done issuing orders, execution of orders can begin
+        executeOrdersPhase();
+        playerListPtr->pop_back();
+    }
+    setHasWon(true);
+    Notify();
+}
+
+Player* WarzoneGame::getCurrentPlayer()
+{
+    return currentPlayer;
+}
+
+void WarzoneGame::setCurrentPlayer(Player* p)
+{
+    currentPlayer = p;
+}
+
+Map* WarzoneGame::getGameMap()
+{
+    return gameMapPtr;
+}
+
+void WarzoneGame::setExecutionQueue()
+{
+    vector<Order*> executionVector;
 
     while(!this->ordersRemain())
     {        
@@ -381,67 +460,39 @@ void WarzoneGame::executeOrdersPhase()
                 }
             }
             if (ol->empty())continue;
-            ol->at(index)->execute();
+            executionVector.push_back(ol->at(index));
             ol->erase(ol->cbegin()+index);
         }    
     }
+    executionQueue = executionVector;
 }
 
-void WarzoneGame::mainGameLoop()
+vector<Order*> WarzoneGame::getExecutionQueue()
 {
-    while(playerListPtr->size()>1)
-    {
-        //Remove players who own no territories
-        for(int i=0; i<playerListPtr->size(); i++)
-        {
-            if(playerListPtr->at(i)->getNumTerrOwned()<=0)
-            {
-                cout << *playerListPtr->at(i) << " has been eliminated!";
-                playerListPtr->erase(playerListPtr->begin()+i);   
-            }
-        }
-        //Each player gets their turn according to the playerList order (from startup phase)
-        for(Player* player : *playerListPtr)
-        {
-            setCurrentPlayer(player);
-            //Draw a card
-            gameDeckPtr->draw(player->getHand());
-
-            if (player->getName().compare("Neutral")!=0 && player->getcaptureTerritory()){
-                gameDeckPtr->draw(player->getHand());
-                player->setcaptureTerritory(false);
-            }
-
-            reinforcementPhase(player, player->getNumTerrOwned());
-            issueOrdersPhase(player);
-            //Pause the loop. For debug purposes only
-            int a;
-            cin >> a;
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-
-        //All players are done issuing orders, execution of orders can begin
-        executeOrdersPhase();
-
-        int a;
-        cin >> a;
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
+    return executionQueue;
 }
 
-Player* WarzoneGame::getCurrentPlayer()
+int WarzoneGame::getCurrentPhase()
 {
-    return currentPlayer;
+    return currentPhase;
 }
 
-void WarzoneGame::setCurrentPlayer(Player* p)
+void WarzoneGame::setCurrentPhase(int n)
 {
-    currentPlayer = p;
+    currentPhase = n;
 }
 
-Map* WarzoneGame::getGameMap()
+bool WarzoneGame::getHasWon()
 {
-    return gameMapPtr;
+    return hasWon;
+}
+
+void WarzoneGame::setHasWon(bool b)
+{
+    hasWon = b;
+}
+
+vector<Player*> WarzoneGame::getPlayerList()
+{
+    return *playerListPtr;
 }

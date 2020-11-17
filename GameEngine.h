@@ -88,6 +88,9 @@ class WarzoneGame : public Subject
     Map* gameMapPtr;
     Deck* gameDeckPtr;
     Player* currentPlayer;
+    vector<Order*> executionQueue;
+    int currentPhase;
+    bool hasWon;
 
     public:
     WarzoneGame(GameInit*);
@@ -100,6 +103,13 @@ class WarzoneGame : public Subject
     Player* getCurrentPlayer();
     void setCurrentPlayer(Player*);
     Map* getGameMap();
+    void setExecutionQueue();
+    vector<Order*> getExecutionQueue();
+    int getCurrentPhase();
+    void setCurrentPhase(int);
+    bool getHasWon();
+    void setHasWon(bool);
+    vector<Player*> getPlayerList();
     //Copy constructor
     WarzoneGame(const WarzoneGame& wzg);
     //Assignment operator
