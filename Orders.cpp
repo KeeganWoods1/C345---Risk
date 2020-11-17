@@ -346,6 +346,7 @@
 		for (int i = 0; i < ptr->size(); i++) {
 			delete ptr->at(i);
 		}
+		delete ptr;
 	}
 	// copy constructor, should not be used in the context of the program
 	Orderlist::Orderlist(const Orderlist& ol) {

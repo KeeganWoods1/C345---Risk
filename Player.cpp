@@ -12,6 +12,10 @@ Player::Player()
 {
     name = "";
     capturedTerritory = new bool(false);
+    negotiatedFriends = NULL;
+    playerHand = NULL;
+    playerOlist = NULL;
+    territoriesToDefend = NULL;
 }
 
 // parametrized constructor definition
@@ -38,32 +42,49 @@ Player::Player(string playerName)
 Player::~Player()
 {
     // avoid memory leaks
-    delete playerHand;
-    delete playerOlist;
-    delete capturedTerritory;
-    capturedTerritory = NULL;
 
-    for (int i=0; i<negotiatedFriends->size(); i++){
-        delete negotiatedFriends->at(i);
-        negotiatedFriends->at(i) = NULL;
-    }
+    if (playerHand !=NULL)delete playerHand;
+    if (playerOlist != NULL)delete playerOlist;
+    if (capturedTerritory != NULL)delete capturedTerritory;
+    delete territoriesToDefend;
+    capturedTerritory = NULL;
+    if (negotiatedFriends!=NULL)
+        for (int i=0; i<negotiatedFriends->size(); i++){
+            delete negotiatedFriends->at(i);
+            negotiatedFriends->at(i) = NULL;
+        }
     delete negotiatedFriends;
     negotiatedFriends = NULL;
 
 
     //Clear ToDefend
-    for(int i = 0; i < territoriesToDefend->size(); i++)
-    {
-        delete territoriesToDefend->at(i);
-        // avoid dangling pointers
-        territoriesToDefend->at(i) = NULL;
-    }
+    if (territoriesToDefend!= NULL)
+        for(int i = 0; i < territoriesToDefend->size(); i++)
+        {
+            delete territoriesToDefend->at(i);
+            // avoid dangling pointers
+            territoriesToDefend->at(i) = NULL;
+        }
 }
 
 // copy constructor definition
 Player::Player(const Player &player)
 {
     name = player.name;
+    reinforcementPool = player.reinforcementPool;
+    capturedTerritory = new bool();
+    *capturedTerritory = *player.capturedTerritory;
+    negotiatedFriends = new vector<string*>;
+    for (int i = 0; i < player.negotiatedFriends->size(); i++) {
+        negotiatedFriends->push_back(new string(*player.negotiatedFriends->at(i)));
+    }
+    territoriesToDefend = new vector<Territory*>;
+    for (int i = 0; i < player.territoriesToDefend->size(); i++) {
+        territoriesToDefend->push_back(new Territory(*player.territoriesToDefend->at(i)));
+    }
+    playerHand = new Hand(*player.playerHand);
+    playerOlist = new Orderlist(*player.playerOlist);
+
 }
 
 // assignment operator
