@@ -81,8 +81,8 @@
 	    map = NULL;
 	}
 	string Advanceorder::print()const {
-		return "Advance order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " units attacking " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
-	}
+		return "Advance order by " + orderplayer->getName() + " to move " + to_string(*troopnum) + " armies from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name();
+        }
 	Advanceorder::Advanceorder(const Advanceorder& old) {
 		troopnum = new int(*old.troopnum);
 		sourceterritory = new Territory(*old.sourceterritory);
