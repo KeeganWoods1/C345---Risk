@@ -1,12 +1,20 @@
 #include "map.h"
 #include <iostream>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 
 //Class Territory
 //constructors
 Territory::Territory() {
     territory_name = "default territory";
     territory_continent = 0;
-    territory_owner = new Player();
+    territory_owner = DBG_NEW Player();
     territory_armycount = 0;
 }
 
@@ -90,21 +98,48 @@ Map::Map() {
 }
 
 Map::Map(const Map *map) {
-    this->adjacent_matrix = map->adjacent_matrix;
     this->vertices = map->vertices;
+    this->adjacent_matrix = DBG_NEW bool* [this->vertices];
+    for (int i = 0; i < vertices; i++) {
+        this->adjacent_matrix[i] = DBG_NEW bool [this->vertices];
+        for (int j = 0; j < vertices; j++)
+            adjacent_matrix[i][j] = map->adjacent_matrix[i][j];
+    }
+    this->territoryListPtr = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < map->territoryListPtr->size(); i++) {
+        territoryListPtr->push_back(DBG_NEW Territory(map->territoryListPtr->at(i)));
+    }
+
 }
 
 Map::Map(int vertices, vector<Territory*>* territoryList) {
     this->vertices = vertices;
-    adjacent_matrix = new bool* [vertices];
+    adjacent_matrix = DBG_NEW bool* [vertices];
     //initialize the 2d array with false
     for (int i = 0; i < vertices; i++) {
-        adjacent_matrix[i] = new bool[vertices];
+        adjacent_matrix[i] = DBG_NEW bool[vertices];
         for (int j = 0; j < vertices; j++)
             adjacent_matrix[i][j] = false;
     }
     //Set the territories list from loaded map file
-    territoryListPtr = territoryList;
+    territoryListPtr = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < territoryList->size(); i++) {
+        territoryListPtr->push_back(territoryList->at(i));
+    }
+}
+//destructor
+Map::~Map() {
+    for (int i = 0; i < vertices; i++) {
+        if(adjacent_matrix[i]!= NULL)delete[] adjacent_matrix[i];
+        adjacent_matrix[i] = NULL;
+    }
+    delete[] adjacent_matrix;
+    adjacent_matrix = NULL;
+    for (int i = 0; i < territoryListPtr->size(); i++) {
+        delete territoryListPtr->at(i);
+    }
+    territoryListPtr->clear();
+    delete territoryListPtr;
 }
 
 //assignment operator
@@ -183,10 +218,6 @@ bool Map::Validate() {
     return true;
 }
 
-//destructor
-Map::~Map() {
-    delete[] adjacent_matrix;
-}
 bool Map::isAdjacent(Territory a, Territory b) {
     int indexa;
     int indexb;

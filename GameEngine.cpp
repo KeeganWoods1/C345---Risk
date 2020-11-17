@@ -14,6 +14,7 @@ MapDirectoryInit::MapDirectoryInit()
 {
     //display map files in folder
     std::string path = "MapFiles";
+    MapLoader* mapLoader;
     for (const auto & entry : fs::directory_iterator(path))
     {
         std::cout << entry.path().filename() << std::endl;
@@ -27,16 +28,18 @@ MapDirectoryInit::MapDirectoryInit()
         cout << "" << endl;
 
         //use user input as parameter to MapLoader() constructor
-        MapLoader* mapLoader = new MapLoader("MapFiles/" + selectedMapName);
+        mapLoader = new MapLoader("MapFiles/" + selectedMapName);
         if(mapLoader->getStatus())
         {
-            gameMapPtr = mapLoader->getMap();
+            gameMapPtr = new Map(mapLoader->getMap());
+            delete mapLoader;
             break;
         }
         else
         {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            delete mapLoader;
         }    
     }    
 }
@@ -51,7 +54,9 @@ Map* MapDirectoryInit::getGameMap()
     return gameMapPtr;
 }
 
-MapDirectoryInit::~MapDirectoryInit(){}
+MapDirectoryInit::~MapDirectoryInit(){
+    delete gameMapPtr;
+}
 
 PlayerListInit::PlayerListInit()
 {
@@ -91,6 +96,13 @@ PlayerListInit::PlayerListInit()
     cout << "Displaying Deck: " << endl;
     cout << "\n" << *deckPtr;
 }
+PlayerListInit::~PlayerListInit() {
+    delete deckPtr;
+    for (int i = 0; i < playerListPtr->size(); i++) {
+        delete playerListPtr->at(i);
+    }
+    delete playerListPtr;
+}
 
 vector<Player*>* PlayerListInit::getPlayerList()
 {
@@ -109,14 +121,25 @@ Deck* PlayerListInit::getDeckPtr()
 
 GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, Deck* gdPtr)
 {
-    playerListPtr = plPtr;
-    gameMapPtr = gmPtr;
-    gameDeckPtr = gdPtr;
+    playerListPtr = new vector<Player*>;
+    for (int i = 0; i < plPtr->size(); i++) {
+        playerListPtr->push_back(new Player(*plPtr->at(i)));
+    }
+    gameMapPtr = new Map(gmPtr);
+    gameDeckPtr = new Deck(*gdPtr);
     startupPhase(playerListPtr, gameMapPtr);
 }
-
+GameInit::~GameInit() {
+    for (int i = 0; i < playerListPtr->size(); i++) {
+        delete playerListPtr->at(i);
+    }
+    delete playerListPtr;
+    delete gameMapPtr;
+    delete gameDeckPtr;
+}
 void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
 {
+    
     //randomly determine order of play
     //rng used as seed for std::mt19337
     std::random_device rd;
@@ -124,19 +147,19 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     std::mt19937 g(rd());
     //shuffle playerList, play order will be the order in which players appear in the shuffled list
     std::shuffle(playerListPtr->begin(), playerListPtr->end(), g);
-
+    
     //display player turn order
     cout << "\nPrinting Player order: " << endl;
     for(int i=0; i< playerListPtr->size(); i++)
     {
         cout << i+1 << ". " << *playerListPtr->at(i) << endl;
     }
-
     //randomly assign all territories in Map object to one player (ie. dont assign 2 players to the same territory)
     vector<int> territoryIndices;
     vector<int> playerListIndices;
+    
     vector<Territory*>* territoriesPtr = gameMapPtr->getTerritories();
-
+    
     for(int i=0; i<gameMapPtr->getTerritories()->size(); i++)
     {
         territoryIndices.push_back(i);
@@ -150,7 +173,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
 
     //shuffle territory indices to randomize territory assignment
     std::shuffle(territoryIndices.begin(), territoryIndices.end(), g);
-
+    
     //assign territories to players without "double booking"
     for(int j=0; j<territoryIndices.size(); j+=playerListIndices.size())
     {
@@ -160,7 +183,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
             if((j+playerListIndices.size())<=territoryIndices.size())
             {
                 //set territory owner
-                territoriesPtr->at(territoryIndices.at(j+k))->setterritory_owner(playerListPtr->at(k)); 
+                territoriesPtr->at(territoryIndices.at(j + k))->setterritory_owner(playerListPtr->at(k));
                 //add territory to player's toDefend list
                 playerListPtr->at(k)->gettoDefend()->push_back(territoriesPtr->at(territoryIndices.at(j+k)));
             }
@@ -169,7 +192,6 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     
     //Give players armies A to distribute (Dont actually let them distribute just give them an initial count)
     const int n = playerListPtr->size();
-
     switch(n)
     {
         case 2:
@@ -205,7 +227,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
             break;
         }
     }
-
+    
     //display player reinforcement pools
     cout << "\nPrinting player reinforcement pools: " << endl;
     for(int i=0; i< playerListPtr->size(); i++)
@@ -214,6 +236,11 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
         << playerListPtr->at(i)->getCurrentReinforcements() << endl;
     }
     cout << "" << endl;
+    /*
+    for (int i = 0; i < territoriesPtr->size(); i++) {
+        delete territoriesPtr->at(i);
+    }
+    delete territoriesPtr;*/
 }
 
 vector<Player*>* GameInit::getPlayerListPtr()
@@ -250,6 +277,9 @@ bool WarzoneGame::ordersRemain()
     return true;
 }
 
+WarzoneGame::~WarzoneGame() {
+}
+
 void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
 {
     const int MIN_REINFORCEMENT = 3;
@@ -275,7 +305,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     NotifyPhase(1);
 
     //**NOTE: This is for testing part 3: Execute orders Only! Remove this and implement full issue orders method**
-    Player* player2;
+    Player* player2 = NULL;
     for(Player* pl : *playerListPtr)
     {
         if(player->getName() != pl->getName())
