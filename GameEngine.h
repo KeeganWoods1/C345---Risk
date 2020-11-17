@@ -11,6 +11,7 @@
 using namespace std;
 
 class Subject;
+
 class MapDirectoryInit 
 {
     private:
