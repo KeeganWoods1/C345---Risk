@@ -304,8 +304,146 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     //notify subscribers of change of phase.
     NotifyPhase(1);
 
-    //**NOTE: This is for testing part 3: Execute orders Only! Remove this and implement full issue orders method**
-    Player* player2 = NULL;
+    // player decides which territories are to be attacked in priority
+    cout << "The list of territories to be attacked: " << endl;
+    cout << player->toString(player->toAttack(*gameMapPtr)) << endl;
+
+    // player decides which territories are to be defended in priority
+    cout << "The list of territories to be defended: " << endl;
+    cout << player->toString(player->gettoDefend()) << endl;
+
+    int reinforcementCounter = player->getCurrentReinforcements();
+    // Player issues deploy orders
+    cout << "Issuing deploy orders only." << endl;
+    cout << "Armies to deploy: " << reinforcementCounter << endl << endl;
+
+    // 1 order added to player's orderlist
+    Deployorder *deployorder1 = new Deployorder(player, new int(10), player->gettoDefend()->at(0));
+    cout << deployorder1->print() << endl;
+    player->issueOrder(deployorder1);
+    NotifyPhase(1);
+    reinforcementCounter -= 10;
+    cout << "Armies left to deploy: " << reinforcementCounter << endl;
+
+
+    if(reinforcementCounter > 0)
+    {
+        // 2nd order added to player's orderlist
+        cout << endl;
+        Deployorder *deployorder2 = new Deployorder(player, new int(10), player->gettoDefend()->at(1));
+        cout << deployorder2->print() << endl;
+        player->issueOrder(deployorder2);
+        NotifyPhase(1);
+        reinforcementCounter -= 10;
+        cout << "Armies left to deploy: " << reinforcementCounter << endl;
+    }
+
+    if(reinforcementCounter > 0)
+    {
+        // 3rd order added to player's orderlist
+        cout << endl;
+        Deployorder *deployorder3 = new Deployorder(player, new int(5), player->gettoDefend()->at(2));
+        cout << deployorder3->print() << endl;
+        player->issueOrder(deployorder3);
+        NotifyPhase(1);
+        reinforcementCounter -= 5;
+        cout << "Armies left to deploy: " << reinforcementCounter << endl;
+    }
+
+    if(reinforcementCounter > 0)
+    {
+        // 4th order added to player's orderlist
+        cout << endl;
+        Deployorder *deployorder4 = new Deployorder(player, new int(5), player->gettoDefend()->at(3));
+        cout << deployorder4->print() << endl;
+        player->issueOrder(deployorder4);
+        NotifyPhase(1);
+        reinforcementCounter -= 5;
+        cout << "Armies left to deploy: " << reinforcementCounter << endl;
+    }
+
+    if(reinforcementCounter > 0)
+    {
+        // 5th order added to player's orderlist
+        cout << endl;
+        Deployorder *deployorder5 = new Deployorder(player, new int(5), player->gettoDefend()->at(3));
+        cout << deployorder5->print() << endl;
+        player->issueOrder(deployorder5);
+        NotifyPhase(1);
+        reinforcementCounter -= 5;
+        cout << "Armies left to deploy: " << reinforcementCounter << endl;
+    }
+
+    if(reinforcementCounter > 0)
+    {
+        // 6th order added to player's orderlist
+        cout << endl;
+        Deployorder *deployorder6 = new Deployorder(player, new int(5), player->gettoDefend()->at(2));
+        cout << deployorder6->print() << endl;
+        player->issueOrder(deployorder6);
+        NotifyPhase(1);
+        reinforcementCounter -= 5;
+        cout << "Armies left to deploy: " << reinforcementCounter << endl;
+    }
+
+        // avoid memory leaks
+        // delete deployorder1;
+        // delete deployorder2;
+        // delete deployorder3;
+        // delete deployorder4;
+
+        // avoid dangling pointers
+        // deployorder1 = NULL;
+        // deployorder2 = NULL;
+        // deployorder3 = NULL;
+        // deployorder4 = NULL;
+
+    cout << endl << "All available armies have been deployed. Proceeding with issuing advance orders." << endl;
+
+    // player chooses to move armies from one of its own territory to the other
+    // in order to defend them
+    Advanceorder *advanceorder1 = new Advanceorder(new int (4), player, player->gettoDefend()->at(3),
+                                                   player->gettoDefend()->at(2), gameMapPtr);
+    cout << advanceorder1->print() << " in order to defend" << endl;
+    player->issueOrder(advanceorder1);
+    NotifyPhase(1);
+
+    Advanceorder *advanceorder2 = new Advanceorder(new int (7), player, player->gettoDefend()->at(1),
+                                                   player->gettoDefend()->at(3), gameMapPtr);
+    cout << advanceorder2->print() << " in order to defend" << endl;
+    player->issueOrder(advanceorder2);
+    NotifyPhase(1);
+
+    // player chooses to move armies from one of its territories to a neighboring
+    // enemy territory to attack them
+    Territory *attack3 = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->at(0);
+    Territory *defend3 = player->toDefend(*gameMapPtr)->at(0);
+    Advanceorder *advanceorder3 = new Advanceorder(new int (2), player, attack3, defend3, gameMapPtr);
+    cout << endl << advanceorder3->print() << " in order to attack" << endl;
+    player->issueOrder(advanceorder3);
+    NotifyPhase(1);
+
+    Territory *attack4 = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(1))->at(0);
+    Territory *defend4 = player->toDefend(*gameMapPtr)->at(1);
+    Advanceorder *advanceorder4 = new Advanceorder(new int (6), player, attack4, defend4, gameMapPtr);
+    cout << endl << advanceorder4->print() << " in order to attack" << endl;
+    player->issueOrder(advanceorder4);
+    NotifyPhase(1);
+    cout << endl;
+
+    // avoiding memory leaks
+    //delete advanceorder1;
+    //delete advanceorder2;
+    //delete advanceorder3;
+    //delete advanceorder4;
+
+    // avoid dangling pointers
+    //advanceorder1 = NULL;
+    //advanceorder2 = NULL;
+    //advanceorder3 = NULL;
+    //advanceorder4 = NULL;
+
+    Player* player2;
     for(Player* pl : *playerListPtr)
     {
         if(player->getName() != pl->getName())
@@ -315,49 +453,44 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         }
     }
 
-    player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(0)));
-    NotifyPhase(1);
-    player->issueOrder(new Deployorder(player,new int (3),player->gettoDefend()->at(1)));
-    NotifyPhase(1);
-    vector<Territory*>* attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0));
-    vector<Territory*>* defend = player->toDefend(*gameMapPtr);
-    vector<Territory*>* attackall = player->toAttack(*gameMapPtr);
-    if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
-    NotifyPhase(1);
-    player->issueOrder(new Airliftorder(new int (1),player->gettoDefend()->at(1),player->gettoDefend()->at(0),player));
-    NotifyPhase(1);
-    player->issueOrder(new Bomborder(player,player2->gettoDefend()->at(0)));
-    NotifyPhase(1);
-    player->issueOrder(new Blockadeorder(player,player->gettoDefend()->at(3)));
-    NotifyPhase(1);
-    player->issueOrder(new Negotiateorder(player,player2));
-    NotifyPhase(1);
-    if (attack->size()>0 && defend->size() > 0)player->issueOrder(new Advanceorder(new int(1),player,attack->at(0),defend->at(0),gameMapPtr));
+    // getting cards from the player's hand
     Card* card = player->getHand()->getHandContainer().at(0);
 
-    if(card->getName() == "Bomb Card")
+    if((card->getName()) == "Bomb Card")
     {
-        dynamic_cast<BombCard*>(card)->play(gameDeckPtr, player, player2->gettoDefend()->at(0));
+        Territory *attack = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(1))->at(0);
+        // the play method adds the order to the player's orderlist
+        dynamic_cast<BombCard *>(card)->play(gameDeckPtr, player, attack);
+        cout << "The Bomb card was used and an order was issued successfully." << endl;
     }
-    else if(card->getName() == "Reinfocement Card")
+    else if(card->getName() == "Reinforcement Card")
     {
-        dynamic_cast<ReinforcementCard*>(card)->play(gameDeckPtr, player);
+        // the play method adds the order to the player's orderlist
+        dynamic_cast<ReinforcementCard *>(card)->play(gameDeckPtr, player);
+        cout << "The Reinforcement card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Blockade Card")
     {
+        // the play method adds the order to the player's orderlist
         dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend()->at(0));
+        cout << "The Blockade card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Airlift Card")
     {
+        // the play method adds the order to the player's orderlist
         dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend()->at(1),player->gettoDefend()->at(0), new int(1));
+        cout << "The Airlift card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Diplomacy Card")
     {
+        // the play method adds the order to the player's orderlist
         dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
+        cout << "The Diplomacy card was used and an order was issued successfully." << endl;
     }
-
     NotifyPhase(1);
 
+    cout << "\nOrders Issued: " << endl;
+    cout << *player->getPlayerlist() << endl;
 }
 
 void WarzoneGame::executeOrdersPhase()
