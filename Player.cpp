@@ -3,7 +3,13 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 using namespace std;
 
 
@@ -11,11 +17,13 @@ using namespace std;
 Player::Player()
 {
     name = "";
-    capturedTerritory = new bool(false);
+    capturedTerritory = DBG_NEW bool(false);
     negotiatedFriends = NULL;
     playerHand = NULL;
     playerOlist = NULL;
     territoriesToDefend = NULL;
+    territoriesToAttack = NULL;
+    surroundingterr = NULL;
 }
 
 // parametrized constructor definition
@@ -24,18 +32,20 @@ Player::Player(string playerName)
     // player's name is set to passed argument
     name = playerName;
 
-    negotiatedFriends = new vector<string*>();
+    negotiatedFriends = DBG_NEW vector<string*>();
     // each player owns a hand of cards
-    playerHand = new Hand();
+    playerHand = DBG_NEW Hand();
 
-    capturedTerritory = new bool(false);
+    capturedTerritory = DBG_NEW bool(false);
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
 
 
     //initialize player orderlist
-    playerOlist = new Orderlist();
-    territoriesToDefend = new vector<Territory*>;
+    playerOlist = DBG_NEW Orderlist();
+    territoriesToDefend = DBG_NEW vector<Territory*>;
+    territoriesToAttack = DBG_NEW vector<Territory*>;
+    surroundingterr = DBG_NEW vector<Territory*>;
 }
 
 // destructor definition
@@ -46,7 +56,6 @@ Player::~Player()
     if (playerHand !=NULL)delete playerHand;
     if (playerOlist != NULL)delete playerOlist;
     if (capturedTerritory != NULL)delete capturedTerritory;
-    delete territoriesToDefend;
     capturedTerritory = NULL;
     if (negotiatedFriends!=NULL)
         for (int i=0; i<negotiatedFriends->size(); i++){
@@ -55,16 +64,13 @@ Player::~Player()
         }
     delete negotiatedFriends;
     negotiatedFriends = NULL;
+    territoriesToDefend->clear();
+    delete territoriesToDefend;
+    territoriesToAttack->clear();
+    delete territoriesToAttack;
+    surroundingterr->clear();
+    delete surroundingterr;
 
-
-    //Clear ToDefend
-    if (territoriesToDefend!= NULL)
-        for(int i = 0; i < territoriesToDefend->size(); i++)
-        {
-            delete territoriesToDefend->at(i);
-            // avoid dangling pointers
-            territoriesToDefend->at(i) = NULL;
-        }
 }
 
 // copy constructor definition
@@ -72,18 +78,26 @@ Player::Player(const Player &player)
 {
     name = player.name;
     reinforcementPool = player.reinforcementPool;
-    capturedTerritory = new bool();
+    capturedTerritory = DBG_NEW bool();
     *capturedTerritory = *player.capturedTerritory;
-    negotiatedFriends = new vector<string*>;
+    negotiatedFriends = DBG_NEW vector<string*>;
     for (int i = 0; i < player.negotiatedFriends->size(); i++) {
-        negotiatedFriends->push_back(new string(*player.negotiatedFriends->at(i)));
+        negotiatedFriends->push_back(DBG_NEW string(*player.negotiatedFriends->at(i)));
     }
-    territoriesToDefend = new vector<Territory*>;
+    territoriesToDefend = DBG_NEW vector<Territory*>;
     for (int i = 0; i < player.territoriesToDefend->size(); i++) {
-        territoriesToDefend->push_back(new Territory(*player.territoriesToDefend->at(i)));
+        territoriesToDefend->push_back(DBG_NEW Territory(*player.territoriesToDefend->at(i)));
     }
-    playerHand = new Hand(*player.playerHand);
-    playerOlist = new Orderlist(*player.playerOlist);
+    territoriesToAttack = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < player.territoriesToAttack->size(); i++) {
+        territoriesToAttack->push_back(DBG_NEW Territory(*player.territoriesToAttack->at(i)));
+    }
+    surroundingterr = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < player.surroundingterr->size(); i++) {
+        surroundingterr->push_back(DBG_NEW Territory(*player.surroundingterr->at(i)));
+    }
+    playerHand = DBG_NEW Hand(*player.playerHand);
+    playerOlist = DBG_NEW Orderlist(*player.playerOlist);
 
 }
 
@@ -171,7 +185,9 @@ vector<Territory*>* Player::gettoDefend(Map& m)
 }
 //new method updates the todefend list with all new territories
 void Player::updatetoDefend(Map &m){
-    vector<Territory*>* terr2def = new vector<Territory*>;
+    territoriesToDefend->clear();
+    delete territoriesToDefend;
+    vector<Territory*>* terr2def = DBG_NEW vector<Territory*>;
         vector<Territory*>* terrall = m.getTerritories();
     for (int i =0; i < terrall->size(); i++){
         if (terrall->at(i)->getterritory_owner()->getName().compare(name)==0)terr2def->push_back(terrall->at(i));
@@ -184,7 +200,7 @@ void Player::updatetoDefend(Map &m){
 vector<Territory*>* Player::toDefend(Map &m)
 {
     updatetoDefend(m);
-    vector<Territory *> *terr2 = new vector<Territory *>;
+    vector<Territory *> *terr2 = DBG_NEW vector<Territory *>;
     for (int j =0; j<territoriesToDefend->size(); j++) {
         Territory t = territoriesToDefend->at(j);
         vector<Territory *> *terr = surroundingterritories(m, t);
@@ -192,8 +208,10 @@ vector<Territory*>* Player::toDefend(Map &m)
             if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0)
                 terr2->push_back(territoriesToDefend->at(j));
         }
+        terr->clear();
+        delete terr;
     }
-    vector<Territory *>* terr = new vector<Territory*>();
+    vector<Territory *>* terr = DBG_NEW vector<Territory*>();
     int initialsize = terr2->size();
     for (int k = 0; k<initialsize; k++) {
         int min = 100000;
@@ -208,7 +226,15 @@ vector<Territory*>* Player::toDefend(Map &m)
         terr2->erase(terr2->cbegin() + index);
 
     }
-    return  terr;
+    terr2->clear();
+    delete terr2;
+    surroundingterr->clear();
+    for (int i = 0; i < terr->size(); i++) {
+        surroundingterr->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    return  surroundingterr;
 }
 
 // definition of method toAttack
@@ -217,11 +243,13 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
     updatetoDefend(m);
     vector<Territory*>* terr = surroundingterritories(m,t);
-    vector<Territory*>* terr2 = new vector<Territory*>;
+    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
     for (int i=0; i <terr->size(); i++){
         if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName())!=0)terr2->push_back(terr->at(i));
     }
-    terr = new vector<Territory*>();
+    terr->clear();
+    delete terr;
+    terr = DBG_NEW vector<Territory*>();
     int initialsize = terr2->size();
     for (int k = 0; k<initialsize; k++) {
         int min = 100000;
@@ -237,11 +265,19 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
         terr2->erase(terr2->cbegin() + index);
 
     }
-    return  terr;
+    terr2->clear();
+    delete terr2;
+    for (int i = 0; i < terr->size(); i++) {
+        territoriesToAttack->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    return  territoriesToAttack;
 }
 vector<Territory*>* Player::toAttack(Map &m){
+
     updatetoDefend(m);
-    vector<Territory*>* result = new vector<Territory*>();
+    vector<Territory*>* result = DBG_NEW vector<Territory*>();
     for (int i=0; i<territoriesToDefend->size(); i++) {
         vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
         for (int j = 0; j < terr->size(); j++) {
@@ -253,6 +289,8 @@ vector<Territory*>* Player::toAttack(Map &m){
                 if (!exists)result->push_back(terr->at(j));
             }
         }
+        terr->clear();
+        delete terr;
     }
     for (int k = 0; k<result->size(); k++) {
         int max = -1;
@@ -268,7 +306,12 @@ vector<Territory*>* Player::toAttack(Map &m){
             iter_swap(result->begin()+index,result->begin()+k);
         }
     }
-    return result;
+    for (int i = 0; i < result->size(); i++) {
+        territoriesToAttack->push_back(result->at(i));
+    }
+    result->clear();
+    delete result;
+    return territoriesToAttack;
 
 }
 
@@ -283,7 +326,7 @@ bool Player::getcaptureTerritory() {return *capturedTerritory;}
 //setter method for boolean value of capture territory
 void Player::setcaptureTerritory(bool b) {*capturedTerritory = b;}
 //adds a friend to the negotiated list
-void Player::addnegotiateFriends(string s) {negotiatedFriends->push_back(new string(s));}
+void Player::addnegotiateFriends(string s) {negotiatedFriends->push_back(DBG_NEW string(s));}
 //clears the list (used at the end of each round)
 void  Player::clearnegotiateFriends() {
     for (int i=0; i<negotiatedFriends->size(); i++){
@@ -301,7 +344,7 @@ bool Player::isNegotiatedFriend(string s) {
 }
 //For a given territory on a map returns all surrounding territories
 vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
-    vector<Territory*>* terr = new vector<Territory*>;
+    vector<Territory*>* terr = DBG_NEW vector<Territory*>;
     for (int i=0; i<m.getTerritories()->size(); i++){
         if(m.isAdjacent(m.getTerritories()->at(i),l)) terr->push_back(m.getTerritories()->at(i));
     }
@@ -311,7 +354,7 @@ vector<Order*>* Player::getOrderList(){
    return(playerOlist->retirevelist());
 }
 vector<Territory*>* Player::allnonFriendlies(Map &m){
-    vector<Territory*>* result = new vector<Territory*>;
+    vector<Territory*>* result = DBG_NEW vector<Territory*>;
     vector<Territory*>* terr = m.getTerritories();
     for (int i=0; i<terr->size(); i++){
         if (terr->at(i)->getterritory_owner()->getName().compare(name)!=0) result->push_back(terr->at(i));

@@ -3,7 +3,13 @@
 #include <fstream>
 #include <string>
 using namespace std;
-
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 //Default constructor
 MapLoader::MapLoader() {
     map= nullptr;
@@ -11,7 +17,7 @@ MapLoader::MapLoader() {
 
 //Parameterized constructor
 MapLoader::MapLoader(string mapName) {
-    map= new string(mapName);
+    map= DBG_NEW string(mapName);
 
     fstream map_stream;
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
@@ -110,7 +116,7 @@ void MapLoader::loadMap(fstream& map_stream) {
                     break;
                 }
 
-                str = new string (line);
+                str = DBG_NEW string (line);
                 continents.push_back(str);
                 //next continent index
                 counter++;
@@ -133,7 +139,7 @@ void MapLoader::loadMap(fstream& map_stream) {
                     break;
                 }
                 
-                str = new string (line);
+                str = DBG_NEW string (line);
                 countries.push_back(str);
                 //next country index
                 counter++;
@@ -154,7 +160,7 @@ void MapLoader::loadMap(fstream& map_stream) {
                 if (line.size() <= 1){
                     break;
                 }
-                str = new string (line);
+                str = DBG_NEW string (line);
                 borders.push_back(str);
                 //next border index
                 counter++;
@@ -166,12 +172,13 @@ void MapLoader::loadMap(fstream& map_stream) {
 
     }//end of while for all map file
 
-    if (continentsFound & countriesFound & bordersFound){
-        cout << "\nCreating a map object...\n" << endl;
+    if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
+        cout << "\nMap is valid.\nCreating a map object...\n" << endl;
         CreateMap(continents, countries, borders);
     } else {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
     }
+    isLoaded = true;
 
     //to avoid memory leak
     str = nullptr;
@@ -182,7 +189,6 @@ void MapLoader::printVector(vector<std::string*> aVector) {
     for (vector<std::string*>::const_iterator i = aVector.begin(); i != aVector.end(); ++i){
         std::cout << **i << endl;
     }
-    cout << "" << endl;
 }
 void MapLoader::printTerritories(vector<Territory*>* aVector){
     for (vector<Territory*>::const_iterator i = aVector->begin(); i != aVector->end(); ++i){
@@ -201,8 +207,7 @@ void MapLoader::printContinents(vector<Continent*>* aVector){
 Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
 
     //creating territories list object and adding each one to the continent that it belongs to
-    vector<Territory*>* territoriesListPtr = new vector<Territory*>();
-    Player* neutralPlayer = new Player("Neutral");
+    vector<Territory*>* territoriesListPtr = DBG_NEW vector<Territory*>();
     //args of territory = int continent, string name, player* owner, int armies.
     for(int j=0; j<countries.size(); j++) {
         string name;
@@ -234,18 +239,14 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }
         }
         //creating territory and add to territories list
-        Territory* territory = new Territory(continentID, name, neutralPlayer, 0);
+        Player* neutralPlayer = DBG_NEW Player("Neutral");
+        Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 0);
         territoriesListPtr->push_back(territory);
     }
-//    Player* neutralPlayer2 = new Player("2");
-//    for (auto territory : *territoriesListPtr){
-//        if (territory->getterritory_name()== "New_Brunswick"){
-//            territory->setterritory_owner(neutralPlayer2);
-//        }
-//    }
-    printTerritories(territoriesListPtr);
+    //printTerritories(territoriesListPtr);
+
     //creating Continents object and setting the bonus army for each continent
-    vector<Continent*>* continentsListPtr = new vector<Continent*>();
+    vector<Continent*>* continentsListPtr = DBG_NEW vector<Continent*>();
     vector<Territory*> territoriesInContinent;
     for (int i=0; i<continents.size(); i++){
         territoriesInContinent.clear();
@@ -281,22 +282,13 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }
         }
         //creating continent and add to continents list
-        Continent* aContinent = new Continent(name, id, bonus, territoriesInContinent);
+        Continent* aContinent = DBG_NEW Continent(name, id, bonus, territoriesInContinent);
         continentsListPtr->push_back(aContinent);
     }
-    //printContinents(continentsListPtr);
-    for (auto continent : *continentsListPtr){
-        if (continent->ownedByOnePlayer(neutralPlayer)){
-            cout << "Player " <<neutralPlayer->getName() <<
-                    " owns this continent\n" << *continent << endl;
-        } else{
-            cout << "no" << endl;
-        }
-        cout << "next" << endl;
-    }
+    printContinents(continentsListPtr);
 
     //create map object
-    validMap = new Map(countries.size(), territoriesListPtr);
+    validMap = DBG_NEW Map(countries.size(), territoriesListPtr);
     vector<int> brdrsList;
     string nextBorder;
 
@@ -329,13 +321,11 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
     }
-    //testing Map object
-    if (validMap->Validate() == true){
-        std::cout << "Map is valid because it is a connected graph.\n" << std::endl;
-        isLoaded = true;
+    for (int i = 0; i < continentsListPtr->size(); i++) {
+        delete continentsListPtr->at(i);
     }
-    else {
-        std::cout << "Map is invalid because it is NOT a connected graph." << std::endl;
-    }
+    delete continentsListPtr;
+    territoriesListPtr->clear();
+    delete territoriesListPtr;
     return validMap;
 }

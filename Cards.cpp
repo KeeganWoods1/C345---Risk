@@ -500,6 +500,9 @@ Hand::Hand()
 //Hand destructor
 Hand::~Hand() 
 {
+    for (int i = 0; i < handOfCardsPtr->size(); i++) {
+        delete handOfCardsPtr->at(i);
+    }
     delete handOfCardsPtr;
     handOfCardsPtr = NULL;
 }
@@ -521,7 +524,7 @@ Hand::Hand(const Hand& h)
 {
     handOfCardsPtr = DBG_NEW vector<Card*>;
     for (int i = 0; i < h.handOfCardsPtr->size(); i++) {
-        handOfCardsPtr->push_back(new Card(*h.handOfCardsPtr->at(i)));
+        handOfCardsPtr->push_back(DBG_NEW Card(*h.handOfCardsPtr->at(i)));
     }
 }
 

@@ -30,6 +30,8 @@ private:
     vector<string*>* negotiatedFriends;
     // player owns a collection of territories
     vector<Territory*>* territoriesToDefend;
+    vector<Territory*>* territoriesToAttack;
+    vector<Territory*>* surroundingterr;
     // player owns a hand of cards
     Hand* playerHand;
     // player's orderlist

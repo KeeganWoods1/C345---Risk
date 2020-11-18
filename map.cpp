@@ -116,16 +116,6 @@ int Continent::getId() {
 int Continent::getBonus() {
     return bonus;
 }
-bool Continent::ownedByOnePlayer(Player* aPlayer){
-    for (int i=0; i<territoriesInContinent.size(); i++){
-        if (territoriesInContinent[i]->getterritory_owner()->getName() == aPlayer->getName()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-}
 
 //insertion operator (toString)
 ostream& operator << (ostream& out, const Continent& c) {
@@ -140,9 +130,8 @@ ostream& operator << (ostream& out, const Continent& c) {
 
 Continent::~Continent() {
     territoriesInContinent.clear();
-    for (int i = 0; i < territoriesInContinent.size(); i++) {
-        delete territoriesInContinent.at(i);
-    }  
+
+
 }
 
 //Class Map
@@ -257,7 +246,7 @@ void Map::transverse(int u, bool visited[]) {
 
 bool Map::Validate() {
     //Check that territories form a connected graph
-    bool* visited = new bool[vertices];
+    bool* visited = DBG_NEW bool[vertices];
     for (int u = 0; u < vertices; u++) {
         for (int i = 0; i < vertices; i++)
             visited[i] = false;

@@ -1,6 +1,12 @@
 #include "Orders.h"
 #include <iostream>
-
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 // Do to the length of this file all comments will be algorith mrealted. for more general comments check the Order.h file
 // abstract class parent class, no algorithm so for this class all comments are in Order.h
 	Order::Order() {};
@@ -97,6 +103,7 @@
 					cout << "0"<< endl;
 					destinationterritory->setterritory_armycount(*troopnum);
 					cout << "1"<< endl;
+					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)delete destinationterritory->getterritory_owner();
 					destinationterritory->setterritory_owner(orderplayer);
 					cout << "3"<< endl;
 					orderplayer->setcaptureTerritory(true);
@@ -107,16 +114,17 @@
 		return false;
 	};
 	Advanceorder::~Advanceorder() {
+		delete troopnum;
 	    map = NULL;
 	}
 	string Advanceorder::print()const {
 		return "Advance order by " + orderplayer->getName() + " to move " + to_string(*troopnum) + " armies from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name();
         }
 	Advanceorder::Advanceorder(const Advanceorder& old) {
-		troopnum = new int(*old.troopnum);
-		sourceterritory = new Territory(*old.sourceterritory);
-		destinationterritory = new Territory(*old.destinationterritory);
-		orderplayer = new Player(*old.orderplayer);
+		troopnum = DBG_NEW int(*old.troopnum);
+		sourceterritory = DBG_NEW Territory(*old.sourceterritory);
+		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
 	}
 	Advanceorder& Advanceorder::operator = (const Advanceorder& old) {
 		cout <<"that is called\n";
@@ -152,12 +160,13 @@
 		else return false;
 	}
 	Airliftorder::~Airliftorder() {
+		delete troopnum;
 	}
 	Airliftorder::Airliftorder(const Airliftorder& old) {
-		troopnum = new int(*old.troopnum);
-		sourceterritory = new Territory(*old.sourceterritory);
-		destinationterritory = new Territory(*old.destinationterritory);
-		orderplayer = new Player(* old.orderplayer);
+		troopnum = DBG_NEW int(*old.troopnum);
+		sourceterritory = DBG_NEW Territory(*old.sourceterritory);
+		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
+		orderplayer = DBG_NEW Player(* old.orderplayer);
 	}
 	Airliftorder& Airliftorder::operator = (const Airliftorder& old) {
 		troopnum = old.troopnum;
@@ -189,7 +198,7 @@
 	}
 	bool Blockadeorder::execute() {
 		if (validate()) {
-			destinationterritory->setterritory_owner(new Player("Neutral"));
+			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral"));
 			return true;
 		}
 		else return false;
@@ -197,8 +206,8 @@
 	Blockadeorder::~Blockadeorder() {
 	}
 	Blockadeorder::Blockadeorder(const Blockadeorder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
+		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
 	}
 	Blockadeorder& Blockadeorder::operator = (const Blockadeorder& old) {
 		orderplayer = old.orderplayer;
@@ -233,8 +242,8 @@
 		if(destinationterritory == NULL) {cout << "destinationterritory is null" << endl;}
 	}
 	Bomborder::Bomborder(const Bomborder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
+		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
 	}
 	Bomborder& Bomborder::operator = (const Bomborder& old) {
 		orderplayer = old.orderplayer;
@@ -270,11 +279,12 @@
 		else return false;
 	}
 	Deployorder::~Deployorder() {
+		delete troopnum;
 	}
 	Deployorder::Deployorder(const Deployorder& old) {
-		troopnum = new int(*old.troopnum);
-		orderplayer = new Player(*old.orderplayer);
-		destinationterritory = new Territory(*old.destinationterritory);
+		troopnum = DBG_NEW int(*old.troopnum);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
+		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
 	}
 	Deployorder& Deployorder::operator = (const Deployorder& old) {
 		troopnum = old.troopnum;
@@ -310,8 +320,8 @@
 	Negotiateorder::~Negotiateorder() {
 	}
 	Negotiateorder::Negotiateorder(const Negotiateorder& old) {
-		orderplayer = new Player(*old.orderplayer);
-		otherplayer = new Player(*old.otherplayer);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
+		otherplayer = DBG_NEW Player(*old.otherplayer);
 	}
 	Negotiateorder& Negotiateorder::operator = (const Negotiateorder& old) {
 		orderplayer = old.orderplayer;
@@ -334,14 +344,16 @@
 	}
 	bool Reinforcementorder::execute() {
 		if (validate()) {
+			orderplayer->addReinforcements(5);
 			return true;
 		}
 		else return false;
 	}
 	Reinforcementorder::~Reinforcementorder() {
+
 	}
 	Reinforcementorder::Reinforcementorder(const Reinforcementorder& old) {
-		orderplayer = new Player(*old.orderplayer);
+		orderplayer = DBG_NEW Player(*old.orderplayer);
 	}
 	Reinforcementorder& Reinforcementorder::operator = (const Reinforcementorder& old) {
 		orderplayer = old.orderplayer;
@@ -356,7 +368,7 @@
 	//may vary l8r depending on how ptr is decided  for now...
 	//ptr is assigned a static array of Order objects and sets them all to null as you cant remove object antries
 	Orderlist::Orderlist() {
-		ptr = new vector<Order*>();
+		ptr = DBG_NEW vector<Order*>();
 	}
 	//destructor for orderlist
 	Orderlist::~Orderlist() {
@@ -368,10 +380,12 @@
 	}
 	// copy constructor, should not be used in the context of the program
 	Orderlist::Orderlist(const Orderlist& ol) {
-		ptr = new vector<Order*> (*ol.ptr);
+		ptr = DBG_NEW vector<Order*> (*ol.ptr);
 	}
 	//assignment operator, similary should not be used in this program
 	Orderlist& Orderlist::operator = (const Orderlist& o) {
+
+
 		ptr = o.ptr;
 		return *this;
 	}
@@ -414,6 +428,7 @@
 			ptr->at(0)->execute();
             remove(0);
 		}
+		delete this;
 	}
 
 vector<Order*>* Orderlist::retirevelist(){return ptr;}

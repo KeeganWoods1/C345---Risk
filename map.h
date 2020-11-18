@@ -93,8 +93,6 @@ public:
     int getBonus();
     string getName();
 
-    bool ownedByOnePlayer(Player* aPlayer);
-
     ~Continent();
 };
 
