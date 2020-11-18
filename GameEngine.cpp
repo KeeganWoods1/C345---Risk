@@ -351,14 +351,13 @@ void WarzoneGame::issueOrdersPhase(Player* player)
                                                 player->gettoDefend()->at(3), gameMapPtr);
     cout << advanceorder2->print() << " in order to defend" << endl;
     player->issueOrder(advanceorder2);
-cout << "0"<< endl;
+
     // player chooses to move armies from one of its territories to a neighboring
     // enemy territory to attack them
     Territory *attack3;
     Territory *defend3;
     Advanceorder *advanceorder3;
-
-    if(player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->at(0) && player->toDefend(*gameMapPtr)->at(0))
+    if(player->gettoDefend()->size() > 0 && player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->size() > 0)
     {
         attack3 = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(0))->at(0); 
         defend3 = player->toDefend(*gameMapPtr)->at(0);    
@@ -366,10 +365,9 @@ cout << "0"<< endl;
         cout << endl << advanceorder3->print() << " in order to attack" << endl;
         player->issueOrder(advanceorder3);
     }
-
     Territory *attack4;
     Territory *defend4;
-    if(player->toAttack(*gameMapPtr, *player->gettoDefend()->at(1))->at(0) && player->toDefend(*gameMapPtr)->at(1))
+    if(player->gettoDefend()->size() > 1 && player->toAttack(*gameMapPtr, *player->gettoDefend()->at(1))->size() > 0)
     {
         attack4 = player->toAttack(*gameMapPtr, *player->gettoDefend()->at(1))->at(0);
         defend4 = player->toDefend(*gameMapPtr)->at(1);
@@ -378,7 +376,7 @@ cout << "0"<< endl;
         player->issueOrder(advanceorder4);
     }
 
-    Player* player2;
+    Player* player2 = NULL;
     for(Player* pl : *playerListPtr)
     {
         if(player->getName() != pl->getName())

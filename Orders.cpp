@@ -33,11 +33,26 @@
 		return map;
 	}
 	bool Advanceorder::validate() {
-		if (sourceterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
-        if (sourceterritory->getterritory_armycount()- *troopnum < 1)return false;
+		if (sourceterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)
+		{
+			cout << "Invalid Order, source territory does not belong to player" << endl;
+			return false;
+		}
+        if (sourceterritory->getterritory_armycount()- *troopnum < 1)
+		{
+			cout << "Invalid order, cannot attack with zero troops!" << endl;	
+			return false;
+		}
         if (orderplayer->getName().compare(destinationterritory->getterritory_owner()->getName()) != 0)
-            if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))return false;
-       return (map->isAdjacent(sourceterritory,destinationterritory));
+		{
+	        if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))
+			{
+				cout << "Invalid Order, Cannot attack while negotiating!" << endl;
+				return false;
+			}
+		}
+
+		return (map->isAdjacent(sourceterritory,destinationterritory));
 	}
 	//returns true if attacker wins the territory (Important for notifying observers of changes in territory owners)
 	bool Advanceorder::execute() 
@@ -70,6 +85,8 @@
 				}
 				if (*troopnum < 1)
 				{
+					cout << "\n\nAttack failed " << orderplayer->getName() << " defeated by the " << *destinationterritory << endl;
+
 					//attack unsuccessful
 					return false;
 				}
@@ -77,7 +94,7 @@
 				{
 					//attacker wins the battle
 					cout << "\n\nAttack won " << orderplayer->getName() << " conquers the " << *destinationterritory << endl;
-					//destinationterritory->getterritory_owner()->remove(destinationterritory);
+					destinationterritory->getterritory_owner()->remove(destinationterritory);
 					cout << "0"<< endl;
 					destinationterritory->setterritory_armycount(*troopnum);
 					cout << "1"<< endl;
