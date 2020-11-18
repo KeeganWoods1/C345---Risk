@@ -18,14 +18,7 @@ Territory::Territory() {
     territory_armycount = 0;
 }
 
-Territory::Territory(const Territory* territory) {
-
-    territory_continent = territory->territory_continent;
-    territory_name = territory->territory_name;
-    territory_owner = territory->territory_owner;
-    territory_armycount = territory->territory_armycount;
-}
-
+//Parameterized constructor
 Territory::Territory(int continent,string name, Player* player, int army) {
     territory_continent = continent;
     territory_name = name;
@@ -33,9 +26,16 @@ Territory::Territory(int continent,string name, Player* player, int army) {
     territory_armycount= army;
 }
 
+//Copy constructor
+Territory::Territory(const Territory* territory) {
+    territory_continent = territory->territory_continent;
+    territory_name = territory->territory_name;
+    territory_owner = territory->territory_owner;
+    territory_armycount = territory->territory_armycount;
+}
+
 //assignment operator
-Territory& Territory::operator=(const Territory& territory)
-{
+Territory& Territory::operator=(const Territory& territory) {
     this->territory_continent = territory.territory_continent;
     this->territory_name = territory.territory_name;
     this->territory_owner = territory.territory_owner;
@@ -44,11 +44,35 @@ Territory& Territory::operator=(const Territory& territory)
 }
 
 //Stream insertion operator overload to output a territory
-ostream& operator << (ostream& out, const Territory& t)
-{
-    out << "Territory of " << t.territory_name << " Owned by: " << *t.territory_owner << ", Occupied by: " << t.territory_armycount << " troops" << endl;
-
+ostream& operator << (ostream& out, const Territory& t) {
+    out << "Territory of " << t.territory_name << " Owned by: " << *t.territory_owner <<
+    +", Occupied by: " << t.territory_armycount << " troops" << endl;
     return out;
+}
+
+//getters
+string Territory::getterritory_name() {
+    return territory_name;
+}
+int Territory::getterritory_continent() {
+    return territory_continent;
+}
+Player* Territory::getterritory_owner() {
+    return territory_owner;
+}
+int Territory::getterritory_armycount() {
+    return territory_armycount;
+}
+void Territory::setterritory_armycount(int a) {
+    territory_armycount = a;
+}
+
+//setters
+void Territory::setterritory_name(string s) {
+    territory_name = s;
+}
+void Territory::setterritory_owner(Player* p) {
+    territory_owner = p;
 }
 
 //destructor
@@ -56,41 +80,59 @@ Territory::~Territory() {
     territory_owner = NULL;
 }
 
-//getters
-string Territory::getterritory_name() {
-    return territory_name;
+//Class Continent
+Continent::Continent() {
+    name = "";
+    id = 0;
+    bonus = 0;
 }
 
-int Territory::getterritory_continent() {
-    return territory_continent;
+Continent::Continent(string n, int i, int b, vector<Territory*> terr) {
+    name = n;
+    id = i;
+    bonus = b;
+    for (int i=0; i<terr.size(); i++) {
+        territoriesInContinent.push_back(terr[i]);
+    }
 }
 
-Player* Territory::getterritory_owner() {
-    return territory_owner;
+//getters and setters
+void Continent::setName(string n) {
+    name = n;
+}
+void Continent::setId(int i) {
+    id = i;
+}
+void Continent::setBonus(int b) {
+    id = b;
 }
 
-
-int Territory::getterritory_armycount() {
-    return territory_armycount;
+string Continent::getName() {
+    return name;
 }
-void Territory::setterritory_armycount(int a) {
-    territory_armycount = a;
+int Continent::getId() {
+    return id;
 }
-//setters
-void Territory::setterritory_name(string s) {
-    territory_name = s;
+int Continent::getBonus() {
+    return bonus;
 }
 
-void Territory::setterritory_owner(Player* p)
-{
-    territory_owner = p;
+//insertion operator (toString)
+ostream& operator << (ostream& out, const Continent& c) {
+    out << c.id <<" Continent " << c.name << ", has bonus armies of " << c.bonus
+    << "\nList of territories ("<< c.territoriesInContinent.size() <<")\n[\n";
+    for(auto T : c.territoriesInContinent){
+        out << T->getterritory_name() << "\n";
+    }
+    out << "]\n" << endl;
+    return out;
 }
 
-string Territory::toString()
-{
-    return territory_name;
+Continent::~Continent() {
+
 }
 
+//Class Map
 //constructors
 Map::Map() {
     this->adjacent_matrix = 0;

@@ -2,10 +2,10 @@
 #include "map.h"
 #include <string>
 #include <vector>
-#pragma once
-using namespace std;
 
+using namespace std;
 class Territory;
+class Continent;
 
 class MapLoader {
     public:
@@ -18,9 +18,8 @@ class MapLoader {
         //Destructor
         ~MapLoader();
 
-        //Getter
+        //Getters
         Map* getMap();
-
         bool getStatus();
 
         //Copy constructor
@@ -40,7 +39,8 @@ class MapLoader {
 
         //to print out a vector content
         void printVector(vector<std::string*>);
-
+        void printTerritories(vector<Territory*>*);
+        void printContinents(vector<Continent*>*);
 
     private:
         //map file
