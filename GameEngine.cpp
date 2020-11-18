@@ -330,6 +330,17 @@ void WarzoneGame::issueOrdersPhase(Player* player)
             reinforcementCounter -= 10;
             cout << "Armies left to deploy: " << reinforcementCounter << endl;
         }
+        else if(reinforcementCounter > 0)
+        {
+            //order added to player's orderlist
+            Deployorder *deployorder1 = new Deployorder(player, new int(reinforcementCounter), player->gettoDefend()->at(i));
+            cout << deployorder1->print() << endl;
+            player->issueOrder(deployorder1);
+            
+            reinforcementCounter = 0;
+            cout << "Armies left to deploy: " << reinforcementCounter << endl;
+        }
+        else break;
     }
 
     cout << endl << "All available armies have been deployed. Proceeding with issuing advance orders." << endl;
