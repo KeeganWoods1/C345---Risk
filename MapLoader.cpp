@@ -237,8 +237,13 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         Territory* territory = new Territory(continentID, name, neutralPlayer, 0);
         territoriesListPtr->push_back(territory);
     }
-    //printTerritories(territoriesListPtr);
-
+//    Player* neutralPlayer2 = new Player("2");
+//    for (auto territory : *territoriesListPtr){
+//        if (territory->getterritory_name()== "New_Brunswick"){
+//            territory->setterritory_owner(neutralPlayer2);
+//        }
+//    }
+    printTerritories(territoriesListPtr);
     //creating Continents object and setting the bonus army for each continent
     vector<Continent*>* continentsListPtr = new vector<Continent*>();
     vector<Territory*> territoriesInContinent;
@@ -280,6 +285,15 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         continentsListPtr->push_back(aContinent);
     }
     //printContinents(continentsListPtr);
+    for (auto continent : *continentsListPtr){
+        if (continent->ownedByOnePlayer(neutralPlayer)){
+            cout << "Player " <<neutralPlayer->getName() <<
+                    " owns this continent\n" << *continent << endl;
+        } else{
+            cout << "no" << endl;
+        }
+        cout << "next" << endl;
+    }
 
     //create map object
     validMap = new Map(countries.size(), territoriesListPtr);
@@ -321,7 +335,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         isLoaded = true;
     }
     else {
-        std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
+        std::cout << "Map is invalid because it is NOT a connected graph." << std::endl;
     }
     return validMap;
 }

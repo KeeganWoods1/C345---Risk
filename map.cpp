@@ -116,6 +116,16 @@ int Continent::getId() {
 int Continent::getBonus() {
     return bonus;
 }
+bool Continent::ownedByOnePlayer(Player* aPlayer){
+    for (int i=0; i<territoriesInContinent.size(); i++){
+        if (territoriesInContinent[i]->getterritory_owner()->getName() == aPlayer->getName()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+}
 
 //insertion operator (toString)
 ostream& operator << (ostream& out, const Continent& c) {
