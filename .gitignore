@@ -33,3 +33,5 @@
 *.app
 /.vs/deliverable 1 orderlist/v16
 /.vs/VSWorkspaceState.json
+
+.DS_Store

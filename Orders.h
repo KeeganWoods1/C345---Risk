@@ -58,6 +58,8 @@ public:
 	~Advanceorder();
 	//sopy constructor
 	Advanceorder(const Advanceorder& old);
+	//Map accessor
+	Map* getMap();
 	//assignment operator
 	Advanceorder& operator = (const Advanceorder& o);
 	//stream insertion operations

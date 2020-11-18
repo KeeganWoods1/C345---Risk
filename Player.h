@@ -104,7 +104,7 @@ public:
     bool getcaptureTerritory();
     //setter method for capture territory
     void setcaptureTerritory(bool b);
-//adds a player to the negotiated friends list
+    //adds a player to the negotiated friends list
     void addnegotiateFriends(string s);
     //clears the list
     void clearnegotiateFriends();
@@ -114,6 +114,9 @@ public:
     static vector<Territory*>* surroundingterritories(Map& m,Territory &l);
     //updates the lsit of territories to defend
     void updatetoDefend(Map &m);
+    //returns orderlist
     vector<Order*>* getOrderList();
+    //removes a territory from toDefend list
+    void remove(Territory*);
 
 };
