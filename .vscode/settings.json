@@ -6,6 +6,15 @@
         "iosfwd": "cpp",
         "__locale": "cpp",
         "locale": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "__hash_table": "cpp",
+        "algorithm": "cpp",
+        "cstdio": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "memory": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp"
     }
 }

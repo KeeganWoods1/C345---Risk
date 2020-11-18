@@ -6,8 +6,24 @@
 #include <string>
 using namespace std;
 
-int main() {
+void demoPart1()
+{
+    
+}
+void demoPrt2()
+{
 
+}
+void demoPart3()
+{
+
+}
+void demoPart4()
+{
+    
+}
+void demoPart5() 
+{
     //Initialize the map directory and get user's selected map
     MapDirectoryInit* mdiPtr = new MapDirectoryInit();
     //Initialize player list and get number of players
@@ -23,6 +39,12 @@ int main() {
     GameController* controller = new GameController(view, statsView, model);
 
     controller->controlGame();
+}
+
+int main() {
+
+    demoPart5();
 
     return 0;
 }
+
