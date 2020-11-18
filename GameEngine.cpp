@@ -28,7 +28,7 @@ MapDirectoryInit::MapDirectoryInit()
         cout << "" << endl;
 
         //use user input as parameter to MapLoader() constructor
-        mapLoader = new MapLoader("MapFiles/" + selectedMapName);
+        mapLoader = new MapLoader(selectedMapName);
         if(mapLoader->getStatus())
         {
             gameMapPtr = new Map(mapLoader->getMap());
@@ -351,7 +351,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
                                                 player->gettoDefend()->at(3), gameMapPtr);
     cout << advanceorder2->print() << " in order to defend" << endl;
     player->issueOrder(advanceorder2);
-
+cout << "0"<< endl;
     // player chooses to move armies from one of its territories to a neighboring
     // enemy territory to attack them
     Territory *attack3;
@@ -449,6 +449,7 @@ void WarzoneGame::executeOrdersPhase()
             order->execute();    
         }         
     }
+
     Notify();
 }
 
@@ -484,7 +485,7 @@ void WarzoneGame::mainGameLoop()
 
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
-        playerListPtr->pop_back();
+        //playerListPtr->pop_back();
     }
     setHasWon(true);
     Notify();
