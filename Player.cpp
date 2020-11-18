@@ -183,8 +183,8 @@ void Player::updatetoDefend(Map &m){
 // returning a list of territories to defend
 vector<Territory*>* Player::toDefend(Map &m)
 {
+    updatetoDefend(m);
     vector<Territory *> *terr2 = new vector<Territory *>;
-
     for (int j =0; j<territoriesToDefend->size(); j++) {
         Territory t = territoriesToDefend->at(j);
         vector<Territory *> *terr = surroundingterritories(m, t);
@@ -240,6 +240,7 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
     return  terr;
 }
 vector<Territory*>* Player::toAttack(Map &m){
+    updatetoDefend(m);
     vector<Territory*>* result = new vector<Territory*>();
     for (int i=0; i<territoriesToDefend->size(); i++) {
         vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
