@@ -41,19 +41,16 @@
 	bool Advanceorder::validate() {
 		if (sourceterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)
 		{
-			cout << "Invalid Order, source territory does not belong to player" << endl;
 			return false;
 		}
         if (sourceterritory->getterritory_armycount()- *troopnum < 1)
 		{
-			cout << "Invalid order, cannot attack with zero troops!" << endl;	
 			return false;
 		}
         if (orderplayer->getName().compare(destinationterritory->getterritory_owner()->getName()) != 0)
 		{
 	        if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))
 			{
-				cout << "Invalid Order, Cannot attack while negotiating!" << endl;
 				return false;
 			}
 		}
@@ -91,7 +88,7 @@
 				}
 				if (*troopnum < 1)
 				{
-					cout << "\n\nAttack failed " << orderplayer->getName() << " defeated by the " << *destinationterritory << endl;
+					cout << "\nAttack failed " << orderplayer->getName() << " defeated by the " << *destinationterritory << endl;
 
 					//attack unsuccessful
 					return false;
@@ -99,13 +96,13 @@
 				else 
 				{
 					//attacker wins the battle
-					cout << "\n\nAttack won " << orderplayer->getName() << " conquers the " << *destinationterritory << endl;
-					cout << "0"<< endl;
+					cout << "\nAttack won " << orderplayer->getName() << " conquers the " << *destinationterritory << endl;
 					destinationterritory->setterritory_armycount(*troopnum);
-					cout << "1"<< endl;
-					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)delete destinationterritory->getterritory_owner();
+					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)
+					{
+						delete destinationterritory->getterritory_owner();
+					}
 					destinationterritory->setterritory_owner(orderplayer);
-					cout << "3"<< endl;
 					orderplayer->setcaptureTerritory(true);
 					return true;
 				}

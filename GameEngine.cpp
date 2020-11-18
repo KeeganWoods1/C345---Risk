@@ -37,9 +37,12 @@ MapDirectoryInit::MapDirectoryInit()
         mapLoader = DBG_NEW MapLoader(selectedMapName);
         if(mapLoader->getStatus())
         {
-            gameMapPtr = DBG_NEW Map(mapLoader->getMap());
-            delete mapLoader;
-            break;
+            if(mapLoader->getMap() != NULL)
+            {
+                gameMapPtr = new Map(mapLoader->getMap());
+                delete mapLoader;
+                break; 
+            }
         }
         else
         {
@@ -101,6 +104,29 @@ PlayerListInit::PlayerListInit()
     deckPtr = DBG_NEW Deck(numOfPlayers);
     cout << "Displaying Deck: " << endl;
     cout << "\n" << *deckPtr;
+
+    string yesNo;
+    cout << "Do you wish to have phase information displayed on screen?(Yes/No) "<< endl;
+    cin >> yesNo;
+    if(yesNo == "No")
+    {
+        setDisplayPhaseInfo(false);
+    }  
+    else
+    {
+        setDisplayPhaseInfo(true);
+    }
+    
+    cout << "\nDo you wish to have game statistics information displayed on screen?(Yes/No) "<< endl;
+    cin >> yesNo;
+    if(yesNo == "No")
+    {
+        setDisplayStatsInfo(false);
+    } 
+    else
+    {
+        setDisplayStatsInfo(true);
+    }    
 }
 PlayerListInit::~PlayerListInit() {
     delete deckPtr;
@@ -125,14 +151,36 @@ Deck* PlayerListInit::getDeckPtr()
     return deckPtr;
 }
 
-GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, Deck* gdPtr)
+bool PlayerListInit::getDisplayPhaseInfo()
 {
-    playerListPtr = DBG_NEW vector<Player*>;
+    return phaseObservers;
+}
+void PlayerListInit::setDisplayPhaseInfo(bool b)
+{
+    phaseObservers = b;
+}
+bool PlayerListInit::getDisplayStatsInfo()
+{
+    return statsObservers;
+}
+void PlayerListInit::setDisplayStatsInfo(bool b)
+{
+    statsObservers = b;
+}
+
+GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, PlayerListInit* pli)
+{
+    if(gmPtr == NULL)
+    {
+        cout << "Map is null" << endl;
+    }
+    pliPtr = pli;
+    playerListPtr = new vector<Player*>;
     for (int i = 0; i < plPtr->size(); i++) {
         playerListPtr->push_back(DBG_NEW Player(*plPtr->at(i)));
     }
-    gameMapPtr = DBG_NEW Map(gmPtr);
-    gameDeckPtr = DBG_NEW Deck(*gdPtr);
+    gameMapPtr = new Map(gmPtr);
+    gameDeckPtr = new Deck(*pli->getDeckPtr());
     startupPhase(playerListPtr, gameMapPtr);
 }
 GameInit::~GameInit() {
@@ -145,7 +193,6 @@ GameInit::~GameInit() {
 }
 void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
 {
-    
     //randomly determine order of play
     //rng used as seed for std::mt19337
     std::random_device rd;
@@ -153,13 +200,7 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     std::mt19937 g(rd());
     //shuffle playerList, play order will be the order in which players appear in the shuffled list
     std::shuffle(playerListPtr->begin(), playerListPtr->end(), g);
-    
-    //display player turn order
-    cout << "\nPrinting Player order: " << endl;
-    for(int i=0; i< playerListPtr->size(); i++)
-    {
-        cout << i+1 << ". " << *playerListPtr->at(i) << endl;
-    }
+
     //randomly assign all territories in Map object to one player (ie. dont assign 2 players to the same territory)
     vector<int> territoryIndices;
     vector<int> playerListIndices;
@@ -234,15 +275,6 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
             break;
         }
     }
-    
-    //display player reinforcement pools
-    cout << "\nPrinting player reinforcement pools: " << endl;
-    for(int i=0; i< playerListPtr->size(); i++)
-    {
-        cout << *playerListPtr->at(i) << ": Available reinforcements: " 
-        << playerListPtr->at(i)->getCurrentReinforcements() << endl;
-    }
-    cout << "" << endl;
 }
 
 vector<Player*>* GameInit::getPlayerListPtr()
@@ -260,12 +292,18 @@ Deck* GameInit::getGameDeckPtr()
     return gameDeckPtr;
 }
 
+PlayerListInit* GameInit::getpliPtr()
+{
+    return pliPtr;
+}
+
 WarzoneGame::WarzoneGame(GameInit* gi)
 {
     playerListPtr = gi->getPlayerListPtr();
     gameMapPtr = gi->getGameMapPtr();
     gameDeckPtr = gi->getGameDeckPtr();
     hasWon = false;
+    gameInitPtr = gi;
 }
 
 bool WarzoneGame::ordersRemain()
@@ -297,27 +335,28 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
     }
     //Place the reinforcements in the players' pools.
     player->addReinforcements(reinforcement);
-
+    //denstration of part 3
+    cout << "----------------------------------------------" << endl;
+    cout << "Demonstrating REINFORCEMENTS PHASE for " << *player << endl;
+    cout << "player owns " << player->getNumTerrOwned() << " territories." << endl;
+    cout << "Player owns 0 continents" << endl;
+    cout << "Added " << reinforcement << " troops to reinforcement pool" << endl;
+    cout << "----------------------------------------------" << endl;    
+    
     //notify subscribers of change of phase to display the troops that were added on turn start.
     
     Notify();
-
 }
 
 void WarzoneGame::issueOrdersPhase(Player* player)
 {
     setCurrentPhase(1);
-    // player decides which territories are to be attacked in priority
-    cout << "The list of territories to be attacked: " << endl;
-    cout << player->toString(player->toAttack(*gameMapPtr)) << endl;
-
-    // player decides which territories are to be defended in priority
-    cout << "The list of territories to be defended: " << endl;
-    cout << player->toString(player->gettoDefend(*gameMapPtr)) << endl;
+    cout << "----------------------------------------------" << endl;
+    cout << "Demonstrating ISSUE ORDERS PHASE for " << *player << endl;
 
     int reinforcementCounter = player->getCurrentReinforcements();
     // Player issues deploy orders
-    cout << "Issuing deploy orders only." << endl;
+    cout << "Issuing deploy orders." << endl;
     cout << "Armies to deploy: " << reinforcementCounter << endl << endl;
 
     for(int i = 0; i<player->gettoDefend(*gameMapPtr)->size(); i++)
@@ -330,7 +369,6 @@ void WarzoneGame::issueOrdersPhase(Player* player)
             player->issueOrder(deployorder1);
             
             reinforcementCounter -= 10;
-            cout << "Armies left to deploy: " << reinforcementCounter << endl;
         }
         else if(reinforcementCounter > 0)
         {
@@ -340,23 +378,18 @@ void WarzoneGame::issueOrdersPhase(Player* player)
             player->issueOrder(deployorder1);
             
             reinforcementCounter = 0;
-            cout << "Armies left to deploy: " << reinforcementCounter << endl;
         }
         else break;
     }
-
-    cout << endl << "All available armies have been deployed. Proceeding with issuing advance orders." << endl;
 
     // player chooses to move armies from one of its own territory to the other
     // in order to defend them
     Advanceorder *advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int (4), player, player->gettoDefend(*gameMapPtr)->at(3),
                                                 player->gettoDefend(*gameMapPtr)->at(2), gameMapPtr);
-    cout << advanceorder1->print() << " in order to defend" << endl;
     player->issueOrder(advanceorder1);
 
     Advanceorder *advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int (7), player, player->gettoDefend(*gameMapPtr)->at(1),
                                                 player->gettoDefend(*gameMapPtr)->at(3), gameMapPtr);
-    cout << advanceorder2->print() << " in order to defend" << endl;
     player->issueOrder(advanceorder2);
 
     // player chooses to move armies from one of its territories to a neighboring
@@ -368,8 +401,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     {
         attack3 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->at(0);
         defend3 = player->toDefend(*gameMapPtr)->at(0);    
-        advanceorder3 = DBG_NEW Advanceorder(DBG_NEW int (2), player, attack3, defend3, gameMapPtr);
-        cout << endl << advanceorder3->print() << " in order to attack" << endl;
+        advanceorder3 = new Advanceorder(new int (2), player, attack3, defend3, gameMapPtr);
         player->issueOrder(advanceorder3);
     }
     Territory *attack4;
@@ -378,8 +410,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     {
         attack4 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->at(0);
         defend4 = player->toDefend(*gameMapPtr)->at(1);
-        Advanceorder *advanceorder4 = DBG_NEW Advanceorder(DBG_NEW int (6), player, attack4, defend4, gameMapPtr);
-        cout << endl << advanceorder4->print() << " in order to attack" << endl;
+        Advanceorder *advanceorder4 = new Advanceorder(new int (6), player, attack4, defend4, gameMapPtr);
         player->issueOrder(advanceorder4);
     }
     Player* player2 = NULL;
@@ -398,45 +429,46 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         Territory *attack = player->toAttack(*gameMapPtr)->at(0);
         // the play method adds the order to the player's orderlist
         dynamic_cast<BombCard *>(card)->play(gameDeckPtr, player, attack);
-        cout << "The Bomb card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Reinforcement Card")
     {
         // the play method adds the order to the player's orderlist
         dynamic_cast<ReinforcementCard *>(card)->play(gameDeckPtr, player);
-        cout << "The Reinforcement card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Blockade Card")
     {
         // the play method adds the order to the player's orderlist
         dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(0));
-        cout << "The Blockade card was used and an order was issued successfully." << endl;
     }
     else if(card->getName() == "Airlift Card")
     {
         // the play method adds the order to the player's orderlist
-        dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(1),player->gettoDefend(*gameMapPtr)->at(0), DBG_NEW int(1));
-        cout << "The Airlift card was used and an order was issued successfully." << endl;
+        dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(1),player->gettoDefend(*gameMapPtr)->at(0), new int(1));
     }
     else if(card->getName() == "Diplomacy Card")
     {
         // the play method adds the order to the player's orderlist
         dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
-        cout << "The Diplomacy card was used and an order was issued successfully." << endl;
     }
     cout << "\nOrders Issued: " << endl;
     cout << *player->getPlayerlist() << endl;
+    cout << "----------------------------------------------" << endl;
+
     Notify();
 }
 
 void WarzoneGame::executeOrdersPhase()
 {
     setCurrentPhase(2);
-
     setExecutionQueue();
+
+    cout << "----------------------------------------------" << endl;
+    cout << "Demonstrating EXECUTE ORDERS PHASE\n" << endl;
 
     for(Order* order : executionQueue)
     {
+        cout << "Executing " << *order << endl;
+
         if(dynamic_cast<Advanceorder*>(order))
         {
             if(order->execute())
@@ -450,11 +482,13 @@ void WarzoneGame::executeOrdersPhase()
             order->execute();    
         }         
     }
+    executionQueue.clear();
+    cout << "----------------------------------------------" << endl;
+
+    Notify();    
     for (int i = 0; i < executionQueue.size(); i++) {
         delete executionQueue.at(i);
     }
-    executionQueue.clear();
-    Notify();
 }
 
 void WarzoneGame::mainGameLoop()
@@ -467,6 +501,7 @@ void WarzoneGame::mainGameLoop()
         {
             if(playerListPtr->at(i)->getNumTerrOwned()<=0)
             {
+                cout << "Player: " << *playerListPtr->at(i) << " has been eliminated" << endl;
                 playerListPtr->erase(playerListPtr->begin()+i); 
                 //update the observers with new playerlist  
                 Notify();
@@ -490,10 +525,9 @@ void WarzoneGame::mainGameLoop()
 
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
-        //playerListPtr->pop_back();
-        turnCounter++;
-        if (turnCounter > 6)break;
+        playerListPtr->at(0)->gettoDefend(*gameMapPtr)->clear();
     }
+    cout << *playerListPtr->at(0) << " Wins!" << endl;
     setHasWon(true);
     Notify();
 }
@@ -598,4 +632,9 @@ void WarzoneGame::setHasWon(bool b)
 vector<Player*> WarzoneGame::getPlayerList()
 {
     return *playerListPtr;
+}
+
+GameInit* WarzoneGame::getGameInitPtr()
+{
+    return gameInitPtr;
 }

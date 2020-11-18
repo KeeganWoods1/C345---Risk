@@ -191,7 +191,10 @@ void StatsScreen::Display()
         cout << std::setprecision(2) << percentOwned <<"% of the map.\n"<< endl;
     }
     cout << "************************************************************\n" << endl;
-
+    
+    cout << "\nPress any key to continue " << flush;
+    cin.get();
+    cin.get(); 
 }
 
 void StatsScreen::displayWin()
@@ -219,5 +222,14 @@ GameController::GameController(GameScreen* newView, StatsScreen* otherView, Warz
 void GameController::controlGame()
 {
     cout << "Starting game...\n" <<endl;
+    
+    if(!gameModel->getGameInitPtr()->getpliPtr()->getDisplayPhaseInfo())
+    {
+        gameModel->Detach(gameView);
+    }
+    if(!gameModel->getGameInitPtr()->getpliPtr()->getDisplayStatsInfo())
+    {
+        gameModel->Detach(statsView);
+    }
     gameModel->mainGameLoop();
 }

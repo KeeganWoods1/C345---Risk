@@ -40,6 +40,8 @@ class PlayerListInit
     int numOfPlayers;
     vector<Player*>* playerListPtr;
     Deck* deckPtr;
+    bool phaseObservers;
+    bool statsObservers;
 
     public:
     PlayerListInit();
@@ -50,6 +52,10 @@ class PlayerListInit
     vector<Player*>* getPlayerList();
     int getNumOfPlayers();
     Deck* getDeckPtr();
+    bool getDisplayPhaseInfo();
+    void setDisplayPhaseInfo(bool);
+    bool getDisplayStatsInfo();
+    void setDisplayStatsInfo(bool);
     //Assignment operator
 	PlayerListInit& operator = (const PlayerListInit& pl);
     //I/O operator overloads
@@ -60,17 +66,19 @@ class PlayerListInit
 class GameInit
 {
     private:
+    PlayerListInit* pliPtr;
     vector<Player*>* playerListPtr;
     Map* gameMapPtr;
     Deck* gameDeckPtr;
     void startupPhase(vector<Player*>*, Map*);
 
     public:
-    GameInit(vector<Player*>*, Map*, Deck*);
+    GameInit(vector<Player*>*, Map*, PlayerListInit*);
     ~GameInit();
     vector<Player*>* getPlayerListPtr();
     Map* getGameMapPtr();
     Deck* getGameDeckPtr();
+    PlayerListInit* getpliPtr();
     //copy constructor
     GameInit(const GameInit& gi);
     //assignment operator
@@ -90,6 +98,7 @@ class WarzoneGame : public Subject
     vector<Order*> executionQueue;
     int currentPhase;
     bool hasWon;
+    GameInit* gameInitPtr;
 
     public:
     WarzoneGame(GameInit*);
@@ -108,6 +117,7 @@ class WarzoneGame : public Subject
     void setCurrentPhase(int);
     bool getHasWon();
     void setHasWon(bool);
+    GameInit* getGameInitPtr();
     vector<Player*> getPlayerList();
     //Copy constructor
     WarzoneGame(const WarzoneGame& wzg);

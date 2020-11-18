@@ -92,7 +92,7 @@ public:
     int getId();
     int getBonus();
     string getName();
-
+    bool ownedByOnePlayer(Player* aPlayer);
     ~Continent();
 };
 
@@ -105,14 +105,14 @@ private:
     int vertices;
     //int to store number of vertices (continents)
     int continentVertices;
-    
     vector<Territory*>* territoryListPtr;
+    vector<Continent*>* continentListPtr;
 
 public:
     //constructors
     Map();
     Map(int);
-    Map(int vertices, vector<Territory*>* territoryList);
+    Map(int vertices, vector<Territory*>* territoryList, vector<Continent*>* continentListPtr);
 
     //copy constructor
     Map(const Map*);
@@ -137,6 +137,8 @@ public:
 
     //Get territories list
     vector<Territory*>* getTerritories();
+    //Get continents list
+    vector<Continent*>* getContinents();
 
     //Get adjacent method
     bool isAdjacent(Territory a, Territory b);
