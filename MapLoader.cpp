@@ -166,13 +166,12 @@ void MapLoader::loadMap(fstream& map_stream) {
 
     }//end of while for all map file
 
-    if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
-        cout << "\nMap is valid.\nCreating a map object...\n" << endl;
+    if (continentsFound & countriesFound & bordersFound){
+        cout << "\nCreating a map object...\n" << endl;
         CreateMap(continents, countries, borders);
     } else {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
     }
-    isLoaded = true;
 
     //to avoid memory leak
     str = nullptr;
@@ -183,6 +182,7 @@ void MapLoader::printVector(vector<std::string*> aVector) {
     for (vector<std::string*>::const_iterator i = aVector.begin(); i != aVector.end(); ++i){
         std::cout << **i << endl;
     }
+    cout << "" << endl;
 }
 void MapLoader::printTerritories(vector<Territory*>* aVector){
     for (vector<Territory*>::const_iterator i = aVector->begin(); i != aVector->end(); ++i){
@@ -279,7 +279,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         Continent* aContinent = new Continent(name, id, bonus, territoriesInContinent);
         continentsListPtr->push_back(aContinent);
     }
-    printContinents(continentsListPtr);
+    //printContinents(continentsListPtr);
 
     //create map object
     validMap = new Map(countries.size(), territoriesListPtr);
@@ -314,6 +314,14 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         for( int k =1; k<brdrsList.size(); k++) {
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
+    }
+    //testing Map object
+    if (validMap->Validate() == true){
+        std::cout << "Map is valid because it is a connected graph.\n" << std::endl;
+        isLoaded = true;
+    }
+    else {
+        std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
     }
     return validMap;
 }
