@@ -96,7 +96,7 @@ void GameScreen::displayIssuOrdersPhase()
     cout << "Displaying Issue Orders Phase Info for " << *_subject->getCurrentPlayer() << ":" << endl;
     cout << "Reinforcements Available:" << _subject->getCurrentPlayer()->getCurrentReinforcements() << endl;
     cout << "\nTerritories To Defend:" << endl;
-    for (Territory* territory : *_subject->getCurrentPlayer()->gettoDefend())
+    for (Territory* territory : *_subject->getCurrentPlayer()->gettoDefend(*_subject->getGameMap()))
     {
         cout << *territory << endl; 
     }
@@ -180,7 +180,7 @@ void StatsScreen::Display()
     cout << "World Domination Status:\n" << endl;
     for(Player* player : _subject->getPlayerList())
     {
-        float percentOwned = ((float)player->gettoDefend()->size()/(float)_subject->getGameMap()->getTerritories()->size()) * 100;
+        float percentOwned = ((float)player->gettoDefend(*_subject->getGameMap())->size()/(float)_subject->getGameMap()->getTerritories()->size()) * 100;
         cout << "Player: " << player->getName() << " -> Dominating ";
         cout << std::setprecision(2) << percentOwned <<"% of the map.\n"<< endl;
     }

@@ -164,11 +164,11 @@ Orderlist* Player::getPlayerlist()
     return playerOlist;
 }
 
-vector<Territory*>* Player::gettoDefend() 
+vector<Territory*>* Player::gettoDefend(Map& m)
 {
+    updatetoDefend( m);
     return territoriesToDefend;
 }
-
 //new method updates the todefend list with all new territories
 void Player::updatetoDefend(Map &m){
     vector<Territory*>* terr2def = new vector<Territory*>;
@@ -215,6 +215,7 @@ vector<Territory*>* Player::toDefend(Map &m)
 // returning a list of territories to attack
 vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
+    updatetoDefend(m);
     vector<Territory*>* terr = surroundingterritories(m,t);
     vector<Territory*>* terr2 = new vector<Territory*>;
     for (int i=0; i <terr->size(); i++){
@@ -317,14 +318,3 @@ vector<Territory*>* Player::allnonFriendlies(Map &m){
     return result;
 }
 
-void Player::remove(Territory* t)
-{
-    vector<Territory*>::iterator it = territoriesToDefend->begin();
-    for (; it!=territoriesToDefend->end(); it++)
-    {
-        if((*it)->getterritory_name() == t->getterritory_name())
-        {
-            territoriesToDefend->erase(it);
-        }
-    }
-}

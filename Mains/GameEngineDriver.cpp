@@ -3,11 +3,11 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
-
+#include <crtdbg.h>
 using namespace std;
 
 int main() {
-  //  _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     //Initialize the map directory and get user's selected map
     MapDirectoryInit* mdiPtr = new MapDirectoryInit();
     //Initialize player list and get number of players
@@ -28,16 +28,13 @@ int main() {
     StatsScreen* statsView = new StatsScreen(g);
     GameScreen* view = new GameScreen(g);
     
-    g->Detach(statsView);
-    g->Detach(view);
+  //  g->Detach(statsView);
+  //  g->Detach(view);
 
     GameController* controller = new GameController(view, statsView, g);
 
     controller->controlGame();
-
-    delete giPtr;
-    delete mdiPtr;
-    delete pliPtr;
-    delete g;
+//    delete statsView;
+   // delete view;
     return 0;
 }

@@ -94,13 +94,10 @@
 				{
 					//attacker wins the battle
 					cout << "\n\nAttack won " << orderplayer->getName() << " conquers the " << *destinationterritory << endl;
-					destinationterritory->getterritory_owner()->remove(destinationterritory);
 					cout << "0"<< endl;
 					destinationterritory->setterritory_armycount(*troopnum);
 					cout << "1"<< endl;
 					destinationterritory->setterritory_owner(orderplayer);
-					cout << "2"<< endl;
-					orderplayer->gettoDefend()->push_back(destinationterritory);
 					cout << "3"<< endl;
 					orderplayer->setcaptureTerritory(true);
 					return true;

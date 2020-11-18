@@ -84,7 +84,7 @@ public:
     // of territories to defend
     vector<Territory*>* toDefend(Map &m);
     //returns the todefend list
-    vector<Territory*>* gettoDefend();
+    vector<Territory*>* gettoDefend(Map& m);
 
     // method toAttack which returns a list
     // of territories to attack
@@ -117,6 +117,5 @@ public:
     //returns orderlist
     vector<Order*>* getOrderList();
     //removes a territory from toDefend list
-    void remove(Territory*);
 
 };
