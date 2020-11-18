@@ -14,7 +14,7 @@ MapLoader::MapLoader(string mapName) {
     map= new string(mapName);
 
     fstream map_stream;
-    map_stream.open(*map, std::fstream::in | std::fstream::out);
+    map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
     if (map_stream.is_open()) {
         std::cout << "Map file was opened successfully\n" << std::endl;
@@ -25,7 +25,7 @@ MapLoader::MapLoader(string mapName) {
     }
         //if map file was not opened successfully
     else
-        cout << "Unable to open the map file!" << endl;
+        cout << "Unable to open the map file!\n" << endl;
 }
 
 //Destructor
@@ -51,7 +51,7 @@ MapLoader::~MapLoader(){
     validMap = NULL;
 }
 
-//getter
+//getters
 Map* MapLoader::getMap() {
     return validMap;
 }
@@ -167,7 +167,7 @@ void MapLoader::loadMap(fstream& map_stream) {
     }//end of while for all map file
 
     if (continentsFound & countriesFound & bordersFound & totalCountries == totalBorders){
-        cout << "Map is valid.\nCreating a map object...\n" << endl;
+        cout << "\nMap is valid.\nCreating a map object...\n" << endl;
         CreateMap(continents, countries, borders);
     } else {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
@@ -184,49 +184,102 @@ void MapLoader::printVector(vector<std::string*> aVector) {
         std::cout << **i << endl;
     }
 }
+void MapLoader::printTerritories(vector<Territory*>* aVector){
+    for (vector<Territory*>::const_iterator i = aVector->begin(); i != aVector->end(); ++i){
+        std::cout << **i;
+    }
+    cout << "" << endl;
+}
+void MapLoader::printContinents(vector<Continent*>* aVector){
+    for (vector<Continent*>::const_iterator i = aVector->begin(); i != aVector->end(); ++i){
+        std::cout << **i;
+    }
+    cout << "" << endl;
+}
 
 //to return a map object
 Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
 
-    //create territories list object
+    //creating territories list object and adding each one to the continent that it belongs to
     vector<Territory*>* territoriesListPtr = new vector<Territory*>();
     Player* neutralPlayer = new Player("Neutral");
     //args of territory = int continent, string name, player* owner, int armies.
-    for(int j=0; j<countries.size(); j++)
-    {
+    for(int j=0; j<countries.size(); j++) {
         string name;
-        int continent; 
+        int continentID;
+
         int wordCount = 1;
         string word = "";
-        //There are 5 words(excludes spaces) in every line of countries vector, we need name/continent or words 2&3
-        for(auto nextWord : *countries[j])
-        {
-            if(nextWord == ' ' && wordCount == 2)
-            {
+        //There are 5 words in every line of countries vector, we need name/continentID or words 2&3
+        for(auto nextWord : *countries[j]) {
+            //reaching end of second word
+            if(nextWord == ' ' && wordCount == 2) {
                 name = word;
                 word = "";
                 wordCount++;
             }
-            else if(nextWord == ' ' && wordCount == 3)
-            {
-                continent = std::stoi(word, nullptr);
+            //reaching end of third word
+            else if(nextWord == ' ' && wordCount == 3) {
+                continentID = std::stoi(word, nullptr);
                 word = "";
                 wordCount++;
             }
-            else if(nextWord == ' ')
-            {
+            //reaching end of first word
+            else if(nextWord == ' ') {
                 word = "";
                 wordCount++;
             }
-            else
-            {
+            else {
                 word = word + nextWord;
-            }      
+            }
         }
-        //create appropriate territory and add to territories list
-        Territory* territory = new Territory(continent, name, neutralPlayer, 0);
+        //creating territory and add to territories list
+        Territory* territory = new Territory(continentID, name, neutralPlayer, 0);
         territoriesListPtr->push_back(territory);
     }
+    //printTerritories(territoriesListPtr);
+
+    //creating Continents object and setting the bonus army for each continent
+    vector<Continent*>* continentsListPtr = new vector<Continent*>();
+    vector<Territory*> territoriesInContinent;
+    for (int i=0; i<continents.size(); i++){
+        territoriesInContinent.clear();
+        string name;
+        int id = i+1;
+        int bonus;
+        int wordCount = 1;
+        string temp = "";
+        //There are 3 words in every line of continents vector, we need name/bonus army or words 1&2
+        for (auto nextWord : *continents[i]){
+            //reach end of second word
+            if (nextWord == ' ' && wordCount == 2){
+                bonus = std::stoi(temp, nullptr);
+                temp = "";
+                wordCount++;
+            }
+            //reaching end of first word
+            else if (nextWord == ' ' && wordCount ==1){
+                name = temp;
+                temp = "";
+                wordCount++;
+            }
+            else if (wordCount >= 3){
+                temp = "";
+            }
+            else{
+                temp = temp + nextWord;
+            }
+        }
+        for (auto Terr : *territoriesListPtr){
+            if(Terr->getterritory_continent() == id){
+                territoriesInContinent.push_back(Terr);
+            }
+        }
+        //creating continent and add to continents list
+        Continent* aContinent = new Continent(name, id, bonus, territoriesInContinent);
+        continentsListPtr->push_back(aContinent);
+    }
+    printContinents(continentsListPtr);
 
     //create map object
     validMap = new Map(countries.size(), territoriesListPtr);
@@ -234,40 +287,33 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     string nextBorder;
 
     //Add all borders to map object
-    for(int j =0; j<borders.size(); j++)
-    {
+    for(int j =0; j<borders.size(); j++) {
         brdrsList.clear();
+
         //convert the string of characters into numbers array
-        for(std::string::iterator it=borders[j]->begin(); it!=borders[j]->end(); ++it)
-        {
+        for(std::string::iterator it=borders[j]->begin(); it!=borders[j]->end(); ++it) {
             //Only add numbers delimited by whitespace
-            if(isdigit(*it))
-            {
+            if(isdigit(*it)) {
                 nextBorder.push_back(*it);
 
                 //If this is the last number on the line -> push to borders
-                if(it == borders[j]->end()-1)
-                {
+                if(it == borders[j]->end()-1) {
                     //convert string to int and clear temp variable nextBorder for next line
                     brdrsList.push_back(std::stoi(nextBorder, nullptr));
                     nextBorder = ""; 
                 }
             }
             //protect against end of lines & trailing spaces on ends of lines
-            else if(nextBorder != "" && it != borders[j]->end())
-            {
+            else if(nextBorder != "" && it != borders[j]->end()) {
                 //convert string to int and clear temp variable nextBorder for next line
                 brdrsList.push_back(std::stoi(nextBorder, nullptr));
                 nextBorder = ""; 
             }
         }
         //add borders to map object
-        for( int k =1; k<brdrsList.size(); k++)
-        {
+        for( int k =1; k<brdrsList.size(); k++) {
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
     }
-    delete territoriesListPtr;
-
     return validMap;
 }

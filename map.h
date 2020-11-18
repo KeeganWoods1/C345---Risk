@@ -23,7 +23,7 @@ class Player;
 //declaration of Territory class
 class Territory {
 private:
-    //continent name of the territory
+    //continent id of the territory
     int territory_continent;
     //name of a territory
     string territory_name;
@@ -33,14 +33,12 @@ private:
     int territory_armycount;
 
 public:
-
     //default constructor
     Territory();
-
+    //Parameterized constructor
+    Territory(int, string, Player*, int);
     //copy constructor
     Territory(const Territory*);
-
-    Territory(int, string, Player*, int);
 
     //assignment operator
     Territory& operator = (const Territory&);
@@ -48,37 +46,55 @@ public:
     //insertion operator
     friend ostream& operator << (ostream& out, const Territory& t);
 
-    //destructor
-    ~Territory();
-
-    //territory name getter
-    string getterritory_name();
-
-    //territory name setter
+    //setters
     void setterritory_name(string);
-
-    //continent name getter
-    int getterritory_continent();
-
-    //setter
     void setterritory_continent(int);
-
-    //territory owner getter
-    Player* getterritory_owner();
-
-    //setter
     void setterritory_owner(Player*);
-
-    //army count getter
-    int getterritory_armycount();
-
-    //army count setter
     void setterritory_armycount(int a);
 
-    string toString();
+    //getters
+    string getterritory_name();
+    int getterritory_continent();
+    Player* getterritory_owner();
+    int getterritory_armycount();
 
+    //destructor
+    ~Territory();
 };
 
+class Continent {
+private:
+    string name;
+    //continent id
+    int id;
+    //continent bonus
+    int bonus;
+    //territories in continent
+    vector<Territory*> territoriesInContinent;
+
+public:
+    Continent();
+    Continent(string, int, int, vector<Territory*>);
+
+    //copy constructor
+    Continent(const Continent*);
+
+    //assignment operator
+    Continent& operator = (const Continent&);
+
+    //insertion operator
+    friend ostream& operator << (ostream& out, const Continent& t);
+
+    //getters and setters
+    void setName(string name);
+    void setId(int i);
+    void setBonus(int b);
+    int getId();
+    int getBonus();
+    string getName();
+
+    ~Continent();
+};
 
 //declaration of Map class with its members
 class Map {
@@ -93,12 +109,9 @@ private:
     vector<Territory*>* territoryListPtr;
 
 public:
-    //default constructor
+    //constructors
     Map();
-
-    //one int parameter constructor
     Map(int);
-
     Map(int vertices, vector<Territory*>* territoryList);
 
     //copy constructor
@@ -121,8 +134,11 @@ public:
 
     //verify a graph whether connected or not
     bool Validate();
+
     //Get territories list
     vector<Territory*>* getTerritories();
+
     //Get adjacent method
     bool isAdjacent(Territory a, Territory b);
+
 };

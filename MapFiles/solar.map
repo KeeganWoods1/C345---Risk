@@ -4,16 +4,16 @@ map solar_map.gif
 crd solar.cards
 
 [continents]
-Mercury 6 yellow  
-Venus 8 yellow    
-Earth 10 yellow   
-Mars 10 yellow    
-Comet 4 yellow    
-Jupiter 12 yellow 
-Saturn 8 yellow   
-Uranus 6 yellow   
-Neptune 6 yellow  
-Pluto 2 yellow    
+Mercury 6 yellow
+Venus 8 yellow
+Earth 10 yellow
+Mars 10 yellow
+Comet 4 yellow
+Jupiter 12 yellow
+Saturn 8 yellow
+Uranus 6 yellow
+Neptune 6 yellow
+Pluto 2 yellow
 
 [countries]
 1 Mercury-South 1 523 359

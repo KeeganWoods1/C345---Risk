@@ -236,11 +236,6 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
         << playerListPtr->at(i)->getCurrentReinforcements() << endl;
     }
     cout << "" << endl;
-    /*
-    for (int i = 0; i < territoriesPtr->size(); i++) {
-        delete territoriesPtr->at(i);
-    }
-    delete territoriesPtr;*/
 }
 
 vector<Player*>* GameInit::getPlayerListPtr()
