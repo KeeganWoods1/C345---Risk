@@ -139,7 +139,10 @@ ostream& operator << (ostream& out, const Continent& c) {
 }
 
 Continent::~Continent() {
-
+    territoriesInContinent.clear();
+    for (int i = 0; i < territoriesInContinent.size(); i++) {
+        delete territoriesInContinent.at(i);
+    }  
 }
 
 //Class Map
