@@ -517,7 +517,6 @@ void WarzoneGame::mainGameLoop()
 
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
-        //playerListPtr->at(0)->gettoDefend(*gameMapPtr)->clear();
         break;
     }
     cout << *playerListPtr->at(0) << " Wins!" << endl;

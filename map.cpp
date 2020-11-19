@@ -200,6 +200,8 @@ Map::Map(int vertices, vector<Territory*>* territoryList, vector<Continent*>* co
 }
 //destructor
 Map::~Map() {
+
+
     for (int i = 0; i < vertices; i++) {
         if(adjacent_matrix[i]!= NULL)delete[] adjacent_matrix[i];
         adjacent_matrix[i] = NULL;

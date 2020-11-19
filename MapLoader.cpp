@@ -13,12 +13,13 @@ using namespace std;
 //Default constructor
 MapLoader::MapLoader() {
     map= nullptr;
+    validMap = NULL;
 }
 
 //Parameterized constructor
 MapLoader::MapLoader(string mapName) {
-    map= DBG_NEW string(mapName);
-
+    map = DBG_NEW string(mapName);
+    validMap = NULL;
     fstream map_stream;
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
@@ -30,14 +31,15 @@ MapLoader::MapLoader(string mapName) {
         map_stream.close();
     }
         //if map file was not opened successfully
-    else
+    else {
         cout << "Unable to open the map file!\n" << endl;
+    }
 }
 
 //Destructor
 MapLoader::~MapLoader(){
     delete map;
-    delete validMap;
+    if (validMap != NULL)delete validMap;
     map = nullptr;
     validMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {

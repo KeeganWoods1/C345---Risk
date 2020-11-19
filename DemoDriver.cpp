@@ -19,12 +19,16 @@ void demoPart1()
     MapDirectoryInit* mdiPtr = DBG_NEW MapDirectoryInit();
     //Initialize player list and get number of players
     PlayerListInit* pliPtr = DBG_NEW PlayerListInit();
-
     cout << "Players in the game: " << endl;
     for(Player* p : *pliPtr->getPlayerList())
     {
         cout<< *p << endl;
     }
+    for (int i = 0; i < mdiPtr->getGameMap()->getTerritories()->size(); i++) {
+        if (mdiPtr->getGameMap()->getTerritories()->at(i)->getterritory_owner()->getName().compare("Neutral") == 0)delete mdiPtr->getGameMap()->getTerritories()->at(i)->getterritory_owner();
+    }
+    delete mdiPtr;
+    delete pliPtr;
 }
 void demoPart2()
 {
@@ -71,6 +75,8 @@ void demoPart3()
     WarzoneGame* warzoneGame = DBG_NEW WarzoneGame(giPtr);
 
     warzoneGame->mainGameLoop();
+
+
     for (int i = 0; i < mdiPtr->getGameMap()->getTerritories()->size(); i++) {
         if (mdiPtr->getGameMap()->getTerritories()->at(i)->getterritory_owner()->getName().compare("Neutral") == 0)delete mdiPtr->getGameMap()->getTerritories()->at(i)->getterritory_owner();
     }
@@ -118,19 +124,19 @@ void demoPart5()
 int main() {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    //demoPart1();
-    //cout << "\nPress any key to continue to Part 2 " << flush;
-    //cin.get();
-    //cin.get();
-    demoPart2();
+    demoPart1();
+    cout << "\nPress any key to continue to Part 2 " << flush;
+    cin.get();
+    cin.get();
+   demoPart2();
     cout << "\nPress any key to continue to Part 3" << flush;
     cin.get();
     cin.get();
-   // demoPart3();
+   demoPart3();
     cout << "\nPress any key to continue to Part 4" << flush;
     cin.get();
     cin.get();
-   // demoPart4();
+    demoPart4();
     cout << "\nPress any key to continue to Part 5" << flush;
     cin.get();
     cin.get();
