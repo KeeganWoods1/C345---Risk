@@ -16,6 +16,16 @@ Observer::Observer() {}
 
 Observer::~Observer() {}
 
+Observer::Observer(const Observer& obs) {
+}
+Observer& Observer::operator = (const Observer& obs) {
+    return *this;
+}
+ostream& operator << (ostream& out, const Observer& o) {
+    out << " this is an observor";
+    return out;
+}
+
 Subject::Subject()
 {
     _observers = DBG_NEW std::list<Observer*>;
@@ -43,6 +53,21 @@ void Subject::Notify()
     {
         (*i)->Update();
     }
+}
+
+Subject::Subject(const Subject& obs) {
+    _observers = new std::list<Observer*>;
+    for (int i = 0; i < obs._observers->size(); i++) {
+        _observers[i] = (obs._observers[i]);
+    }
+}
+Subject& Subject::operator = (const Subject& obs) {
+    _observers = obs._observers;
+    return *this;
+}
+ostream& operator << (ostream& out, const Subject& o) {
+    out << " this is a subject"; 
+    return out;
 }
 
 GameScreen::GameScreen() {}
@@ -152,6 +177,17 @@ void GameScreen::clearScreen()
         cout << "\n\n\n\n\n\n\n\n\n\n"; 
     }
 }
+GameScreen::GameScreen(const GameScreen& obs) {
+    _subject = new WarzoneGame(*obs._subject);
+}
+GameScreen& GameScreen::operator = (const GameScreen& obs) {
+    _subject = obs._subject;
+    return *this;
+}
+ostream& operator << (ostream& out, const GameScreen& o) {
+    out << "this is a game screen ";
+    return out;
+}
 
 StatsScreen::StatsScreen() {}
 
@@ -211,6 +247,17 @@ void StatsScreen::clearScreen()
         cout << "\n\n\n\n\n\n\n\n\n\n"; 
     }
 }
+StatsScreen::StatsScreen(const StatsScreen& obs) {
+    _subject = new WarzoneGame(*obs._subject);
+}
+StatsScreen& StatsScreen::operator = (const StatsScreen& obs) {
+    _subject = obs._subject;
+    return *this;
+}
+ostream& operator << (ostream& out, const StatsScreen& o) {
+    out << " this is a stats screen";
+    return out;
+}
 
 GameController::GameController(GameScreen* newView, StatsScreen* otherView, WarzoneGame* newModel)
 {
@@ -232,4 +279,19 @@ void GameController::controlGame()
         gameModel->Detach(statsView);
     }
     gameModel->mainGameLoop();
+}
+GameController::GameController(const GameController& obs) {
+    gameView = new GameScreen(*obs.gameView);
+    statsView = new StatsScreen(*obs.statsView);
+    gameModel = new WarzoneGame(*obs.gameModel);
+}
+GameController& GameController::operator = (const GameController& obs) {
+    gameView = obs.gameView;
+    statsView = obs.statsView;
+    gameModel = obs.gameModel;
+    return *this;
+}
+ostream& operator << (ostream& out, const GameController o) {
+    out << "this is a game controller";
+    return out;
 }
