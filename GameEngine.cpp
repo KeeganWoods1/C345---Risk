@@ -307,11 +307,11 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
 void WarzoneGame::issueOrdersPhase(Player* player)
 {
     setCurrentPhase(1);
-    // player decides which territories are to be attacked in priority
+    // list of territories that are to be attacked 
     cout << "The list of territories to be attacked: " << endl;
     cout << player->toString(player->toAttack(*gameMapPtr)) << endl;
 
-    // player decides which territories are to be defended in priority
+    // list of territories that are to be defended 
     cout << "The list of territories to be defended: " << endl;
     cout << player->toString(player->gettoDefend(*gameMapPtr)) << endl;
 
@@ -394,6 +394,8 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     // getting cards from the player's hand
     Card* card = player->getHand()->getHandContainer().at(0);
+    
+    // Issuing an order that corresponds to the card in question
     if((card->getName()) == "Bomb Card"){
         Territory *attack = player->toAttack(*gameMapPtr)->at(0);
         // the play method adds the order to the player's orderlist
