@@ -33,6 +33,7 @@
 		destinationterritory = destt;
 		sourceterritory = souret;
 		map = m;
+		msg = "Advance order by " + orderplayer->getName() + " to move " + to_string(*troopnum) + " armies from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name();
 	}
 	Map* Advanceorder::getMap()
 	{
@@ -119,7 +120,7 @@
 	    map = NULL;
 	}
 	string Advanceorder::print()const {
-		return "Advance order by " + orderplayer->getName() + " to move " + to_string(*troopnum) + " armies from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name();
+		return msg;
         }
 	Advanceorder::Advanceorder(const Advanceorder& old) {
 		troopnum = DBG_NEW int(*old.troopnum);
@@ -146,6 +147,7 @@
 		sourceterritory = sourcet;
 		destinationterritory = destinationt;
 		orderplayer = orderp;
+		msg = "Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
 	}
 	bool Airliftorder::validate() {
 
@@ -187,17 +189,16 @@
 		return out;
 	}
 	string Airliftorder::print() const{
-		string s = "Airlift order by " + orderplayer->getName() + " and is " + to_string(*troopnum) + " troops being Airlifted to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name();
-		return s;
+		return msg;
 
 	}
 	string Blockadeorder::print()const {
-		string s = "Blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name() ;
-		return s;
+		return msg;
 	}
 	Blockadeorder::Blockadeorder(Player* orderp, Territory* destt) {
 		orderplayer = orderp;
 		destinationterritory = destt;
+		msg = "Blockade order from " + orderplayer->getName() + ", to blockade territory " + destinationterritory->getterritory_name();
 	}
 	bool Blockadeorder::validate() {
 	    if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())!=0)return false;
@@ -231,12 +232,12 @@
 		return out;
 	}
 	string Bomborder::print() const {
-		string s = "bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
-			return s;
+		return msg;
 	}
 	Bomborder::Bomborder(Player* orderp, Territory* destt) {
 		orderplayer = orderp;
 		destinationterritory = destt;
+		msg = "bomb order from " + orderplayer->getName() + " on country " + destinationterritory->getterritory_name();
 	}
 	bool Bomborder::validate() {
 	    if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())==0)return false;
@@ -273,13 +274,13 @@
 
 	}
 	string Deployorder::print() const {
-		string s = "\nDeploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name()+"\n";
-		return s;
+		return msg;
 	}
 	Deployorder::Deployorder(Player* orderp, int* j, Territory* destt) {
 		orderplayer = orderp;
 		troopnum = j;
 		destinationterritory = destt;
+		msg = "\nDeploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
 	}
 	bool Deployorder::validate() {
         if (orderplayer->getCurrentReinforcements()< *troopnum)return false;
@@ -318,12 +319,12 @@
 
 	}
 	string Negotiateorder::print() const {
-		string s = "Negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName();
-		return s;
+		return msg;
 	}
 	Negotiateorder::Negotiateorder(Player* orderp, Player* destp) {
 		orderplayer = orderp;
 		otherplayer = destp;
+		msg = "Negotiate order from " + orderplayer->getName() + " to " + otherplayer->getName();
 	}
 	bool Negotiateorder::validate() {
 	    if (orderplayer->getName().compare(otherplayer->getName())==0)return false;
@@ -356,11 +357,11 @@
 		return out;
 	}
 	string Reinforcementorder::print() const {
-		string s = "Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops";
-		return s;
+		return msg;
 	}
 	Reinforcementorder::Reinforcementorder(Player* orderp) {
 		orderplayer = orderp;
+		msg = "Reinforcement order from " + orderplayer->getName() + " to reinforce their army with 5 troops";
 	}
 	bool Reinforcementorder::validate() {
 		return true;

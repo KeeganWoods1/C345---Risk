@@ -482,7 +482,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     Player* player2 = NULL;
     for(Player* pl : *playerListPtr)
     {
-        if(player->getName() != pl->getName())
+        if(pl->getName().compare(player->getName())!=0)
         {
             player2 = pl;
             break;
@@ -490,33 +490,35 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     }
 
     // getting cards from the player's hand
-    Card* card = player->getHand()->getHandContainer().at(0);
-    
-    // Issuing an order that corresponds to the card in question
-    if((card->getName()) == "Bomb Card"){
-        Territory *attack = player->toAttack(*gameMapPtr)->at(0);
-        // the play method adds the order to the player's orderlist
-        dynamic_cast<BombCard *>(card)->play(gameDeckPtr, player, attack);
-    }
-    else if(card->getName() == "Reinforcement Card")
-    {
-        // the play method adds the order to the player's orderlist
-        dynamic_cast<ReinforcementCard *>(card)->play(gameDeckPtr, player);
-    }
-    else if(card->getName() == "Blockade Card")
-    {
-        // the play method adds the order to the player's orderlist
-        dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(0));
-    }
-    else if(card->getName() == "Airlift Card")
-    {
-        // the play method adds the order to the player's orderlist
-        dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(1),player->gettoDefend(*gameMapPtr)->at(0), DBG_NEW int(1));
-    }
-    else if(card->getName() == "Diplomacy Card")
-    {
-        // the play method adds the order to the player's orderlist
-        dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
+    if (player2 != NULL) {
+        Card* card = player->getHand()->getHandContainer().at(0);
+
+        // Issuing an order that corresponds to the card in question
+        if ((card->getName()) == "Bomb Card") {
+            Territory* attack = player->toAttack(*gameMapPtr)->at(0);
+            // the play method adds the order to the player's orderlist
+            dynamic_cast<BombCard*>(card)->play(gameDeckPtr, player, attack);
+        }
+        else if (card->getName() == "Reinforcement Card")
+        {
+            // the play method adds the order to the player's orderlist
+            dynamic_cast<ReinforcementCard*>(card)->play(gameDeckPtr, player);
+        }
+        else if (card->getName() == "Blockade Card")
+        {
+            // the play method adds the order to the player's orderlist
+            dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(0));
+        }
+        else if (card->getName() == "Airlift Card")
+        {
+            // the play method adds the order to the player's orderlist
+            dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(1), player->gettoDefend(*gameMapPtr)->at(0), DBG_NEW int(1));
+        }
+        else if (card->getName() == "Diplomacy Card")
+        {
+            // the play method adds the order to the player's orderlist
+            dynamic_cast<DiplomacyCard*>(card)->play(gameDeckPtr, player, player2);
+        }
     }
     cout << "\nOrders Issued: " << endl;
     cout << *player->getPlayerlist() << endl;
