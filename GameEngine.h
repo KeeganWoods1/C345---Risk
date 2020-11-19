@@ -47,15 +47,15 @@ class PlayerListInit
     PlayerListInit();
     PlayerListInit(int);
     ~PlayerListInit();
-    //Copy constructor
-    PlayerListInit(const PlayerListInit& pl);
     vector<Player*>* getPlayerList();
     int getNumOfPlayers();
     Deck* getDeckPtr();
     bool getDisplayPhaseInfo();
     void setDisplayPhaseInfo(bool);
     bool getDisplayStatsInfo();
-    void setDisplayStatsInfo(bool);
+    void setDisplayStatsInfo(bool);    
+    //Copy constructor
+    PlayerListInit(const PlayerListInit& pl);
     //Assignment operator
 	PlayerListInit& operator = (const PlayerListInit& pl);
     //I/O operator overloads

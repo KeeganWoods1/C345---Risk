@@ -67,6 +67,32 @@ MapDirectoryInit::~MapDirectoryInit(){
     delete gameMapPtr;
 }
 
+//copy constructor
+MapDirectoryInit::MapDirectoryInit(const MapDirectoryInit& c) : 
+selectedMapName(c.selectedMapName), 
+gameMapPtr(new Map(*gameMapPtr)) {}
+
+//assignmnet operator overload
+MapDirectoryInit &MapDirectoryInit::operator = (const MapDirectoryInit& o) 
+{
+    selectedMapName = o.selectedMapName;
+    gameMapPtr = o.gameMapPtr;
+    return *this;
+}
+
+//stream i/o overloads
+istream &operator >> (istream &stream, MapDirectoryInit &o)
+{
+    stream >> o.selectedMapName;
+    return stream;
+}
+
+ostream &operator << (ostream &out, const MapDirectoryInit &o)
+{
+    out << o.selectedMapName;
+    return out;
+}
+
 PlayerListInit::PlayerListInit()
 {
     bool validEntry = false;
@@ -166,6 +192,30 @@ bool PlayerListInit::getDisplayStatsInfo()
 void PlayerListInit::setDisplayStatsInfo(bool b)
 {
     statsObservers = b;
+}
+//copy constructor
+PlayerListInit::PlayerListInit(const PlayerListInit& c) : 
+    numOfPlayers(c.numOfPlayers), 
+    playerListPtr(new vector<Player*>(*playerListPtr)), 
+    deckPtr(new Deck(*deckPtr)), 
+    phaseObservers(c.phaseObservers), 
+    statsObservers(c.statsObservers) {}
+
+//assignmnet operator overload
+PlayerListInit &PlayerListInit::operator = (const PlayerListInit& o) 
+{
+    numOfPlayers = o.numOfPlayers;
+    playerListPtr = o.playerListPtr;
+    deckPtr = o.deckPtr;
+    phaseObservers = o.phaseObservers;
+    statsObservers = o.statsObservers;
+    return *this;
+}
+
+ostream &operator << (ostream &out, const PlayerListInit &o)
+{
+    out << "This is a PlayerInit Object";
+    return out;
 }
 
 GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, PlayerListInit* pli)
@@ -287,6 +337,28 @@ PlayerListInit* GameInit::getpliPtr()
 {
     return pliPtr;
 }
+//copy constructor
+GameInit::GameInit(const GameInit& c) : 
+    pliPtr(new PlayerListInit(*pliPtr)),
+    playerListPtr(new vector<Player*>(*playerListPtr)),
+    gameMapPtr(new Map(*gameMapPtr)),
+    gameDeckPtr(c.gameDeckPtr) {}
+
+//assignmnet operator overload
+GameInit &GameInit::operator = (const GameInit& o) 
+{
+    pliPtr = o.pliPtr;
+    playerListPtr = o.playerListPtr;
+    gameMapPtr = o.gameMapPtr;
+    gameDeckPtr = o.gameDeckPtr;
+
+    return *this;
+}
+ostream &operator << (ostream &out, const GameInit &o)
+{
+    out << "This is a GameInit Object";
+    return out;
+}
 
 WarzoneGame::WarzoneGame(GameInit* gi)
 {
@@ -296,6 +368,7 @@ WarzoneGame::WarzoneGame(GameInit* gi)
     hasWon = false;
     gameInitPtr = gi;
 }
+
 
 bool WarzoneGame::ordersRemain()
 {
@@ -631,4 +704,35 @@ vector<Player*> WarzoneGame::getPlayerList()
 GameInit* WarzoneGame::getGameInitPtr()
 {
     return gameInitPtr;
+}
+
+//copy constructor
+WarzoneGame::WarzoneGame(const WarzoneGame& c) : 
+    playerListPtr(new vector<Player*>(*c.playerListPtr)),
+    gameMapPtr(new Map(*c.gameMapPtr)),
+    gameDeckPtr(new Deck(*c.gameDeckPtr)),
+    currentPlayer(new Player(*c.currentPlayer)),
+    executionQueue(c.executionQueue),
+    currentPhase(c.currentPhase),
+    hasWon(c.hasWon),
+    gameInitPtr(new GameInit(*c.gameInitPtr)) {}
+
+//assignmnet operator overload
+WarzoneGame &WarzoneGame::operator = (const WarzoneGame& o) 
+{
+    playerListPtr = o.playerListPtr;
+    gameMapPtr = o.gameMapPtr;
+    gameDeckPtr = o.gameDeckPtr;
+    currentPlayer = o.currentPlayer;
+    executionQueue = o.executionQueue;
+    currentPhase = o.currentPhase;
+    hasWon = o.hasWon;
+    gameInitPtr = o.gameInitPtr;
+
+    return *this;
+}
+ostream &operator << (ostream &out, const WarzoneGame &o)
+{
+    out << "This is a WarzoneGame Object";
+    return out;
 }
