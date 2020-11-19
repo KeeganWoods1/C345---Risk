@@ -317,8 +317,10 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
     setCurrentPhase(0);
     const int MIN_REINFORCEMENT = 3;
     int reinforcement = 0;
+    int continentBonus = player->getContinentBonus(gameMapPtr);
 
     reinforcement += player->getNumTerrOwned() / 3;
+    reinforcement += continentBonus;
 
     //to make sure that the player has the minimum reinforcement
     if (reinforcement < MIN_REINFORCEMENT) {
@@ -330,7 +332,7 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
     cout << "----------------------------------------------" << endl;
     cout << "Demonstrating REINFORCEMENTS PHASE for " << *player << endl;
     cout << "player owns " << player->getNumTerrOwned() << " territories." << endl;
-    cout << "Player owns 0 continents" << endl;
+    cout << "Player receives " << continentBonus << " continent bonus troops" << endl;
     cout << "Added " << reinforcement << " troops to reinforcement pool" << endl;
     cout << "----------------------------------------------" << endl;    
     

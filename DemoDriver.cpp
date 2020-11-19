@@ -4,7 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
-#include <crtdbg.h>
+//#include <crtdbg.h>
 using namespace std;
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -85,11 +85,8 @@ void demoPart3()
     delete mdiPtr;
     delete pliPtr;
 }
-void demoPart4()
-{
-    
-}
-void demoPart5()
+
+void demoPart4_5()
 {
     //Initialize the map directory and get user's selected map
     MapDirectoryInit* mdiPtr = DBG_NEW MapDirectoryInit();
@@ -122,25 +119,21 @@ void demoPart5()
 }
 
 int main() {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+   // _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     demoPart1();
     cout << "\nPress any key to continue to Part 2 " << flush;
     cin.get();
     cin.get();
-   demoPart2();
+    demoPart2();
     cout << "\nPress any key to continue to Part 3" << flush;
     cin.get();
     cin.get();
-   demoPart3();
-    cout << "\nPress any key to continue to Part 4" << flush;
-    cin.get();
-    cin.get();
-    demoPart4();
+    demoPart3();
     cout << "\nPress any key to continue to Part 5" << flush;
     cin.get();
     cin.get();
-    demoPart5();
+    demoPart4_5();
 
     return 0;
 }

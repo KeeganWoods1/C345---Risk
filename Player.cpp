@@ -365,7 +365,7 @@ int Player::getContinentBonus(Map* m)
 {
     int bonus = 0;
     for (auto continent : *m->getContinents()){
-        if (continent->ownedByOnePlayer(this,m))
+        if (continent->ownedByOnePlayer(this, m))
         {
             bonus += continent->getBonus();
         } 

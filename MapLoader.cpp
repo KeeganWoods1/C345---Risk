@@ -31,9 +31,11 @@ MapLoader::MapLoader(string mapName) {
         map_stream.close();
     }
         //if map file was not opened successfully
-    else {
+    else
+    {
         cout << "Unable to open the map file!\n" << endl;
     }
+        
 }
 
 //Destructor

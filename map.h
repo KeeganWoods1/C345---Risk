@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-class Map;
+
 /*manually create territories, and the adjacency between territories,
 * and a way to verify that the map is connected (how?)
 *manually create continents, and check whether they are defined, and create sub-graphs, and each countries belongs to one continent.
@@ -14,6 +14,7 @@ class Map;
 */
 
 class Player;
+class Map;
 
 /*
  * manually creating territories, and using the 2d array adjacency array to find whether connected or not.
