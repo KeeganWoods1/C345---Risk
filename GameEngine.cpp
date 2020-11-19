@@ -430,7 +430,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         if(reinforcementCounter >= 10 && player->gettoDefend(*gameMapPtr)->size() > i)
         {
             //order added to player's orderlist
-            Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(10), player->gettoDefend(*gameMapPtr)->at(i));
+            Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(10), player->toDefend(*gameMapPtr)->at(i));
             cout << deployorder1->print() << endl;
             player->issueOrder(deployorder1);
             
@@ -439,7 +439,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         else if(reinforcementCounter > 0 && player->gettoDefend(*gameMapPtr)->size() > i)
         {
             //order added to player's orderlist
-            Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(reinforcementCounter), player->gettoDefend(*gameMapPtr)->at(i));
+            Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(reinforcementCounter), player->toDefend(*gameMapPtr)->at(i));
             cout << deployorder1->print() << endl;
             player->issueOrder(deployorder1);
             
@@ -454,14 +454,14 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     // player chooses to move armies from one of its own territory to the other
     // in order to defend them
     if (player->gettoDefend(*gameMapPtr)->size() > 3) {
-        Advanceorder* advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int(4), player, player->gettoDefend(*gameMapPtr)->at(3),
-            player->gettoDefend(*gameMapPtr)->at(2), gameMapPtr);
+        Advanceorder* advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int(4), player, player->toDefend(*gameMapPtr)->at(3),
+            player->toDefend(*gameMapPtr)->at(2), gameMapPtr);
         cout << advanceorder1->print() << " in order to defend" << endl;
         player->issueOrder(advanceorder1);
     }
-    if (player->gettoDefend(*gameMapPtr)->size() > 3) {
-        Advanceorder* advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int(7), player, player->gettoDefend(*gameMapPtr)->at(1),
-            player->gettoDefend(*gameMapPtr)->at(3), gameMapPtr);
+    if (player->gettoDefend(*gameMapPtr)->size() > 4) {
+        Advanceorder* advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int(7), player, player->toDefend(*gameMapPtr)->at(4),
+            player->toDefend(*gameMapPtr)->at(1), gameMapPtr);
         cout << "\n" << advanceorder2->print() << " in order to defend" << endl;
         player->issueOrder(advanceorder2);
     }
@@ -470,9 +470,9 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     Territory *attack3;
     Territory *defend3;
     Advanceorder *advanceorder3;
-    if(player->gettoDefend(*gameMapPtr)->size() > 0 && player->gettoDefend(*gameMapPtr)->size() >0 && player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->size() > 0)
+    if(player->gettoDefend(*gameMapPtr)->size() > 0 && player->toDefend(*gameMapPtr)->size() >0 && player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(0))->size() > 0)
     {
-        attack3 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->at(0);
+        attack3 = player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(0))->at(0);
         defend3 = player->toDefend(*gameMapPtr)->at(0);    
         advanceorder3 = DBG_NEW Advanceorder(DBG_NEW int (2), player, attack3, defend3, gameMapPtr);
         cout << endl << advanceorder3->print() << " in order to attack" << endl;
@@ -480,9 +480,9 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     }
     Territory *attack4;
     Territory *defend4;
-    if(player->gettoDefend(*gameMapPtr)->size() > 1 && player->gettoDefend(*gameMapPtr)->size() > 1&&player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->size() > 0)
+    if(player->toDefend(*gameMapPtr)->size() > 1 && player->toDefend(*gameMapPtr)->size() > 1&&player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(1))->size() > 0)
     {
-        attack4 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->at(0);
+        attack4 = player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(1))->at(0);
         defend4 = player->toDefend(*gameMapPtr)->at(1);
         Advanceorder *advanceorder4 = DBG_NEW Advanceorder(DBG_NEW int (6), player, attack4, defend4, gameMapPtr);
         cout << endl << advanceorder4->print() << " in order to attack" << endl;
