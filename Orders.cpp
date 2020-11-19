@@ -66,6 +66,7 @@
 			{
 			    sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
                 destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
+				cout << "\nmoving " + to_string(*troopnum) + " units from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name() + " resulting in a new total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
                 return true;
 			}
 			else 
@@ -152,6 +153,7 @@
 		if (validate()) {
 			sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
+			cout << "\nairlifted " + to_string(*troopnum) + " units to " +  destinationterritory->getterritory_name()+ " from " + sourceterritory->getterritory_name() + " for a new total of " + to_string(destinationterritory->getterritory_armycount())+ "units\n";
 			return true;
 		}
 		else return false;
@@ -196,6 +198,8 @@
 	bool Blockadeorder::execute() {
 		if (validate()) {
 			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral"));
+			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount() * 2);
+			cout << "\nsetting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n" ;
 			return true;
 		}
 		else return false;
@@ -230,6 +234,7 @@
 	bool Bomborder::execute() {
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()/2);
+			cout << "\nbombed " + destinationterritory->getterritory_name() + " making the new count " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
 			return true;
 		}
 		else return false;
@@ -254,7 +259,7 @@
 
 	}
 	string Deployorder::print() const {
-		string s = "Deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name();
+		string s = "\nDeploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name()+"\n";
 		return s;
 	}
 	Deployorder::Deployorder(Player* orderp, int* j, Territory* destt) {
@@ -271,6 +276,7 @@
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
 			orderplayer->setCurrentReinforcements(orderplayer->getCurrentReinforcements()-*troopnum);
+			cout << "\nmoved " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " for a total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n" ;
 			return true;
 		}
 		else return false;
