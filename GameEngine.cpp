@@ -470,17 +470,17 @@ void WarzoneGame::executeOrdersPhase()
         }
         else
         {
-            order->execute();    
+            order->execute();
         }
-        delete order;
     }
-    executionQueue.clear();
     cout << "----------------------------------------------" << endl;
 
     Notify();    
     for (int i = 0; i < executionQueue.size(); i++) {
         delete executionQueue.at(i);
     }
+    executionQueue.clear();
+
 }
 
 void WarzoneGame::mainGameLoop()
