@@ -206,7 +206,6 @@ void MapLoader::printContinents(vector<Continent*>* aVector){
 //to return a map object
 Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
 
-    Player* neutralPlayer = DBG_NEW Player("Neutral");
     //creating territories list object and adding each one to the continent that it belongs to
     vector<Territory*>* territoriesListPtr = DBG_NEW vector<Territory*>();
     //args of territory = int continent, string name, player* owner, int armies.
@@ -240,7 +239,8 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }
         }
         //creating territory and add to territories list
-        Territory* territory = new Territory(continentID, name, neutralPlayer, 1);
+        Player* neutralPlayer = DBG_NEW Player("Neutral");
+        Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
     //printTerritories(territoriesListPtr);
@@ -319,9 +319,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
     }
-    for (int i = 0; i < continentsListPtr->size(); i++) {
-        delete continentsListPtr->at(i);
-    }
+    continentsListPtr->clear();
     delete continentsListPtr;
     territoriesListPtr->clear();
     delete territoriesListPtr;
