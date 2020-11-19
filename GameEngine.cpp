@@ -70,7 +70,7 @@ MapDirectoryInit::~MapDirectoryInit(){
 //copy constructor
 MapDirectoryInit::MapDirectoryInit(const MapDirectoryInit& c) : 
 selectedMapName(c.selectedMapName), 
-gameMapPtr(new Map(*gameMapPtr)) {}
+gameMapPtr(new Map(*c.gameMapPtr)) {}
 
 //assignmnet operator overload
 MapDirectoryInit &MapDirectoryInit::operator = (const MapDirectoryInit& o) 
@@ -196,8 +196,8 @@ void PlayerListInit::setDisplayStatsInfo(bool b)
 //copy constructor
 PlayerListInit::PlayerListInit(const PlayerListInit& c) : 
     numOfPlayers(c.numOfPlayers), 
-    playerListPtr(new vector<Player*>(*playerListPtr)), 
-    deckPtr(new Deck(*deckPtr)), 
+    playerListPtr(new vector<Player*>(*c.playerListPtr)), 
+    deckPtr(new Deck(*c.deckPtr)), 
     phaseObservers(c.phaseObservers), 
     statsObservers(c.statsObservers) {}
 
@@ -339,9 +339,9 @@ PlayerListInit* GameInit::getpliPtr()
 }
 //copy constructor
 GameInit::GameInit(const GameInit& c) : 
-    pliPtr(new PlayerListInit(*pliPtr)),
-    playerListPtr(new vector<Player*>(*playerListPtr)),
-    gameMapPtr(new Map(*gameMapPtr)),
+    pliPtr(new PlayerListInit(*c.pliPtr)),
+    playerListPtr(new vector<Player*>(*c.playerListPtr)),
+    gameMapPtr(new Map(*c.gameMapPtr)),
     gameDeckPtr(c.gameDeckPtr) {}
 
 //assignmnet operator overload
@@ -562,7 +562,7 @@ void WarzoneGame::executeOrdersPhase()
 
 void WarzoneGame::mainGameLoop()
 {
-    int turnCounter = 0;
+    //Game loop runs until only the winner remains
     while(playerListPtr->size()>1)
     {
         //Remove players who own no territories
@@ -580,22 +580,22 @@ void WarzoneGame::mainGameLoop()
         for(Player* player : *playerListPtr)
         {
             setCurrentPlayer(player);
-            //Draw a card
+            //Draw a card regardless of previous turn (for demonstration only)
             gameDeckPtr->draw(player->getHand());
-
+            //Player draws a card only if they conquered a territory in the previous turn
             if (player->getName().compare("Neutral")!=0 && player->getcaptureTerritory()){
                 gameDeckPtr->draw(player->getHand());
                 player->setcaptureTerritory(false);
             }
-
             reinforcementPhase(player, player->getNumTerrOwned());
             issueOrdersPhase(player);
         }
-
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
+        //End the game for domonstrative purposes
         break;
     }
+    //Only one player remains in the playerList, declare a winner
     cout << *playerListPtr->at(0) << " Wins!" << endl;
     setHasWon(true);
     Notify();
