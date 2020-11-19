@@ -119,10 +119,10 @@ int main() {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     //demoPart1();
-    cout << "\nPress any key to continue to Part 2 " << flush;
-    cin.get();
-    cin.get();
-    //demoPart2();
+    //cout << "\nPress any key to continue to Part 2 " << flush;
+    //cin.get();
+    //cin.get();
+    demoPart2();
     cout << "\nPress any key to continue to Part 3" << flush;
     cin.get();
     cin.get();
