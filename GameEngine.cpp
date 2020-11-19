@@ -427,7 +427,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     for(int i = 0; i<player->gettoDefend(*gameMapPtr)->size(); i++)
     {
-        if(reinforcementCounter >= 10)
+        if(reinforcementCounter >= 10 && player->gettoDefend(*gameMapPtr)->size() > i)
         {
             //order added to player's orderlist
             Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(10), player->gettoDefend(*gameMapPtr)->at(i));
@@ -436,7 +436,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
             
             reinforcementCounter -= 10;
         }
-        else if(reinforcementCounter > 0)
+        else if(reinforcementCounter > 0 && player->gettoDefend(*gameMapPtr)->size() > i)
         {
             //order added to player's orderlist
             Deployorder *deployorder1 = DBG_NEW Deployorder(player, DBG_NEW int(reinforcementCounter), player->gettoDefend(*gameMapPtr)->at(i));
@@ -450,20 +450,22 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     // player chooses to move armies from one of its own territory to the other
     // in order to defend them
-    Advanceorder *advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int (4), player, player->gettoDefend(*gameMapPtr)->at(3),
-                                                player->gettoDefend(*gameMapPtr)->at(2), gameMapPtr);
-    player->issueOrder(advanceorder1);
-
-    Advanceorder *advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int (7), player, player->gettoDefend(*gameMapPtr)->at(1),
-                                                player->gettoDefend(*gameMapPtr)->at(3), gameMapPtr);
-    player->issueOrder(advanceorder2);
-
+    if (player->gettoDefend(*gameMapPtr)->size() > 3) {
+        Advanceorder* advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int(4), player, player->gettoDefend(*gameMapPtr)->at(3),
+            player->gettoDefend(*gameMapPtr)->at(2), gameMapPtr);
+        player->issueOrder(advanceorder1);
+    }
+    if (player->gettoDefend(*gameMapPtr)->size() > 3) {
+        Advanceorder* advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int(7), player, player->gettoDefend(*gameMapPtr)->at(1),
+            player->gettoDefend(*gameMapPtr)->at(3), gameMapPtr);
+        player->issueOrder(advanceorder2);
+    }
     // player chooses to move armies from one of its territories to a neighboring
     // enemy territory to attack them
     Territory *attack3;
     Territory *defend3;
     Advanceorder *advanceorder3;
-    if(player->gettoDefend(*gameMapPtr)->size() > 0 && player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->size() > 0)
+    if(player->gettoDefend(*gameMapPtr)->size() > 0 && player->gettoDefend(*gameMapPtr)->size() >0 && player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->size() > 0)
     {
         attack3 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(0))->at(0);
         defend3 = player->toDefend(*gameMapPtr)->at(0);    
@@ -472,7 +474,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     }
     Territory *attack4;
     Territory *defend4;
-    if(player->gettoDefend(*gameMapPtr)->size() > 1 && player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->size() > 0)
+    if(player->gettoDefend(*gameMapPtr)->size() > 1 && player->gettoDefend(*gameMapPtr)->size() > 1&&player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->size() > 0)
     {
         attack4 = player->toAttack(*gameMapPtr, *player->gettoDefend(*gameMapPtr)->at(1))->at(0);
         defend4 = player->toDefend(*gameMapPtr)->at(1);
@@ -494,7 +496,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
         Card* card = player->getHand()->getHandContainer().at(0);
 
         // Issuing an order that corresponds to the card in question
-        if ((card->getName()) == "Bomb Card") {
+        if ((card->getName()) == "Bomb Card" && player->toAttack(*gameMapPtr)->size() > 0) {
             Territory* attack = player->toAttack(*gameMapPtr)->at(0);
             // the play method adds the order to the player's orderlist
             dynamic_cast<BombCard*>(card)->play(gameDeckPtr, player, attack);
@@ -504,12 +506,12 @@ void WarzoneGame::issueOrdersPhase(Player* player)
             // the play method adds the order to the player's orderlist
             dynamic_cast<ReinforcementCard*>(card)->play(gameDeckPtr, player);
         }
-        else if (card->getName() == "Blockade Card")
+        else if (card->getName() == "Blockade Card" && player->gettoDefend(*gameMapPtr)->size() > 0)
         {
             // the play method adds the order to the player's orderlist
             dynamic_cast<BlockadeCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(0));
         }
-        else if (card->getName() == "Airlift Card")
+        else if (card->getName() == "Airlift Card" && player->gettoDefend(*gameMapPtr)->size() > 1)
         {
             // the play method adds the order to the player's orderlist
             dynamic_cast<AirliftCard*>(card)->play(gameDeckPtr, player, player->gettoDefend(*gameMapPtr)->at(1), player->gettoDefend(*gameMapPtr)->at(0), DBG_NEW int(1));
@@ -565,6 +567,7 @@ void WarzoneGame::executeOrdersPhase()
 void WarzoneGame::mainGameLoop()
 {
     //Game loop runs until only the winner remains
+    int counter = 0;
     while(playerListPtr->size()>1)
     {
         //Remove players who own no territories
@@ -594,8 +597,9 @@ void WarzoneGame::mainGameLoop()
         }
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
+        counter++;
+        if (counter > 20) break;
         //End the game for domonstrative purposes
-        break;
     }
     //Only one player remains in the playerList, declare a winner
     cout << *playerListPtr->at(0) << " Wins!" << endl;
