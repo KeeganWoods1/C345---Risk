@@ -42,6 +42,7 @@ private:
 public:
     // default constructor
     Player();
+    void clear();
 
     // parametrized constructor
     Player(string);

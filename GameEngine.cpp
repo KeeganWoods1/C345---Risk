@@ -601,6 +601,7 @@ void WarzoneGame::mainGameLoop()
                 player->setcaptureTerritory(false);
             }
             reinforcementPhase(player, player->getNumTerrOwned());
+            player->clear();
             issueOrdersPhase(player);
         }
         //All players are done issuing orders, execution of orders can begin

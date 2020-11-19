@@ -177,6 +177,13 @@ Orderlist* Player::getPlayerlist()
 {
     return playerOlist;
 }
+void Player::clear() {
+    *capturedTerritory = false;
+    for (int i = 0; i < negotiatedFriends->size(); i++) {
+        delete negotiatedFriends->at(i);
+    }
+    negotiatedFriends->clear();
+}
 
 vector<Territory*>* Player::gettoDefend(Map& m)
 {

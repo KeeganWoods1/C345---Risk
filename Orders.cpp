@@ -49,7 +49,8 @@
 		}
         if (orderplayer->getName().compare(destinationterritory->getterritory_owner()->getName()) != 0)
 		{
-	        if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))
+
+			if (orderplayer->isNegotiatedFriend(destinationterritory->getterritory_owner()->getName()))
 			{
 				return false;
 			}
