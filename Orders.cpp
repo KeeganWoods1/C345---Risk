@@ -303,13 +303,13 @@
 		troopnum = DBG_NEW int(*old.troopnum);
 		orderplayer = DBG_NEW Player(*old.orderplayer);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
-		msg = msg;
+		msg = old.msg;
 	}
 	Deployorder& Deployorder::operator = (const Deployorder& old) {
 		troopnum = old.troopnum;
 		orderplayer = old.orderplayer;
 		destinationterritory = old.destinationterritory;
-		msg = msg;
+		msg = old.msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Deployorder& o) {
@@ -379,11 +379,11 @@
 	}
 	Reinforcementorder::Reinforcementorder(const Reinforcementorder& old) {
 		orderplayer = DBG_NEW Player(*old.orderplayer);
-		msg = msg;
+		msg = old.msg;
 	}
 	Reinforcementorder& Reinforcementorder::operator = (const Reinforcementorder& old) {
 		orderplayer = old.orderplayer;
-		msg = msg;
+		msg = old.msg;
 		return *this;
 
 	}
