@@ -491,6 +491,8 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     // getting cards from the player's hand
     Card* card = player->getHand()->getHandContainer().at(0);
+    
+    // Issuing an order that corresponds to the card in question
     if((card->getName()) == "Bomb Card"){
         Territory *attack = player->toAttack(*gameMapPtr)->at(0);
         // the play method adds the order to the player's orderlist
