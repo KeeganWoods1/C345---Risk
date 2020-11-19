@@ -290,7 +290,6 @@ bool Map::Validate() {
                 return false;
         }
     }
-    //TODO:check that continents form a connected sub-graph
     
 
     return true;

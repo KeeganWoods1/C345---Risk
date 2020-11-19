@@ -27,7 +27,6 @@
 
 	}
 	Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret, Map *m): Order(true) {
-     //   Advanceorder::Advanceorder(int* i, Player* orderp, Territory* destt, Territory* souret): Order(true) {
 		troopnum = i;
 		orderplayer = orderp;
 		destinationterritory = destt;

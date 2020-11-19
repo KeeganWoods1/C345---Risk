@@ -247,7 +247,6 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
-    //printTerritories(territoriesListPtr);
 
     //creating Continents object and setting the bonus army for each continent
     vector<Continent*>* continentsListPtr = DBG_NEW vector<Continent*>();
