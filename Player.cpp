@@ -212,8 +212,10 @@ vector<Territory*>* Player::toDefend(Map &m)
         Territory t = territoriesToDefend->at(j);
         vector<Territory *> *terr = surroundingterritories(m, t);
         for (int i = 0; i < terr->size(); i++) {
-            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0)
+            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0) {
                 terr2->push_back(territoriesToDefend->at(j));
+                break;
+            }
         }
         terr->clear();
         delete terr;
@@ -284,6 +286,7 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 vector<Territory*>* Player::toAttack(Map &m){
 
     updatetoDefend(m);
+    territoriesToAttack->clear();
     vector<Territory*>* result = DBG_NEW vector<Territory*>();
     for (int i=0; i<territoriesToDefend->size(); i++) {
         vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
@@ -293,7 +296,10 @@ vector<Territory*>* Player::toAttack(Map &m){
                 for (int k = 0; k < result->size(); k++) {
                     if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
                 }
-                if (!exists)result->push_back(terr->at(j));
+                if (!exists) {
+                    result->push_back(terr->at(j));
+                    break;
+                }
             }
         }
         terr->clear();

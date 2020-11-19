@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
+#include <crtdbg.h>
 
 using namespace std;
 #ifdef _DEBUG
@@ -118,15 +119,16 @@ void demoPart4_5()
 }
 
 int main() {
-    demoPart1();
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+   // demoPart1();
     cout << "\nPress any key to continue to Part 2 " << flush;
     cin.get();
     cin.get();
-    demoPart2();
+    //demoPart2();
     cout << "\nPress any key to continue to Part 3" << flush;
     cin.get();
     cin.get();
-    demoPart3();
+   // demoPart3();
     cout << "\nPress any key to continue to Part 4_5" << flush;
     cin.get();
     cin.get();

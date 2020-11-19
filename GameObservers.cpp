@@ -127,7 +127,7 @@ void GameScreen::displayIssuOrdersPhase()
     cout << "Displaying Issue Orders Phase Info for " << *_subject->getCurrentPlayer() << ":" << endl;
     cout << "Reinforcements Available:" << _subject->getCurrentPlayer()->getCurrentReinforcements() << endl;
     cout << "\nTerritories To Defend:" << endl;
-    for (Territory* territory : *_subject->getCurrentPlayer()->gettoDefend(*_subject->getGameMap()))
+    for (Territory* territory : *_subject->getCurrentPlayer()->toDefend(*_subject->getGameMap()))
     {
         cout << *territory << endl; 
     }
