@@ -76,6 +76,7 @@ private:
 	//the player that orderd it [important for blockade and making sure they are ordering their own troops]
 	Player* orderplayer;
 	Map* map;
+	string msg;
 
 };
 //Airlift order, drops a set number troops into a owned territory from another non or adjacent territory
@@ -106,6 +107,7 @@ private:
 	Territory* destinationterritory;
 	//the playter who initiated the order
 	Player* orderplayer;
+	string msg;
 	//may also need a pointer to two Territory objects and a player pointer to make sure the player calling the order is the owner of source
 };
 //triples army count of owned territory but then turns neutral
@@ -132,6 +134,7 @@ private:
 	Player* orderplayer;
 	//territory to be turned neutral
 	Territory* destinationterritory;
+	string msg;
 };
 //country losses half its troops
 class Bomborder : public Order {
@@ -157,6 +160,7 @@ private:
 	Player* orderplayer;
 	//territory to be bombed
 	Territory* destinationterritory;
+	string msg;
 };
 //deploys the set ammount of troops the class has to a territory
 //currently cant validate but needs to check the num of available troops
@@ -185,6 +189,7 @@ private:
 	int* troopnum;
 	//territory to recieve troops
 	Territory* destinationterritory;
+	string msg;
 };
 //prevents battles between two players (will need to be added to some orders or player class)
 class Negotiateorder : public Order {
@@ -210,6 +215,7 @@ private:
 	Player* orderplayer;
 	//player to be targeted for negotiation
 	Player* otherplayer;
+	string msg;
 
 };
 //gives the player 5 armies to deploy [needs to be instant and the player needs an ammount of troops]
@@ -234,6 +240,7 @@ public:
 private:
 	//player hwo issued the order
 	Player* orderplayer;
+	string msg;
 };
 /*
 Class orderlist

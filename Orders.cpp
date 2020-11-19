@@ -66,7 +66,8 @@
 			{
 			    sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
                 destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
-				cout << "\nmoving " + to_string(*troopnum) + " units from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name() + " resulting in a new total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+				msg = "\nmoving " + to_string(*troopnum) + " units from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name() + " resulting in a new total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+				cout << msg;
                 return true;
 			}
 			else 
@@ -89,7 +90,8 @@
 				}
 				if (*troopnum < 1)
 				{
-					cout << "\nAttack failed " << orderplayer->getName() << " defeated by the " << *destinationterritory << endl;
+					msg = "\nAttack failed " + orderplayer->getName() + " defeated by the " + destinationterritory->getterritory_owner()->getName() + "\n";
+					cout << msg;
 
 					//attack unsuccessful
 					return false;
@@ -97,7 +99,8 @@
 				else 
 				{
 					//attacker wins the battle
-					cout << "\nAttack won " << orderplayer->getName() << " conquers the " << *destinationterritory << endl;
+					msg = "\nAttack won " + orderplayer->getName() + " conquers the " + destinationterritory->getterritory_owner()->getName() +"\n";
+					cout << msg;
 					destinationterritory->setterritory_armycount(*troopnum);
 					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)
 					{
@@ -123,6 +126,7 @@
 		sourceterritory = DBG_NEW Territory(*old.sourceterritory);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
 		orderplayer = DBG_NEW Player(*old.orderplayer);
+		msg = old.msg;
 	}
 	Advanceorder& Advanceorder::operator = (const Advanceorder& old) {
 		cout <<"that is called\n";
@@ -130,6 +134,7 @@
 		sourceterritory = old.sourceterritory;
 		destinationterritory = old.destinationterritory;
 		orderplayer = old.orderplayer;
+		msg = old.msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, Advanceorder& o) {
@@ -153,7 +158,8 @@
 		if (validate()) {
 			sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
-			cout << "\nairlifted " + to_string(*troopnum) + " units to " +  destinationterritory->getterritory_name()+ " from " + sourceterritory->getterritory_name() + " for a new total of " + to_string(destinationterritory->getterritory_armycount())+ "units\n";
+			msg = "\nairlifted " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + " for a new total of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
+			cout << msg;
 			return true;
 		}
 		else return false;
@@ -166,12 +172,14 @@
 		sourceterritory = DBG_NEW Territory(*old.sourceterritory);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
 		orderplayer = DBG_NEW Player(* old.orderplayer);
+		msg = old.msg;
 	}
 	Airliftorder& Airliftorder::operator = (const Airliftorder& old) {
 		troopnum = old.troopnum;
 		sourceterritory = old.sourceterritory;
 		destinationterritory = old.destinationterritory;
 		orderplayer = old.orderplayer;
+		msg = old.msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, Airliftorder& o) {
@@ -199,7 +207,8 @@
 		if (validate()) {
 			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral"));
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount() * 2);
-			cout << "\nsetting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n" ;
+			msg = "\nsetting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
+			cout << msg;
 			return true;
 		}
 		else return false;
@@ -209,10 +218,12 @@
 	Blockadeorder::Blockadeorder(const Blockadeorder& old) {
 		orderplayer = DBG_NEW Player(*old.orderplayer);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
+		msg = old.msg;
 	}
 	Blockadeorder& Blockadeorder::operator = (const Blockadeorder& old) {
 		orderplayer = old.orderplayer;
 		destinationterritory = old.destinationterritory;
+		msg = old.msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Blockadeorder& o) {
@@ -234,7 +245,8 @@
 	bool Bomborder::execute() {
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()/2);
-			cout << "\nbombed " + destinationterritory->getterritory_name() + " making the new count " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+			msg = "\nbombed " + destinationterritory->getterritory_name() + " making the new count " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+			cout << msg;
 			return true;
 		}
 		else return false;
@@ -246,10 +258,12 @@
 	Bomborder::Bomborder(const Bomborder& old) {
 		orderplayer = DBG_NEW Player(*old.orderplayer);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
+		msg = old.msg;
 	}
 	Bomborder& Bomborder::operator = (const Bomborder& old) {
 		orderplayer = old.orderplayer;
 		destinationterritory = old.destinationterritory;
+		msg = old.msg;
 		return *this;
 
 	}
@@ -276,7 +290,8 @@
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
 			orderplayer->setCurrentReinforcements(orderplayer->getCurrentReinforcements()-*troopnum);
-			cout << "\nmoved " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " for a total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n" ;
+			msg = "\nmoved " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " for a total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+			cout << msg;
 			return true;
 		}
 		else return false;
@@ -288,11 +303,13 @@
 		troopnum = DBG_NEW int(*old.troopnum);
 		orderplayer = DBG_NEW Player(*old.orderplayer);
 		destinationterritory = DBG_NEW Territory(*old.destinationterritory);
+		msg = msg;
 	}
 	Deployorder& Deployorder::operator = (const Deployorder& old) {
 		troopnum = old.troopnum;
 		orderplayer = old.orderplayer;
 		destinationterritory = old.destinationterritory;
+		msg = msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Deployorder& o) {
@@ -316,6 +333,7 @@
 		if (validate()) {
 			orderplayer->addnegotiateFriends(otherplayer->getName());
 			otherplayer->addnegotiateFriends(orderplayer->getName());
+			msg = "\na truce was brokered between " +orderplayer->getName() + " and " +otherplayer->getName() +"\n";
 			return true;
 		}
 		else return false;
@@ -325,10 +343,12 @@
 	Negotiateorder::Negotiateorder(const Negotiateorder& old) {
 		orderplayer = DBG_NEW Player(*old.orderplayer);
 		otherplayer = DBG_NEW Player(*old.otherplayer);
+		msg = old.msg;
 	}
 	Negotiateorder& Negotiateorder::operator = (const Negotiateorder& old) {
 		orderplayer = old.orderplayer;
 		otherplayer = old.otherplayer;
+		msg = old.msg;
 		return *this;
 	}
 	ostream& operator << (ostream& out, const Negotiateorder& o) {
@@ -348,6 +368,8 @@
 	bool Reinforcementorder::execute() {
 		if (validate()) {
 			orderplayer->addReinforcements(5);
+			msg = "adding 5 reinfrocements to the pool of player " + orderplayer->getName();
+			cout << msg;
 			return true;
 		}
 		else return false;
@@ -357,9 +379,11 @@
 	}
 	Reinforcementorder::Reinforcementorder(const Reinforcementorder& old) {
 		orderplayer = DBG_NEW Player(*old.orderplayer);
+		msg = msg;
 	}
 	Reinforcementorder& Reinforcementorder::operator = (const Reinforcementorder& old) {
 		orderplayer = old.orderplayer;
+		msg = msg;
 		return *this;
 
 	}
