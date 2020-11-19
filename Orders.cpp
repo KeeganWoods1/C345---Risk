@@ -443,7 +443,6 @@
 		return true;
 	}
 	void Orderlist::add(Order* o) {
-		cout << "Adding order to list" << endl;
 		//this calls the copy constructor
 		ptr->push_back(o);
 	}
