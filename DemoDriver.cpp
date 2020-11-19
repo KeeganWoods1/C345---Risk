@@ -37,7 +37,6 @@ void demoPart2()
     
     //Initialize player list and get number of players
     PlayerListInit* pliPtr = DBG_NEW PlayerListInit();
-    cout << *mdiPtr->getGameMap()->getContinents()->at(0) << endl;
     //Initialize game start phase
     GameInit* giPtr = DBG_NEW GameInit(pliPtr->getPlayerList(), mdiPtr->getGameMap(), pliPtr);
 
@@ -119,12 +118,12 @@ void demoPart4_5()
 }
 
 int main() {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    demoPart1();
+    
+   // demoPart1();
     cout << "\nPress any key to continue to Part 2 " << flush;
     cin.get();
     cin.get();
-    demoPart2();
+   // demoPart2();
     cout << "\nPress any key to continue to Part 3" << flush;
     cin.get();
     cin.get();

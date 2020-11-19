@@ -66,7 +66,7 @@
 			{
 			    sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
                 destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
-				msg = "\nmoving " + to_string(*troopnum) + " units from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name() + " resulting in a new total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+				msg = "moving " + to_string(*troopnum) + " units from " + sourceterritory->getterritory_name() + " to " + destinationterritory->getterritory_name() + " resulting in a new total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
 				cout << msg;
                 return true;
 			}
@@ -90,7 +90,7 @@
 				}
 				if (*troopnum < 1)
 				{
-					msg = "\nAttack failed " + orderplayer->getName() + " defeated by the " + destinationterritory->getterritory_owner()->getName() + "\n";
+					msg = "Attack failed " + orderplayer->getName() + " defeated by the " + destinationterritory->getterritory_owner()->getName() + "\n";
 					cout << msg;
 
 					//attack unsuccessful
@@ -99,7 +99,7 @@
 				else 
 				{
 					//attacker wins the battle
-					msg = "\nAttack won " + orderplayer->getName() + " conquers the " + destinationterritory->getterritory_owner()->getName() +"\n";
+					msg = "Attack won " + orderplayer->getName() + " conquers the " + destinationterritory->getterritory_owner()->getName() +"\n";
 					cout << msg;
 					destinationterritory->setterritory_armycount(*troopnum);
 					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)
@@ -159,7 +159,7 @@
 		if (validate()) {
 			sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount()-*troopnum);
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
-			msg = "\nairlifted " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + " for a new total of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
+			msg = "airlifted " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " from " + sourceterritory->getterritory_name() + " for a new total of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
 			cout << msg;
 			return true;
 		}
@@ -207,7 +207,7 @@
 		if (validate()) {
 			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral"));
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount() * 2);
-			msg = "\nsetting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
+			msg = "setting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
 			cout << msg;
 			return true;
 		}
@@ -245,7 +245,7 @@
 	bool Bomborder::execute() {
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()/2);
-			msg = "\nbombed " + destinationterritory->getterritory_name() + " making the new count " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+			msg = "bombed " + destinationterritory->getterritory_name() + " making the new count " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
 			cout << msg;
 			return true;
 		}
@@ -279,7 +279,7 @@
 		orderplayer = orderp;
 		troopnum = j;
 		destinationterritory = destt;
-		msg = "\nDeploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
+		msg = "Deploy order from " + orderplayer->getName() + " to deploy " + to_string(*troopnum) + " troops to " + destinationterritory->getterritory_name() + "\n";
 	}
 	bool Deployorder::validate() {
         if (orderplayer->getCurrentReinforcements()< *troopnum)return false;
@@ -290,7 +290,7 @@
 		if (validate()) {
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount()+*troopnum);
 			orderplayer->setCurrentReinforcements(orderplayer->getCurrentReinforcements()-*troopnum);
-			msg = "\nmoved " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " for a total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
+			msg = "moved " + to_string(*troopnum) + " units to " + destinationterritory->getterritory_name() + " for a total of " + to_string(destinationterritory->getterritory_armycount()) + " units\n";
 			cout << msg;
 			return true;
 		}
@@ -333,7 +333,7 @@
 		if (validate()) {
 			orderplayer->addnegotiateFriends(otherplayer->getName());
 			otherplayer->addnegotiateFriends(orderplayer->getName());
-			msg = "\na truce was brokered between " +orderplayer->getName() + " and " +otherplayer->getName() +"\n";
+			msg = "a truce was brokered between " +orderplayer->getName() + " and " +otherplayer->getName() +"\n";
 			return true;
 		}
 		else return false;
