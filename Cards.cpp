@@ -15,6 +15,7 @@
 using namespace std;
 
 //Card default constructor
+
 Card::Card()
 {
     name = "test";
