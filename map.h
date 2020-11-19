@@ -92,7 +92,7 @@ public:
     int getId();
     int getBonus();
     string getName();
-    bool ownedByOnePlayer(Player* aPlayer);
+    bool ownedByOnePlayer(Player* aPlayer, Map* m);
     ~Continent();
 };
 
