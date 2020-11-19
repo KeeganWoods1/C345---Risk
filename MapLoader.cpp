@@ -176,19 +176,14 @@ void MapLoader::loadMap(fstream& map_stream) {
 
     }//end of while for all map file
 
-    if (continentsFound & countriesFound & bordersFound)
-    {
+    if (continentsFound & countriesFound & bordersFound) {
         cout << "\nCreating a map object...\n" << endl;
-        if(!CreateMap(continents, countries, borders)->Validate())
-        {
-            cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
-        }   
+        CreateMap(continents, countries, borders);
     } 
     else 
     {
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
     }
-    isLoaded = true;
 
     //to avoid memory leak
     str = nullptr;
@@ -332,6 +327,12 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     delete continentsListPtr;
     territoriesListPtr->clear();
     delete territoriesListPtr;
-
+    if (validMap->Validate() == true) {
+        std::cout << "Map is valid because it is a connected graph.\n" << std::endl;
+        isLoaded = true;
+    }
+    else {
+        std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
+    }
     return validMap;
 }

@@ -286,12 +286,14 @@ bool Map::Validate() {
             visited[i] = false;
         transverse(u, visited);
         for (int i = 0; i < vertices; i++) {
-            if (!visited[i]) //if there is a node, not visited by transversal, graph is not connected
+            if (!visited[i]) {
+
+                delete[] visited;
                 return false;
+            }
         }
     }
-    
-
+    delete[] visited;
     return true;
 }
 
