@@ -87,12 +87,22 @@ Continent::Continent() {
     bonus = 0;
 }
 
+Continent::Continent(const Continent* c) {
+    name = c->name;
+    bonus = c->bonus;
+    id = c->id;
+    for (int i = 0; i < c->territoriesInContinent.size(); i++) {
+        this->territoriesInContinent.push_back(DBG_NEW Territory (c->territoriesInContinent[i]));
+    }
+
+}
+
 Continent::Continent(string n, int i, int b, vector<Territory*> terr) {
     name = n;
     id = i;
     bonus = b;
     for (int i=0; i<terr.size(); i++) {
-        territoriesInContinent.push_back(terr[i]);
+        territoriesInContinent.push_back(DBG_NEW Territory( terr[i]));
     }
 }
 
@@ -116,7 +126,16 @@ int Continent::getId() {
 int Continent::getBonus() {
     return bonus;
 }
-
+bool Continent::ownedByOnePlayer(Player* aPlayer, Map  *m){
+   vector<Territory*>* maps =  aPlayer->gettoDefend(*m);
+    for (int i=0; i<maps->size(); i++){
+        if (maps->at(i)->getterritory_owner()->getName().compare(aPlayer->getName()) != 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 //insertion operator (toString)
 ostream& operator << (ostream& out, const Continent& c) {
     out << c.id <<" Continent " << c.name << ", has bonus armies of " << c.bonus
@@ -129,9 +148,9 @@ ostream& operator << (ostream& out, const Continent& c) {
 }
 
 Continent::~Continent() {
-    territoriesInContinent.clear();
-
-
+    for (int i = 0; i < territoriesInContinent.size(); i++) {
+        delete territoriesInContinent[i];
+    }
 }
 
 //Class Map
@@ -153,10 +172,14 @@ Map::Map(const Map *map) {
     for (int i = 0; i < map->territoryListPtr->size(); i++) {
         territoryListPtr->push_back(DBG_NEW Territory(map->territoryListPtr->at(i)));
     }
+    this->continentListPtr = DBG_NEW vector<Continent*>;
+    for (int i = 0; i < map->continentListPtr->size(); i++) {
+        continentListPtr->push_back(DBG_NEW Continent(map->continentListPtr->at(i)));
+    }
 
 }
 
-Map::Map(int vertices, vector<Territory*>* territoryList) {
+Map::Map(int vertices, vector<Territory*>* territoryList, vector<Continent*>* continentList) {
     this->vertices = vertices;
     adjacent_matrix = DBG_NEW bool* [vertices];
     //initialize the 2d array with false
@@ -170,9 +193,15 @@ Map::Map(int vertices, vector<Territory*>* territoryList) {
     for (int i = 0; i < territoryList->size(); i++) {
         territoryListPtr->push_back(territoryList->at(i));
     }
+    continentListPtr = DBG_NEW vector<Continent*>;
+    for (int i = 0; i < continentList->size(); i++) {
+        continentListPtr->push_back(continentList->at(i));
+    }
 }
 //destructor
 Map::~Map() {
+
+
     for (int i = 0; i < vertices; i++) {
         if(adjacent_matrix[i]!= NULL)delete[] adjacent_matrix[i];
         adjacent_matrix[i] = NULL;
@@ -184,6 +213,11 @@ Map::~Map() {
     }
     territoryListPtr->clear();
     delete territoryListPtr;
+    for (int i = 0; i < continentListPtr->size(); i++) {
+        delete continentListPtr->at(i);
+    }
+    continentListPtr->clear();
+    delete continentListPtr;
 }
 
 //assignment operator
@@ -271,4 +305,8 @@ bool Map::isAdjacent(Territory a, Territory b) {
     }
     return(adjacent_matrix[indexa][indexb]);
 
+}
+vector<Continent*>* Map::getContinents()
+{
+    return continentListPtr;
 }

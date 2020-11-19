@@ -13,12 +13,13 @@ using namespace std;
 //Default constructor
 MapLoader::MapLoader() {
     map= nullptr;
+    validMap = NULL;
 }
 
 //Parameterized constructor
 MapLoader::MapLoader(string mapName) {
-    map= DBG_NEW string(mapName);
-
+    map = DBG_NEW string(mapName);
+    validMap = NULL;
     fstream map_stream;
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
@@ -31,13 +32,16 @@ MapLoader::MapLoader(string mapName) {
     }
         //if map file was not opened successfully
     else
+    {
         cout << "Unable to open the map file!\n" << endl;
+    }
+        
 }
 
 //Destructor
 MapLoader::~MapLoader(){
     delete map;
-    delete validMap;
+    if (validMap != NULL)delete validMap;
     map = nullptr;
     validMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {
@@ -240,7 +244,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         }
         //creating territory and add to territories list
         Player* neutralPlayer = DBG_NEW Player("Neutral");
-        Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 0);
+        Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
     //printTerritories(territoriesListPtr);
@@ -285,10 +289,8 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         Continent* aContinent = DBG_NEW Continent(name, id, bonus, territoriesInContinent);
         continentsListPtr->push_back(aContinent);
     }
-    printContinents(continentsListPtr);
-
     //create map object
-    validMap = DBG_NEW Map(countries.size(), territoriesListPtr);
+    validMap = DBG_NEW Map(countries.size(), territoriesListPtr, continentsListPtr);
     vector<int> brdrsList;
     string nextBorder;
 
@@ -321,9 +323,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             validMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
         }   
     }
-    for (int i = 0; i < continentsListPtr->size(); i++) {
-        delete continentsListPtr->at(i);
-    }
+    continentsListPtr->clear();
     delete continentsListPtr;
     territoriesListPtr->clear();
     delete territoriesListPtr;

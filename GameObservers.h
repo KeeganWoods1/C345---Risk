@@ -1,7 +1,9 @@
 #pragma once
 #include <list>
 #include <string>
+#include<iostream>
 
+using namespace std;
 class WarzoneGame;
 
 class Observer
@@ -9,6 +11,10 @@ class Observer
     public:
         virtual void Update() =0;
         ~Observer();
+
+        Observer(const Observer& obs);
+        Observer& operator = ( const Observer& obs);
+        friend ostream &operator << (ostream& out, const Observer& o);
     protected:
         Observer();
 };
@@ -21,6 +27,9 @@ class Subject
         virtual void Notify();
         Subject();
         ~Subject();
+        Subject(const Subject& obs);
+        Subject& operator = (const Subject& obs);
+        friend ostream& operator << (ostream& out, const Subject& o);
     private:
         std::list<Observer*>* _observers;
 };
@@ -36,6 +45,9 @@ class GameScreen : public Observer
         void displayIssuOrdersPhase();
         void displayExecuteOrdersPhase();
         void clearScreen();
+        GameScreen(const GameScreen& obs);
+        GameScreen& operator = (const GameScreen& obs);
+        friend ostream& operator << (ostream& out, const GameScreen& o);
     private:
         WarzoneGame* _subject;
 };
@@ -50,6 +62,9 @@ class StatsScreen : public Observer
         void Display();
         void displayWin();
         void clearScreen();
+        StatsScreen(const StatsScreen& obs);
+        StatsScreen& operator = (const StatsScreen& obs);
+        friend ostream& operator << (ostream& out, const StatsScreen& o);
     private:
         WarzoneGame* _subject;
 };
@@ -59,6 +74,9 @@ class GameController
     public:
         GameController(GameScreen* newView, StatsScreen* otherView, WarzoneGame* newModel);
         void controlGame();
+        GameController(const GameController& obs);
+        GameController& operator = (const GameController& obs);
+        friend ostream& operator << (ostream& out, const GameController o);
     private:
         GameScreen* gameView;
         StatsScreen* statsView;

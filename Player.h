@@ -36,6 +36,8 @@ private:
     Hand* playerHand;
     // player's orderlist
     Orderlist* playerOlist;
+    //bonus value for continents owned
+    int continentBonus;
 
 public:
     // default constructor
@@ -91,9 +93,9 @@ public:
     // method toAttack which returns a list
     // of territories to attack
     vector<Territory*>* toAttack(Map &m,Territory& t);
-//returns all possible territories to attack
+    //returns all possible territories to attack
     vector<Territory*>* toAttack(Map &m);
-//returns all enemy territories
+    //returns all enemy territories
     vector<Territory*>* allnonFriendlies(Map &m);
 
     string toString(vector<Territory*>* t);
@@ -118,6 +120,6 @@ public:
     void updatetoDefend(Map &m);
     //returns orderlist
     vector<Order*>* getOrderList();
-    //removes a territory from toDefend list
-
+    //returns the bonus troops awarded for owning territories
+    int getContinentBonus(Map* m);
 };
