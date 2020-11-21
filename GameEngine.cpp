@@ -453,13 +453,14 @@ void WarzoneGame::issueOrdersPhase(Player* player)
 
     // player chooses to move armies from one of its own territory to the other
     // in order to defend them
-    if (player->gettoDefend(*gameMapPtr)->size() > 3) {
+    int defenbdterritorysize = player->toDefend(*gameMapPtr)->size();
+    if (defenbdterritorysize > 3) {
         Advanceorder* advanceorder1 = DBG_NEW Advanceorder(DBG_NEW int(1), player, player->toDefend(*gameMapPtr)->at(3),
             player->toDefend(*gameMapPtr)->at(2), gameMapPtr);
         cout << advanceorder1->print() << " in order to defend" << endl;
         player->issueOrder(advanceorder1);
     }
-    if (player->gettoDefend(*gameMapPtr)->size() > 4) {
+    if (defenbdterritorysize > 4) {
         Advanceorder* advanceorder2 = DBG_NEW Advanceorder(DBG_NEW int(2), player, player->toDefend(*gameMapPtr)->at(4),
             player->toDefend(*gameMapPtr)->at(1), gameMapPtr);
         cout << "\n" << advanceorder2->print() << " in order to defend" << endl;
@@ -470,7 +471,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     Territory *attack3;
     Territory *defend3;
     Advanceorder *advanceorder3;
-    if(player->gettoDefend(*gameMapPtr)->size() > 0 && player->toDefend(*gameMapPtr)->size() >0 && player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(0))->size() > 0)
+    if(defenbdterritorysize > 0  && player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(0))->size() > 0)
     {
         attack3 = player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(0))->at(0);
         defend3 = player->toDefend(*gameMapPtr)->at(0);    
@@ -485,7 +486,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     }
     Territory *attack4;
     Territory *defend4;
-    if(player->toDefend(*gameMapPtr)->size() > 1 && player->toDefend(*gameMapPtr)->size() > 1&&player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(1))->size() > 0)
+    if(defenbdterritorysize > 1 &&player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(1))->size() > 0)
     {
         attack4 = player->toAttack(*gameMapPtr, *player->toDefend(*gameMapPtr)->at(1))->at(0);
         defend4 = player->toDefend(*gameMapPtr)->at(1);
@@ -617,7 +618,7 @@ void WarzoneGame::mainGameLoop()
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
         counter++;
-        if (counter > 20) break;
+//        if (counter > 150) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner
