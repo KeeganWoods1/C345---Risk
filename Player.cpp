@@ -251,6 +251,7 @@ vector<Territory*>* Player::toDefend(Map &m)
 vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
     updatetoDefend(m);
+    territoriesToAttack->clear();
     vector<Territory*>* terr = surroundingterritories(m,t);
     vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
     for (int i=0; i <terr->size(); i++){

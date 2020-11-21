@@ -55,8 +55,11 @@
 				return false;
 			}
 		}
-
-		return (map->isAdjacent(sourceterritory,destinationterritory));
+		bool b = map->isAdjacent(sourceterritory, destinationterritory);
+		if (!b) {
+			return (b);
+		}
+		else return b;
 	}
 	//returns true if attacker wins the territory (Important for notifying observers of changes in territory owners)
 	bool Advanceorder::execute() 
