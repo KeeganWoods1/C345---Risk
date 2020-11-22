@@ -130,7 +130,40 @@ ostream& operator << (ostream& out,  NeutralPlayerStrategy& h)
 	return out;
 }
 vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
-	return NULL;
+    vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
+    vector<Territory*>* territoriesToAttack = p->getterritoriesToAttack();
+    territoriesToAttack->clear();
+    vector<Territory*>* terr = p->surroundingterritories(*m, *t);
+    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < terr->size(); i++) {
+        if (terr->at(i)->getterritory_owner()->getName().compare(t->getterritory_owner()->getName()) != 0)terr2->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    terr = DBG_NEW vector<Territory*>();
+    int initialsize = terr2->size();
+    for (int k = 0; k < initialsize; k++) {
+        int min = 100000;
+        int index = -1;
+        for (int i = 0; i < terr2->size(); i++) {
+            if (terr2->at(i)->getterritory_armycount() < min) {
+                min = terr2->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        if (index == -1)cout << "error here";
+        terr->push_back(terr2->at(index));
+        terr2->erase(terr2->cbegin() + index);
+
+    }
+    terr2->clear();
+    delete terr2;
+    for (int i = 0; i < terr->size(); i++) {
+        territoriesToAttack->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    return  territoriesToAttack;
 }
 vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p) {
     vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
