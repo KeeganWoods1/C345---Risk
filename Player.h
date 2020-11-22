@@ -124,3 +124,5 @@ public:
     //returns the bonus troops awarded for owning territories
     int getContinentBonus(Map* m);
 };
+
+

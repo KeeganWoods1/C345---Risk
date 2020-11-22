@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "GameObservers.h"
+#include "PlayerStrategies.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
