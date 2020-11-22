@@ -21,7 +21,7 @@ PlayerStrategy &PlayerStrategy:: operator = (const PlayerStrategy& h) {
 	player = h.player;
 	return *this;
 }
-ostream& operator << (ostream& out, const PlayerStrategy& o) {
+ostream& operator << (ostream& out,  PlayerStrategy& o) {
 	Player* p;
 	p = o.player;
 	cout << "this is a player strategy abstract class." + p->getName();
@@ -75,7 +75,6 @@ ostream& operator << (ostream& out,  AggressivePlayerStrategy& h)
 	return out;
 }
 void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
-
 }
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* P) : PlayerStrategy{ P } {}
@@ -93,7 +92,6 @@ ostream& operator << (ostream& out,  BenevolentPlayerStrategy& h)
 	return out;
 }
 void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
-
 }
 
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* P) : PlayerStrategy{ P } {}
@@ -106,7 +104,34 @@ NeutralPlayerStrategy& NeutralPlayerStrategy:: operator = (const NeutralPlayerSt
 }
 
 ostream& operator << (ostream& out,  NeutralPlayerStrategy& h)
+
+
 {
 	out << "this is a Human player strategy for player : " + h.getPlayerName();
 	return out;
+}
+
+void Context::issueOrder(Map* m, vector<Player*>* pl) {
+	ps->issueorder(m, pl);
+}
+Context::Context(PlayerStrategy* playerstrat) {
+	ps = playerstrat;
+}
+Context::~Context() {
+	delete ps;
+}
+
+Context::Context(const Context& c) {
+	ps = new PlayerStrategy(*c.ps);
+}
+Context& Context:: operator = (const Context& c) {
+	ps = c.ps;
+	return *this;
+}
+ostream& operator << (ostream& out, Context& o) {
+	out << "this is the a context";
+	return out;
+}
+string Context::getPlayerName() {
+	return ps->getPlayerName();
 }

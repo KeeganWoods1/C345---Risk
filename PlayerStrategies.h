@@ -16,7 +16,7 @@ public:
 	//assignment operator
 	PlayerStrategy& operator = (const PlayerStrategy& h);
 	//stream insertion override
-	friend ostream& operator << (ostream& out, const PlayerStrategy& o);
+	friend ostream& operator << (ostream& out,  PlayerStrategy& o);
 	//getter method (no setter method by design, although it may be needed if there were a "drop-in drop-out" feature [see Civlization 5 pit boss mode)
 	Player* getPlayer();
 	//getter method that only returns the name of the player
@@ -39,7 +39,7 @@ public:
 	//assignment operator ovveride
 	HumanPlayerStrategy& operator = (const HumanPlayerStrategy& h);
 	//stream insertion ovveride
-	friend ostream& operator << (ostream& out, const HumanPlayerStrategy& o);
+	friend ostream& operator << (ostream& out,  HumanPlayerStrategy& o);
 };
 //derived class that implements aggressive player strategy
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -55,7 +55,7 @@ public:
 	//assignment override constructor 
 	AggressivePlayerStrategy & operator = (const AggressivePlayerStrategy & h);
 	//stream insertion override
-	friend ostream& operator << (ostream& out, const AggressivePlayerStrategy & o);
+	friend ostream& operator << (ostream& out,  AggressivePlayerStrategy & o);
 };
 //derived class that implements BenevolentPlayerStrategy issue order
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -71,7 +71,7 @@ public:
 	//assignment operator
 	BenevolentPlayerStrategy& operator = (const BenevolentPlayerStrategy& h);
 	//stream insertion override
-	friend ostream& operator << (ostream& out, const BenevolentPlayerStrategy& o);
+	friend ostream& operator << (ostream& out,  BenevolentPlayerStrategy& o);
 };
 //derived class that implements NeutralPlayerStrategy issue order
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -87,5 +87,26 @@ public:
 	//assignemnt operator
 	NeutralPlayerStrategy& operator = (const NeutralPlayerStrategy& h);
 	//stream insertion operator
-	friend ostream& operator << (ostream& out, const NeutralPlayerStrategy& o);
+	friend ostream& operator << (ostream& out,  NeutralPlayerStrategy& o);
+};
+//the contest class of the deisng strategy pattern
+class Context {
+public:
+	//getter method
+	string getPlayerName();
+	//calls the stragtegies issue order
+	void issueOrder(Map* m, vector<Player*>* pl);
+	//constructor
+	Context(PlayerStrategy* playerstrat);
+	//destructor
+	~Context();
+	//copy ocnstructor
+	Context(const Context& c);
+	//assignment operator
+	Context& operator = (const Context& c);
+	//stream insertion operator
+	friend ostream& operator << (ostream& out, Context& o);
+private:
+	//private variable that hodls the execution
+	PlayerStrategy* ps;
 };

@@ -1,6 +1,5 @@
 #include "GameEngine.h"
 #include "GameObservers.h"
-#include "PlayerStrategies.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -99,6 +98,7 @@ PlayerListInit::PlayerListInit()
     bool validEntry = false;
     string playerName;
     playerListPtr = DBG_NEW vector<Player*>;
+    playerais = DBG_NEW vector<Context*>;
 
     //set number of players
     while(!validEntry)
@@ -124,9 +124,9 @@ PlayerListInit::PlayerListInit()
         cin >> playerName;
         Player* player = DBG_NEW Player(playerName);
 
+        playerais->push_back(new Context(new NeutralPlayerStrategy(player)));
         playerListPtr->push_back(player); 
     }
-
     //Generate deck as a function of the number of players
     deckPtr = DBG_NEW Deck(numOfPlayers);
     cout << "Displaying Deck: " << endl;
@@ -161,6 +161,10 @@ PlayerListInit::~PlayerListInit() {
         delete playerListPtr->at(i);
     }
     delete playerListPtr;
+    for (int i = 0; i < playerais->size(); i++) {
+        delete playerais->at(i);
+    }
+    delete playerais;
 }
 
 vector<Player*>* PlayerListInit::getPlayerList()
@@ -240,9 +244,17 @@ void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
     std::random_device rd;
     //mersenne-twister-engine to ensure high quality "shuffle"
     std::mt19937 g(rd());
+    vector<Context*>* ais = pliPtr->getPlayerAi();
     //shuffle playerList, play order will be the order in which players appear in the shuffled list
     std::shuffle(playerListPtr->begin(), playerListPtr->end(), g);
-
+    for (int i = 0; i < playerListPtr->size(); i++) {
+        for (int j = 0; j < playerListPtr->size(); j++) {
+            if (i != j && playerListPtr->at(i)->getName().compare(ais->at(j)->getPlayerName()) == 0) {
+                swap(ais->at(i), ais->at(j));
+                break;
+            }
+        }
+    }
     //randomly assign all territories in Map object to one player (ie. dont assign 2 players to the same territory)
     vector<int> territoryIndices;
     vector<int> playerListIndices;
@@ -588,6 +600,7 @@ void WarzoneGame::mainGameLoop()
 {
     //Game loop runs until only the winner remains
     int counter = 0;
+    vector<Context*>* ais = gameInitPtr->getAis();
     while(playerListPtr->size()>1)
     {
         //Remove players who own no territories
@@ -614,12 +627,18 @@ void WarzoneGame::mainGameLoop()
             }
             reinforcementPhase(player, player->getNumTerrOwned());
             player->clear();
-            issueOrdersPhase(player);
+            //issueOrdersPhase(player);
+            for (int i = 0; i < ais->size(); i++) {
+                if (player->getName().compare(ais->at(i)->getPlayerName()) == 0) {
+                    ais->at(i)->issueOrder(gameMapPtr,playerListPtr);
+                    break;
+                }
+            }
         }
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
         counter++;
-//        if (counter > 150) break;
+        if (counter > 0) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner
@@ -765,3 +784,5 @@ ostream &operator << (ostream &out, const WarzoneGame &o)
     out << "This is a WarzoneGame Object";
     return out;
 }
+vector<Context*>* PlayerListInit::getPlayerAi() { return playerais; }
+vector<Context*>* GameInit::getAis() { return pliPtr->getPlayerAi(); }
