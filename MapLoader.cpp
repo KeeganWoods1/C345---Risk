@@ -244,7 +244,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }
         }
         //creating territory and add to territories list
-        Player* neutralPlayer = DBG_NEW Player("Neutral");
+        Player* neutralPlayer = DBG_NEW Player("Neutral", new NeutralPlayerStrategy());
         Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }

@@ -8,38 +8,29 @@ MAJORITY COMMENTS LOCATED IN . DUE TO SIMPLICITY OF .CPP
 
 
 
-PlayerStrategy::PlayerStrategy(Player* p) {
-	player = p;
+PlayerStrategy::PlayerStrategy() {
 }
 PlayerStrategy::~PlayerStrategy() {
-	player = NULL;
 }
 PlayerStrategy::PlayerStrategy(const PlayerStrategy& h) {
-	player = h.player;
 }
 PlayerStrategy &PlayerStrategy:: operator = (const PlayerStrategy& h) {
-	player = h.player;
 	return *this;
 }
 ostream& operator << (ostream& out,  PlayerStrategy& o) {
-	Player* p;
-	p = o.player;
-	cout << "this is a player strategy abstract class." + p->getName();
+
+	cout << "this is a player strategy abstract class.";
 	return out;
 }
-Player* PlayerStrategy::getPlayer() { return player; }
+vector<Territory*>* PlayerStrategy::toAttack(Map* m, Player* p, Territory* t) { return NULL; }
+vector<Territory*>* PlayerStrategy::toAttack(Map* m, Player* p){ return NULL; }
+vector<Territory*>* PlayerStrategy::toDefend(Map* m, Player* p){ return NULL; }
 
-string PlayerStrategy::getPlayerName() {
-	return player->getName();
-}
-
-void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
+void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {
 
 }
 
-HumanPlayerStrategy::HumanPlayerStrategy(Player* P) : PlayerStrategy{ P }
-	{}
-
+HumanPlayerStrategy::HumanPlayerStrategy(){}
 HumanPlayerStrategy::~HumanPlayerStrategy() {}
 HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy& h) :  PlayerStrategy{ h } {}
 HumanPlayerStrategy& HumanPlayerStrategy:: operator = (const HumanPlayerStrategy& h)  { 
@@ -49,16 +40,23 @@ HumanPlayerStrategy& HumanPlayerStrategy:: operator = (const HumanPlayerStrategy
 
 ostream& operator << (ostream& out,  HumanPlayerStrategy& h)
 {
-	string p;
-	p = h.PlayerStrategy::getPlayerName();
-	out << "this is a Human player strategy for player : " + p;
+	out << "this is a Human player strategy";
 	return out;
 }
-void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
+vector<Territory*>* HumanPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
+	return NULL;
+}
+vector<Territory*>* HumanPlayerStrategy::toAttack(Map* m, Player* p) {
+	return NULL;
+}
+vector<Territory*>* HumanPlayerStrategy::toDefend(Map* m, Player* p) {
+	return NULL;
+}
+void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {
 
 }
 
-AggressivePlayerStrategy::AggressivePlayerStrategy(Player* P) : PlayerStrategy{ P } {
+AggressivePlayerStrategy::AggressivePlayerStrategy() {
 }
 
 AggressivePlayerStrategy::~AggressivePlayerStrategy() {}
@@ -71,13 +69,22 @@ AggressivePlayerStrategy& AggressivePlayerStrategy:: operator = (const Aggressiv
 
 ostream& operator << (ostream& out,  AggressivePlayerStrategy& h)
 {
-	out << "this is a Human player strategy for player : " + h.getPlayerName();
+	out << "this is a Human player strategy";
 	return out;
 }
-void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
+vector<Territory*>* AggressivePlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
+	return NULL;
+}
+vector<Territory*>* AggressivePlayerStrategy::toAttack(Map* m, Player* p) {
+	return NULL;
+}
+vector<Territory*>* AggressivePlayerStrategy::toDefend(Map* m, Player* p) {
+	return NULL;
+}
+void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {
 }
 
-BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* P) : PlayerStrategy{ P } {}
+BenevolentPlayerStrategy::BenevolentPlayerStrategy() {}
 
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() {}
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(const BenevolentPlayerStrategy& h) : PlayerStrategy{ h } {}
@@ -88,13 +95,22 @@ BenevolentPlayerStrategy& BenevolentPlayerStrategy:: operator = (const Benevolen
 
 ostream& operator << (ostream& out,  BenevolentPlayerStrategy& h)
 {
-	out << "this is a Human player strategy for player : " + h.getPlayerName();
+	out << "this is a Human player strategy";
 	return out;
 }
-void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl) {
+vector<Territory*>* BenevolentPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
+	return NULL;
+}
+vector<Territory*>* BenevolentPlayerStrategy::toAttack(Map* m, Player* p) {
+	return NULL;
+}
+vector<Territory*>* BenevolentPlayerStrategy::toDefend(Map* m, Player* p) {
+	return NULL;
+}
+void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {
 }
 
-NeutralPlayerStrategy::NeutralPlayerStrategy(Player* P) : PlayerStrategy{ P } {}
+NeutralPlayerStrategy::NeutralPlayerStrategy(){}
 
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {}
 NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy& h) : PlayerStrategy{ h } {}
@@ -107,31 +123,15 @@ ostream& operator << (ostream& out,  NeutralPlayerStrategy& h)
 
 
 {
-	out << "this is a Human player strategy for player : " + h.getPlayerName();
+	out << "this is a Human player strategy for player";
 	return out;
 }
-
-void Context::issueOrder(Map* m, vector<Player*>* pl) {
-	ps->issueorder(m, pl);
+vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
+	return NULL;
 }
-Context::Context(PlayerStrategy* playerstrat) {
-	ps = playerstrat;
+vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p) {
+	return NULL;
 }
-Context::~Context() {
-	delete ps;
-}
-
-Context::Context(const Context& c) {
-	ps = new PlayerStrategy(*c.ps);
-}
-Context& Context:: operator = (const Context& c) {
-	ps = c.ps;
-	return *this;
-}
-ostream& operator << (ostream& out, Context& o) {
-	out << "this is the a context";
-	return out;
-}
-string Context::getPlayerName() {
-	return ps->getPlayerName();
+vector<Territory*>* NeutralPlayerStrategy::toDefend(Map* m, Player* p) {
+	return NULL;
 }

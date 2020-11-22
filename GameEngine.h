@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Cards.h"
 #include "GameObservers.h"
-#include "PlayerStrategies.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -43,7 +42,6 @@ class PlayerListInit
     Deck* deckPtr;
     bool phaseObservers;
     bool statsObservers;
-    vector<Context*>* playerais;
 
     public:
     PlayerListInit();
@@ -56,7 +54,6 @@ class PlayerListInit
     void setDisplayPhaseInfo(bool);
     bool getDisplayStatsInfo();
     void setDisplayStatsInfo(bool);
-    vector<Context*>* getPlayerAi();
     //Copy constructor
     PlayerListInit(const PlayerListInit& pl);
     //Assignment operator
@@ -89,7 +86,6 @@ class GameInit
     //I/O operator overloads
     friend istream &operator >> (istream &stream, GameInit& gi);
     friend ostream &operator << (ostream &out, const GameInit& gi);
-    vector<Context*>* getAis();
 };
 
 class WarzoneGame : public Subject

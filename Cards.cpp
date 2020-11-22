@@ -117,7 +117,7 @@ void BombCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Bomborder(player, territory));
+    player->addOrder(DBG_NEW Bomborder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -167,7 +167,7 @@ void ReinforcementCard::play(Deck* deck, Player* player)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Reinforcementorder(player));
+    player->addOrder(DBG_NEW Reinforcementorder(player));
 
     //remove card from the hand
     //place card back in deck
@@ -217,7 +217,7 @@ void BlockadeCard::play(Deck* deck, Player* player, Territory* territory)
     vector<Card*> deckContainer = deck->getDeck();   
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Blockadeorder(player, territory));
+    player->addOrder(DBG_NEW Blockadeorder(player, territory));
 
     //remove card from the hand
     //place card back in deck
@@ -267,7 +267,7 @@ void AirliftCard::play( Deck* deck, Player* player, Territory* territorySource, 
     vector<Card*> deckContainer = deck->getDeck();
     
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Airliftorder(i, territorySource, territoryDestination, player));
+    player->addOrder(DBG_NEW Airliftorder(i, territorySource, territoryDestination, player));
 
     //remove card from the hand
     //place card back in deck
@@ -317,7 +317,7 @@ void DiplomacyCard::play(Deck* deck, Player* player, Player* targetPlayer)
     vector<Card*> deckContainer = deck->getDeck();
 
     //create order and add to orderlist
-    player->issueOrder(DBG_NEW Negotiateorder(player, targetPlayer));
+    player->addOrder(DBG_NEW Negotiateorder(player, targetPlayer));
 
     //remove card from the hand
     //place card back in deck

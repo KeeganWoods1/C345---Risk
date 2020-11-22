@@ -2,6 +2,7 @@
 #include "map.h"
 #include "Orders.h"
 #include "Cards.h"
+#include "PlayerStrategies.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@ class Orderlist;
 class Advanceorder;
 class Deck;
 class Hand;
-
+class PlayerStrategy;
 class Player
 {
 private:
@@ -26,6 +27,8 @@ private:
     static const int MINARMIES;
     // captured a territory boolean (for card distribution after teh round);
     bool* capturedTerritory;
+    //the paleyrs stragety
+    PlayerStrategy* playerstrategy;
 
     vector<string*>* negotiatedFriends;
     // player owns a collection of territories
@@ -45,7 +48,7 @@ public:
     void clear();
 
     // parametrized constructor
-    Player(string);
+    Player(string, PlayerStrategy*);
 
     // destructor
     ~Player();
@@ -104,7 +107,7 @@ public:
     // method issueOrder which creates an Order
     // object and puts it in the player’s list
     // of orders
-    void issueOrder(Order* order);
+    void issueOrder(Map* m, vector<Player*>* pl);
     //Getter method for boolean capture territory
     bool getcaptureTerritory();
     //setter method for capture territory
@@ -123,6 +126,8 @@ public:
     vector<Order*>* getOrderList();
     //returns the bonus troops awarded for owning territories
     int getContinentBonus(Map* m);
+    //adds a single order to the list
+    void addOrder(Order* o);
 };
 
 

@@ -209,7 +209,7 @@
 	}
 	bool Blockadeorder::execute() {
 		if (validate()) {
-			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral"));
+			destinationterritory->setterritory_owner(DBG_NEW Player("Neutral", new NeutralPlayerStrategy()));
 			destinationterritory->setterritory_armycount(destinationterritory->getterritory_armycount() * 2);
 			msg = "setting territory " + destinationterritory->getterritory_name() + " to neutral with a new army count of " + to_string(destinationterritory->getterritory_armycount()) + "units\n";
 			cout << msg;

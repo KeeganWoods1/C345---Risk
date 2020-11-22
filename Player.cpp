@@ -27,7 +27,7 @@ Player::Player()
 }
 
 // parametrized constructor definition
-Player::Player(string playerName)
+Player::Player(string playerName, PlayerStrategy *ps)
 {
     // player's name is set to passed argument
     name = playerName;
@@ -40,7 +40,7 @@ Player::Player(string playerName)
     // minimal number of armies for any player is 3
     const int MINARMIES = 3;
 
-
+    playerstrategy = ps;
     //initialize player orderlist
     playerOlist = DBG_NEW Orderlist();
     territoriesToDefend = DBG_NEW vector<Territory*>;
@@ -70,6 +70,7 @@ Player::~Player()
     delete territoriesToAttack;
     surroundingterr->clear();
     delete surroundingterr;
+    delete playerstrategy;
 
 }
 
@@ -98,6 +99,7 @@ Player::Player(const Player &player)
     }
     playerHand = DBG_NEW Hand(*player.playerHand);
     playerOlist = DBG_NEW Orderlist(*player.playerOlist);
+    playerstrategy = DBG_NEW PlayerStrategy(*player.playerstrategy);
 
 }
 
@@ -206,6 +208,8 @@ void Player::updatetoDefend(Map &m){
 // returning a list of territories to defend
 vector<Territory*>* Player::toDefend(Map &m)
 {
+    return playerstrategy->toDefend(&m, this);
+    /*
     updatetoDefend(m);
     vector<Territory *> *terr2 = DBG_NEW vector<Territory *>;
     for (int j =0; j<territoriesToDefend->size(); j++) {
@@ -244,12 +248,15 @@ vector<Territory*>* Player::toDefend(Map &m)
     terr->clear();
     delete terr;
     return  surroundingterr;
+    */
 }
 
 // definition of method toAttack
 // returning a list of territories to attack
 vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
+    return playerstrategy->toAttack(&m, this, &t);
+    /*
     updatetoDefend(m);
     territoriesToAttack->clear();
     vector<Territory*>* terr = surroundingterritories(m,t);
@@ -283,9 +290,11 @@ vector<Territory*>* Player::toAttack(Map &m,Territory &t)
     terr->clear();
     delete terr;
     return  territoriesToAttack;
+    */
 }
 vector<Territory*>* Player::toAttack(Map &m){
-
+    return playerstrategy->toAttack(&m, this);
+    /*
     updatetoDefend(m);
     territoriesToAttack->clear();
     vector<Territory*>* result = DBG_NEW vector<Territory*>();
@@ -326,14 +335,18 @@ vector<Territory*>* Player::toAttack(Map &m){
     result->clear();
     delete result;
     return territoriesToAttack;
+    */
 
 }
 
 // definition of issueOrder which creates a specific Order
 // object and adds it to the player's list of orders
-void Player::issueOrder(Order* order)
+void Player::issueOrder(Map *m, vector<Player*>* pl)
 {
-    playerOlist->add(order);
+    playerstrategy->issueorder(m,pl,this);
+}
+void Player::addOrder(Order* o) {
+    playerOlist->add(o);
 }
 //returns the Boolean value fi the players has captured a territory
 bool Player::getcaptureTerritory() {return *capturedTerritory;}
