@@ -576,7 +576,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     cout << *player->getPlayerlist() << endl;
     cout << "----------------------------------------------" << endl;
 
-    //Notify();
+    Notify();
     
 }
 

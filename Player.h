@@ -128,6 +128,7 @@ public:
     int getContinentBonus(Map* m);
     //adds a single order to the list
     void addOrder(Order* o);
+    vector<Territory*>* getterritoriesToAttack();
 };
 
 

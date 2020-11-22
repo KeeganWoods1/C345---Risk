@@ -399,4 +399,7 @@ int Player::getContinentBonus(Map* m)
     }
     return bonus;
 }
+vector<Territory*>* Player::getterritoriesToAttack() {
+    return territoriesToAttack;
+}
 

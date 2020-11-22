@@ -6,7 +6,13 @@ MAJORITY COMMENTS LOCATED IN . DUE TO SIMPLICITY OF .CPP
 
 */
 
-
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 
 PlayerStrategy::PlayerStrategy() {
 }
@@ -22,9 +28,6 @@ ostream& operator << (ostream& out,  PlayerStrategy& o) {
 	cout << "this is a player strategy abstract class.";
 	return out;
 }
-vector<Territory*>* PlayerStrategy::toAttack(Map* m, Player* p, Territory* t) { return NULL; }
-vector<Territory*>* PlayerStrategy::toAttack(Map* m, Player* p){ return NULL; }
-vector<Territory*>* PlayerStrategy::toDefend(Map* m, Player* p){ return NULL; }
 
 void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {
 
@@ -130,8 +133,48 @@ vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p, Territory
 	return NULL;
 }
 vector<Territory*>* NeutralPlayerStrategy::toAttack(Map* m, Player* p) {
-	return NULL;
+    vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
+    vector<Territory*>* territoriesToAttack = p->getterritoriesToAttack();
+    territoriesToAttack->clear();
+    vector<Territory*>* result = DBG_NEW vector<Territory*>();
+    for (int i = 0; i < territoriesToDefend->size(); i++) {
+        vector<Territory*>* terr = p->surroundingterritories(*m, *territoriesToDefend->at(i));
+        for (int j = 0; j < terr->size(); j++) {
+            if (terr->at(j)->getterritory_owner()->getName().compare(territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
+                bool exists = false;
+                for (int k = 0; k < result->size(); k++) {
+                    if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
+                }
+                if (!exists) {
+                    result->push_back(terr->at(j));
+                    break;
+                }
+            }
+        }
+        terr->clear();
+        delete terr;
+    }
+    for (int k = 0; k < result->size(); k++) {
+        int max = -1;
+        int index = -1;
+        int i = k;
+        for (; i < result->size(); i++) {
+            if (result->at(i)->getterritory_armycount() > max) {
+                max = result->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        if (index != k) {
+            iter_swap(result->begin() + index, result->begin() + k);
+        }
+    }
+    for (int i = 0; i < result->size(); i++) {
+        territoriesToAttack->push_back(result->at(i));
+    }
+    result->clear();
+    delete result;
+    return territoriesToAttack;
 }
 vector<Territory*>* NeutralPlayerStrategy::toDefend(Map* m, Player* p) {
-	return NULL;
+	return p->gettoDefend(*m);
 }
