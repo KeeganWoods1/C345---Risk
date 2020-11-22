@@ -121,7 +121,39 @@ PlayerListInit::PlayerListInit()
         string playerName;
         cout << "Please enter player " << i+1 << "'s name"<< endl;
         cin >> playerName;
-        Player* player = DBG_NEW Player(playerName, new NeutralPlayerStrategy());
+        bool b = true;
+        Player* player;
+        while (b) {
+            cout << "please input the number corresponding to the player type\n1: Human ai\n2: Aggresive ai\n3: benevolent ai\n4: neutral ai\n";
+            int i = -1;
+            cin >> i;
+            switch (i) {
+            case 1: {
+                player = DBG_NEW Player(playerName, new HumanPlayerStrategy());
+                b = false;
+                break;
+            }
+            case 2: {
+                player = DBG_NEW Player(playerName, new AggressivePlayerStrategy());
+                b = false;
+                break;
+            }
+            case 3: {
+                player = DBG_NEW Player(playerName, new BenevolentPlayerStrategy());
+                b = false;
+                break;
+            }
+            case 4: {
+                player = DBG_NEW Player(playerName, new NeutralPlayerStrategy());
+                b = false;
+                break;
+            }
+            default:
+                cout << "inccorrect number please try again";
+            }
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
         playerListPtr->push_back(player); 
     }
     //Generate deck as a function of the number of players
@@ -544,7 +576,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     cout << *player->getPlayerlist() << endl;
     cout << "----------------------------------------------" << endl;
 
-//    Notify();
+    //Notify();
     
 }
 
