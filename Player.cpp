@@ -341,9 +341,9 @@ vector<Territory*>* Player::toAttack(Map &m){
 
 // definition of issueOrder which creates a specific Order
 // object and adds it to the player's list of orders
-void Player::issueOrder(Map *m, vector<Player*>* pl)
+void Player::issueOrder(Map *m, vector<Player*>* pl, Deck* deckpointer)
 {
-    playerstrategy->issueorder(m,pl,this);
+    playerstrategy->issueorder(m,pl,this,deckpointer);
 }
 void Player::addOrder(Order* o) {
     playerOlist->add(o);
@@ -401,5 +401,8 @@ int Player::getContinentBonus(Map* m)
 }
 vector<Territory*>* Player::getterritoriesToAttack() {
     return territoriesToAttack;
+}
+vector<Territory*>* Player::getSurroundingterr() {
+    return surroundingterr;
 }
 

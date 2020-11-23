@@ -76,6 +76,7 @@
 			}
 			else 
 			{
+				sourceterritory->setterritory_armycount(sourceterritory->getterritory_armycount() - *troopnum);
 				int totalattackerDestroyed = 0;
 				int totaldefenderDestroyed = 0;
 				while (*troopnum > 0 && destinationterritory->getterritory_armycount() > 0){
@@ -103,7 +104,7 @@
 				else 
 				{
 					//attacker wins the battle
-					msg = "Attack won " + orderplayer->getName() + " conquers the " + destinationterritory->getterritory_owner()->getName() +"\n";
+					msg = "Attack won " + orderplayer->getName() + " conquers " + destinationterritory->getterritory_name() +"\n";
 					cout << msg;
 					destinationterritory->setterritory_armycount(*troopnum);
 					if (destinationterritory->getterritory_owner()->getName().compare("Neutral") == 0)

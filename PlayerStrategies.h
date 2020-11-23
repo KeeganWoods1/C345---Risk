@@ -1,12 +1,14 @@
 #pragma once
 #include "map.h"
 #include "Player.h"
+#include"Cards.h"
 #include <vector>
+class Deck;
 //BASE CLASS TO be derived and is the foundation of the "strategy" part of the stretegy design pattern (with gameengine.cpp being the context)
 class PlayerStrategy {
 public:
 	//abstract method (makes the whole method an "interface")
-	virtual void issueorder(Map* m, vector<Player*>* pl, Player* curplayer) {};
+	virtual void issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {};
 	// default constructor
 	PlayerStrategy();
 	//destructor
@@ -27,7 +29,7 @@ public:
 class HumanPlayerStrategy : public PlayerStrategy {
 public:
 	// main function that acts as part of the strategy design pattern
-	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer);
+	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer);
 	//constructor
 	HumanPlayerStrategy();
 	//empty destructor
@@ -47,7 +49,7 @@ public:
 class AggressivePlayerStrategy : public PlayerStrategy {
 public:
 	//main function that acts as the concrete implementation part of the strategy design pattern
-	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer);
+	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer);
 	//constructor
 	AggressivePlayerStrategy ();
 	//destructor
@@ -67,7 +69,7 @@ public:
 class BenevolentPlayerStrategy : public PlayerStrategy {
 public:
 	//main function for concrete implementation
-	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer);
+	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer);
 	//constructor
 	BenevolentPlayerStrategy();
 	//destructor
@@ -87,7 +89,7 @@ public:
 class NeutralPlayerStrategy : public PlayerStrategy {
 public:
 	//main function
-	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer);
+	void issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer);
 	//constructor
 	NeutralPlayerStrategy();
 	//destructor

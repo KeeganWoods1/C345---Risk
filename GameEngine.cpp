@@ -448,7 +448,7 @@ void WarzoneGame::issueOrdersPhase(Player* player)
     setCurrentPhase(1);
     cout << "----------------------------------------------" << endl;
     cout << "Demonstrating ISSUE ORDERS PHASE for " << *player << endl;
-    player->issueOrder(gameMapPtr, playerListPtr);
+    player->issueOrder(gameMapPtr, playerListPtr,gameDeckPtr);
     /*
     int reinforcementCounter = player->getCurrentReinforcements();
     // Player issues deploy orders
@@ -650,7 +650,7 @@ void WarzoneGame::mainGameLoop()
         //All players are done issuing orders, execution of orders can begin
         executeOrdersPhase();
         counter++;
-        if (counter > 0) break;
+        if (counter > 2) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner

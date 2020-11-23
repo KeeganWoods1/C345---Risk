@@ -107,7 +107,7 @@ public:
     // method issueOrder which creates an Order
     // object and puts it in the player’s list
     // of orders
-    void issueOrder(Map* m, vector<Player*>* pl);
+    void issueOrder(Map* m, vector<Player*>* pl,Deck* deckpointer);
     //Getter method for boolean capture territory
     bool getcaptureTerritory();
     //setter method for capture territory
@@ -128,7 +128,10 @@ public:
     int getContinentBonus(Map* m);
     //adds a single order to the list
     void addOrder(Order* o);
+    //getter mtehod
     vector<Territory*>* getterritoriesToAttack();
+    //getter method
+    vector<Territory*>* getSurroundingterr();
 };
 
 
