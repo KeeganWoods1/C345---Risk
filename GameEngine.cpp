@@ -627,30 +627,33 @@ void WarzoneGame::mainGameLoop()
             if(playerListPtr->at(i)->getNumTerrOwned()<=0)
             {
                 cout << "Player: " << *playerListPtr->at(i) << " has been eliminated" << endl;
+                delete playerListPtr->at(i);
                 playerListPtr->erase(playerListPtr->begin()+i); 
                 //update the observers with new playerlist  
                 Notify();
             }
         }
         //Each player gets their turn according to the playerList order (from startup phase)
-        for(Player* player : *playerListPtr)
-        {
-            setCurrentPlayer(player);
-            //Draw a card regardless of previous turn (for demonstration only)
-            gameDeckPtr->draw(player->getHand());
-            //Player draws a card only if they conquered a territory in the previous turn
-            if (player->getName().compare("Neutral")!=0 && player->getcaptureTerritory()){
+        if (playerListPtr->size() > 1) {
+            for (Player* player : *playerListPtr)
+            {
+                setCurrentPlayer(player);
+                //Draw a card regardless of previous turn (for demonstration only)
                 gameDeckPtr->draw(player->getHand());
-                player->setcaptureTerritory(false);
+                //Player draws a card only if they conquered a territory in the previous turn
+                if (player->getName().compare("Neutral") != 0 && player->getcaptureTerritory()) {
+                    gameDeckPtr->draw(player->getHand());
+                    player->setcaptureTerritory(false);
+                }
+                reinforcementPhase(player, player->getNumTerrOwned());
+                player->clear();
+                issueOrdersPhase(player);
             }
-            reinforcementPhase(player, player->getNumTerrOwned());
-            player->clear();
-            issueOrdersPhase(player);
+            //All players are done issuing orders, execution of orders can begin
+            executeOrdersPhase();
         }
-        //All players are done issuing orders, execution of orders can begin
-        executeOrdersPhase();
         counter++;
-        if (counter > 2) break;
+        if (counter > 60) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner

@@ -224,7 +224,8 @@ void StatsScreen::Display()
     {
         float percentOwned = ((float)player->gettoDefend(*_subject->getGameMap())->size()/(float)_subject->getGameMap()->getTerritories()->size()) * 100;
         cout << "Player: " << player->getName() << " -> Dominating ";
-        cout << std::setprecision(2) << percentOwned <<"% of the map.\n"<< endl;
+        if (percentOwned < 100 )cout << std::setprecision(2) << percentOwned <<"% of the map.\n"<< endl;
+        else cout << std::setprecision(3) << percentOwned << "% of the map.\n" << endl;
     }
     cout << "************************************************************\n" << endl;
     

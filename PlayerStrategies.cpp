@@ -56,13 +56,21 @@ vector<Territory*>* HumanPlayerStrategy::toDefend(Map* m, Player* p) {
 	return NULL;
 }
 void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
-    int* reinforcementCounter = DBG_NEW int (curplayer->getCurrentReinforcements());
-    Territory* t = curplayer->toDefend(*m)->at(0);
-    curplayer->addOrder(new Deployorder(curplayer,reinforcementCounter,t));
-    Territory* defend = toDefend(m,curplayer)->at(0);
-    Territory* attack = toAttack(m, curplayer, defend)->at(0);
-    int* attacknum = new int(*reinforcementCounter + t->getterritory_armycount() - 2);
-    curplayer->addOrder(new Advanceorder(attacknum,curplayer,attack,defend,m));
+    if (curplayer->toDefend(*m)->size() > 1) {
+        int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
+        Territory* t = curplayer->toDefend(*m)->at(0);
+        curplayer->addOrder(new Deployorder(curplayer, reinforcementCounter, t));
+        Territory* defend = toDefend(m, curplayer)->at(0);
+        Territory* attack = toAttack(m, curplayer, defend)->at(0);
+        for (int i = 1; i < curplayer->gettoDefend(*m)->size(); i++) {
+            if (curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() > 1 && m->isAdjacent(defend, curplayer->gettoDefend(*m)->at(i))) {
+                int* attacknum2 = new int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1);
+                curplayer->addOrder(new Advanceorder(attacknum2, curplayer, defend, curplayer->gettoDefend(*m)->at(i), m));
+            }
+        }
+        int* attacknum = new int(*reinforcementCounter + t->getterritory_armycount() - 2);
+        curplayer->addOrder(new Advanceorder(attacknum, curplayer, attack, defend, m));
+    }
     vector<Card*> cards = curplayer->getHand()->getHandContainer();
     for (int i = 0; i < cards.size(); i++) {
         Card* card = cards.at(i);
@@ -70,6 +78,22 @@ void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* c
             {
                 // the play method adds the order to the player's orderlist
                 dynamic_cast<BlockadeCard*>(card)->play(deckpointer, curplayer, curplayer->toDefend(*m)->at(0));
+            }
+            else if ((card->getName()) == "Bomb Card" && curplayer->toAttack(*m)->size() > 0) {
+                Territory* attack = curplayer->toAttack(*m)->at(0);
+                // the play method adds the order to the player's orderlist
+                dynamic_cast<BombCard*>(card)->play(deckpointer, curplayer, attack);
+            }
+            else if (card->getName() == "Reinforcement Card")
+            {
+                // the play method adds the order to the player's orderlist
+                dynamic_cast<ReinforcementCard*>(card)->play(deckpointer, curplayer);
+            }
+            else if (card->getName() == "Airlift Card" && curplayer->gettoDefend(*m)->size() > 1)
+            {
+                // the play method adds the order to the player's orderlist
+                int i = curplayer->gettoDefend(*m)->size() - 1;
+                if (i >= 1) dynamic_cast<AirliftCard*>(card)->play(deckpointer, curplayer, curplayer->gettoDefend(*m)->at(i), curplayer->gettoDefend(*m)->at(0), DBG_NEW int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1));
             }
             
     }
