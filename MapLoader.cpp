@@ -41,7 +41,8 @@ MapLoader::MapLoader(string mapName) {
 //Destructor
 MapLoader::~MapLoader(){
     delete map;
-    if (validMap != NULL)delete validMap;
+    if (validMap != NULL)
+        delete validMap;
     map = nullptr;
     validMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {
@@ -66,8 +67,7 @@ Map* MapLoader::getMap() {
     return validMap;
 }
 
-bool MapLoader::getStatus()
-{
+bool MapLoader::getStatus() {
     return isLoaded;
 }
 
@@ -335,4 +335,58 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
         std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
     }
     return validMap;
+}
+
+//Default constructor
+ConquestFileReader::ConquestFileReader() {
+    conquest_map = nullptr;
+    validConquestMap = nullptr;
+}
+//Parameterized constructor
+ConquestFileReader::ConquestFileReader(string conquest_map_Name) {
+
+}
+//Destructor
+ConquestFileReader::~ConquestFileReader(){
+    delete conquest_map;
+    if (validConquestMap != NULL)
+        delete validConquestMap;
+    conquest_map = nullptr;
+    validConquestMap = nullptr;
+
+}
+//getters
+Map* ConquestFileReader::getMap() {
+    return validConquestMap;
+}
+bool ConquestFileReader::getStatus() {
+    return isLoaded;
+}
+
+//Copy constructor
+ConquestFileReader::ConquestFileReader(const ConquestFileReader &anotherConquestMap) {
+    cout << "Using copy constructor";
+}
+
+//Assignment operator
+ConquestFileReader& ConquestFileReader::operator = (const ConquestFileReader& conquest_map) {
+    cout << "Using assignment operator";
+    return *this;
+}
+
+//to load a map and store its contents in vectors
+void ConquestFileReader::loadMap(fstream& map_stream) {
+
+}
+//to return a map object
+Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
+
+}
+
+ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader conquest_map_reader){
+
+}
+
+void ConquestFileReaderAdapter::loadMap(fstream& map_stream) {
+    cout << "Using Adapter" << endl;
 }
