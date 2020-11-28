@@ -13,14 +13,7 @@ class MapLoader
 public:
     //Constructor
     MapLoader();
-    MapLoader(string);
-
-    //Destructor
-    ~MapLoader();
-
-    //Getters
-    Map* getMap();
-    bool getStatus();
+    MapLoader(std::string);
 
     //Copy constructor
     MapLoader(const MapLoader&);
@@ -30,15 +23,21 @@ public:
     friend std::ostream& operator<<(std::ostream&, const MapLoader&);
 
     //to load a map file
-    virtual void loadMap(fstream&);
+    virtual void loadMap(string);
     //to return a map object
     Map* CreateMap(vector<string*>, vector<string*>, vector<string*>);
+
+    //Getters
+    Map* getMap();
+    bool getStatus();
+
+    //Destructor
+    ~MapLoader();
 
     //to print out a vector content
     void printVector(vector<std::string*>);
     void printTerritories(vector<Territory*>*);
     void printContinents(vector<Continent*>*);
-
 private:
     //map file
     string* map;
@@ -59,14 +58,7 @@ class ConquestFileReader
 public:
     //Constructor
     ConquestFileReader();
-    ConquestFileReader(string);
-
-    //Destructor
-    ~ConquestFileReader();
-
-    //Getters
-    Map* getMap();
-    bool getStatus();
+    ConquestFileReader(std::string);
 
     //Copy constructor
     ConquestFileReader(const ConquestFileReader&);
@@ -76,10 +68,21 @@ public:
     friend std::ostream& operator<<(std::ostream&, const ConquestFileReader&);
 
     //to load a map file
-    void loadMap(fstream&);
+    void loadMap(string);
     //to return a map object
     Map* CreateMap(vector<string*>, vector<string*>, vector<string*>);
 
+    //Getters
+    Map* getMap();
+    bool getStatus();
+
+    //Destructor
+    ~ConquestFileReader();
+
+    //to print out a vector content
+    void printVector(vector<std::string*>);
+    void printTerritories(vector<Territory*>*);
+    void printContinents(vector<Continent*>*);
 private:
     //map file
     string* conquest_map;
@@ -98,9 +101,10 @@ private:
 class ConquestFileReaderAdapter : MapLoader
 {
 public:
-    ConquestFileReaderAdapter(ConquestFileReader conquest_map_reader);
+    //constructor
+    ConquestFileReaderAdapter(ConquestFileReader* conquest_map_reader);
     //overriding the load map method from MapLoader class
-    void loadMap(fstream&);
+    void loadMap(string);
 
 private:
     ConquestFileReader* conquest_map;
