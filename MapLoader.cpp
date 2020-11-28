@@ -13,13 +13,13 @@ using namespace std;
 //Default constructor
 MapLoader::MapLoader() {
     map= nullptr;
-    validMap = NULL;
+    validMap = nullptr;
+    isLoaded = false;
 }
 
 //Parameterized constructor
 MapLoader::MapLoader(string mapName) {
     map = DBG_NEW string(mapName);
-    validMap = NULL;
     fstream map_stream;
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
@@ -30,12 +30,9 @@ MapLoader::MapLoader(string mapName) {
         //closes the stream
         map_stream.close();
     }
-        //if map file was not opened successfully
+    //if map file was not opened successfully
     else
-    {
         cout << "Unable to open the map file!\n" << endl;
-    }
-        
 }
 
 //Destructor
@@ -53,13 +50,10 @@ MapLoader::~MapLoader(){
         delete countries.at(i);
     }
     countries.clear();
-    if (borders.size() >= 1)
     for (int i = 0; i < borders.size(); i++) {
         if (!borders.at(i)->empty())delete borders.at(i);
     }
-
-    map = NULL;
-    validMap = NULL;
+    borders.clear();
 }
 
 //getters
@@ -388,5 +382,6 @@ ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader conquest
 }
 
 void ConquestFileReaderAdapter::loadMap(fstream& map_stream) {
-    cout << "Using Adapter" << endl;
+    cout << "Using File Reader Adapter" << endl;
+    conquest_map->loadMap(map_stream);
 }
