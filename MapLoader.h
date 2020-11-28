@@ -70,13 +70,13 @@ public:
 
     //Copy constructor
     ConquestFileReader(const ConquestFileReader&);
-    //Assignment operato
+    //Assignment operator
     ConquestFileReader& operator = (const ConquestFileReader&);
     //Stream insertion operator (toString method)
     friend std::ostream& operator<<(std::ostream&, const ConquestFileReader&);
 
     //to load a map file
-    void loadMap(stream&);
+    void loadMap(fstream&);
     //to return a map object
     Map* CreateMap(vector<string*>, vector<string*>, vector<string*>);
 
@@ -88,7 +88,7 @@ private:
     //map load status
     bool isLoaded = false;
 
-    //to store the contents from the map file
+    //to store the contents from the conquest map file
     vector<std::string*> continents;
     vector<std::string*> countries;
     vector<std::string*> borders;
