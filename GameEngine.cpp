@@ -21,35 +21,60 @@ MapDirectoryInit::MapDirectoryInit()
     //display map files in folder
     std::string path = "MapFiles";
     MapLoader* mapLoader;
-    for (const auto & entry : fs::directory_iterator(path))
+    ConquestFileReader* conMapLoader;
+
+    for (const auto & entry : fs::recursive_directory_iterator(path))
     {
         std::cout << entry.path().filename() << std::endl;
     }
 
     while(1)
     {
+        int fileType;
         //ask user to pick
         cout << "\nPlease enter the name of the map file you wish to load: " << endl;
         cin >> selectedMapName;
         cout << "" << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        //use user input as parameter to MapLoader() constructor
-        mapLoader = DBG_NEW MapLoader(selectedMapName);
-        if(mapLoader->getStatus())
+        cout << "Is this\n1. A Warzone Map File\n2. A Conquest Map File" << endl;
+        cin >> fileType;
+        cout << "" << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if(fileType == 1)
         {
-            if(mapLoader->getMap() != NULL)
+            //use user input as parameter to MapLoader() constructor
+            mapLoader = DBG_NEW MapLoader(selectedMapName);
+            if(mapLoader->getStatus())
             {
-                gameMapPtr = mapLoader->getMap();
-                delete mapLoader;
-                break; 
+                if(mapLoader->getMap() != NULL)
+                {
+                    gameMapPtr = mapLoader->getMap();
+                    delete mapLoader;
+                    break; 
+                }
             }
+            else
+            {
+                cin.clear();
+                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                delete mapLoader;
+            }  
         }
         else
         {
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            delete mapLoader;
-        }    
+            conMapLoader =  DBG_NEW ConquestFileReader(selectedMapName);
+            if (conMapLoader->getStatus()){
+                ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conMapLoader);
+                conquestFileReaderAdapter->loadMap(selectedMapName);
+                gameMapPtr = conMapLoader->getMap();
+                delete conquestFileReaderAdapter;   
+                break;
+            }   
+        }     
     }    
 }
 

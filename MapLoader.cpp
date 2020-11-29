@@ -37,7 +37,6 @@ MapLoader::MapLoader(string mapName) {
         cout << "Unable to open the map file!\n" << endl;
     }
 }
-
 //Copy constructor
 MapLoader::MapLoader(const MapLoader &anotherMap) {
     cout << "Using copy constructor";
@@ -49,7 +48,7 @@ MapLoader::MapLoader(const MapLoader &anotherMap) {
 MapLoader::~MapLoader(){
     delete map;
     if (validMap != NULL)
-//        delete validMap;
+    //delete validMap;
     map = nullptr;
     validMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {
@@ -184,6 +183,9 @@ void MapLoader::loadMap(std::string map_name) {
     }
     else
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
+
+    //to avoid memory leak
+    delete str;
     //closes the stream
     map_stream.close();
 }//end of loadMap()
@@ -273,11 +275,15 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     //create map object
     validMap = DBG_NEW Map(countries.size(), territoriesListPtr, continentsListPtr);
     //deleting territoriesListPtr and continentsListPtr to avoid memory leak
+    for (auto Terr : *territoriesListPtr){
+        delete Terr;
+    }
+    for (auto Cont : *continentsListPtr){
+        delete Cont;
+    }
 
     vector<int> brdrsList;
     string nextBorder;
-    delete continentsListPtr;
-    delete territoriesListPtr;
     //Add all borders to map object
     for(int j =0; j<borders.size(); j++) {
         brdrsList.clear();
@@ -451,8 +457,6 @@ void ConquestFileReader::loadMap(std::string conquest_map_name) {
     else
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
 
-    //to avoid memory leak
-    delete str;
     //closes the stream
     conquest_map_stream.close();
 }
@@ -599,13 +603,7 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
     }
 
     //deleting territoriesListPtr and continentsListPtr to avoid memory leak
-    for (auto Terr : *territoriesListPtr){
-        delete Terr;
-    }
     delete territoriesListPtr;
-    for (auto Cont : *continentsListPtr){
-        delete Cont;
-    }
     delete continentsListPtr;
 
     if (validConquestMap->Validate()) {
