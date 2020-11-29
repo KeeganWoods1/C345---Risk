@@ -127,9 +127,8 @@ int Continent::getBonus() {
     return bonus;
 }
 bool Continent::ownedByOnePlayer(Player* aPlayer, Map  *m){
-   vector<Territory*>* maps =  aPlayer->gettoDefend(*m);
-    for (int i=0; i<maps->size(); i++){
-        if (maps->at(i)->getterritory_owner()->getName().compare(aPlayer->getName()) != 0)
+    for (int i=0; i<territoriesInContinent.size(); i++){
+        if (territoriesInContinent.at(i)->getterritory_owner()->getName().compare(aPlayer->getName()) != 0)
         {
             return false;
         }
