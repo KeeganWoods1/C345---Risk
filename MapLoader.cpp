@@ -184,9 +184,6 @@ void MapLoader::loadMap(std::string map_name) {
     }
     else
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
-
-    //to avoid memory leak
-    delete str;
     //closes the stream
     map_stream.close();
 }//end of loadMap()
@@ -276,17 +273,11 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     //create map object
     validMap = DBG_NEW Map(countries.size(), territoriesListPtr, continentsListPtr);
     //deleting territoriesListPtr and continentsListPtr to avoid memory leak
-    for (auto Terr : *territoriesListPtr){
-        delete Terr;
-    }
-    delete territoriesListPtr;
-    for (auto Cont : *continentsListPtr){
-        delete Cont;
-    }
-    delete continentsListPtr;
 
     vector<int> brdrsList;
     string nextBorder;
+    delete continentsListPtr;
+    delete territoriesListPtr;
     //Add all borders to map object
     for(int j =0; j<borders.size(); j++) {
         brdrsList.clear();
@@ -325,27 +316,6 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     }
     return validMap;
 }//end of CreateMap()
-
-//Destructor
-MapLoader::~MapLoader(){
-    delete map;
-    if (validMap != NULL)
-        delete validMap;
-    map = nullptr;
-    validMap = nullptr;
-    for (int i = 0; i < continents.size(); i++) {
-        delete continents.at(i);
-    }
-    continents.clear();
-    for (int i = 0; i < countries.size(); i++) {
-        delete countries.at(i);
-    }
-    countries.clear();
-    for (int i = 0; i < borders.size(); i++) {
-        if (!borders.at(i)->empty())delete borders.at(i);
-    }
-    borders.clear();
-}
 
 //to print out a vector content
 void MapLoader::printVector(vector<std::string*> aVector) {
