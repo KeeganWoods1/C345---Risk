@@ -77,7 +77,6 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 n = new int(troopNum);
 
                 curplayer->addOrder(new Deployorder(curplayer, n, sourceTerritory));
-                curplayer->setCurrentReinforcements(curplayer->getCurrentReinforcements() - *n);
                 break;
             }
             case 2:

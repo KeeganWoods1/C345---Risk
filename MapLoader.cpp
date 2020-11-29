@@ -39,7 +39,7 @@ MapLoader::MapLoader(string mapName) {
 MapLoader::~MapLoader(){
     delete map;
     if (validMap != NULL)
-        delete validMap;
+//        delete validMap;
     map = nullptr;
     validMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {
@@ -374,7 +374,7 @@ void ConquestFileReader::loadMap(fstream& map_stream) {
 }
 //to return a map object
 Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
-
+    return NULL;
 }
 
 ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader conquest_map_reader){
