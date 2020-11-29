@@ -284,7 +284,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
                     nextBorder = "";
                 }
             }
-                //protect against end of lines & trailing spaces on ends of lines
+            //protect against end of lines & trailing spaces on ends of lines
             else if(nextBorder != "" && it != borders[j]->end()) {
                 //convert string to int and clear temp variable nextBorder for next line
                 brdrsList.push_back(std::stoi(nextBorder, nullptr));
@@ -399,7 +399,6 @@ ConquestFileReader& ConquestFileReader::operator=(const ConquestFileReader& aCon
 
 //to load a map and store its contents in vectors
 void ConquestFileReader::loadMap(std::string conquest_map_name) {
-    cout << "in loadMap for ConquestFileReader" << endl;
     fstream conquest_map_stream;
     conquest_map_stream.open("MapFiles/ConquestMaps/"+conquest_map_name, std::fstream::in | std::fstream::out);
 
@@ -462,13 +461,14 @@ void ConquestFileReader::loadMap(std::string conquest_map_name) {
     else
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
 
+    //to avoid memory leak
+    delete str;
     //closes the stream
     conquest_map_stream.close();
 }
 
 //to return a map object
 Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *> countries, vector<string *> borders) {
-    cout << "in create map" << endl;
     vector<Territory*>* territoriesListPtr = DBG_NEW vector<Territory*>();
     vector<Continent*>* continentsListPtr = DBG_NEW vector<Continent*>();
     vector<Territory*> territoriesInContinent;
@@ -482,6 +482,7 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
         int wordCount = 1;
         string word = "";
         string name = "";
+        string* rest = NULL;
         //we need name/continentName or words 1&4
         for(auto nextWord : *countries[j]) {
             //reaching end of 4th word
@@ -496,14 +497,17 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
                 word = "";
                 wordCount++;
             }
-            else if (nextWord == ','){
+            else if (nextWord == ',' && (wordCount == 2 || wordCount == 3)){
                 word = "";
                 wordCount++;
             }
-            else{
+            else {
                 word = word + nextWord;
             }
         }
+        rest = DBG_NEW string(word);
+        borders.push_back(rest);
+
         //getting the id of the continent this Territory is in
         for(int i=0; i <continents.size(); i++){
             string temp = "";
@@ -527,7 +531,6 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
         Territory* territory = DBG_NEW Territory(continentID, territoryName, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
-    printTerritories(territoriesListPtr);
 
     //creating Continents object and setting the bonus army for each continent
     for(int j=0; j<continents.size(); j++) {
@@ -563,10 +566,47 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
         Continent* aContinent = DBG_NEW Continent(name, continentID, bonus, territoriesInContinent);
         continentsListPtr->push_back(aContinent);
     }//end of for loop for continents
-    printContinents(continentsListPtr);
 
     //create map object
     validConquestMap = DBG_NEW Map(countries.size(), territoriesListPtr, continentsListPtr);
+
+    //Add all borders to map object
+    vector<int> brdrsList;
+
+    for(int j = 0; j<borders.size(); j++) {
+        brdrsList.clear();
+        string neighborTerr;
+        string word;
+        int terrId = j+1;
+        brdrsList.push_back(terrId);
+        int neighborId;
+        int len = borders[j]->length();
+        int len_Count = 0;
+
+        for(auto ch : *borders[j]) {
+            int count = 0;
+            len_Count++;
+            //assuming that we have an empty line at the end of the file to make it work
+            if (ch == ',' || len_Count == len){
+                neighborTerr = word;
+                word = "";
+                for (auto Terr : *territoriesListPtr){
+                    count++;
+                    if(Terr->getterritory_name() == neighborTerr){
+                        neighborId = count;
+                        brdrsList.push_back(neighborId);
+                    }
+                }
+            }
+            else{
+                word = word + ch;
+                neighborTerr = "";
+            }
+        }
+        for(int k =1; k<brdrsList.size(); k++) {
+            validConquestMap->addBorder(brdrsList[0] - 1, brdrsList[k] - 1);
+        }
+    }
 
     //deleting territoriesListPtr and continentsListPtr to avoid memory leak
     for (auto Terr : *territoriesListPtr){
@@ -577,6 +617,14 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
         delete Cont;
     }
     delete continentsListPtr;
+
+    if (validConquestMap->Validate()) {
+        std::cout << "Map is valid because it is a connected graph.\n" << std::endl;
+        isLoaded = true;
+    }
+    else {
+        std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
+    }
 
     return validConquestMap;
 }//end of CreateMap()
@@ -607,6 +655,18 @@ ConquestFileReader::~ConquestFileReader(){
         delete validConquestMap;
     conquest_map = nullptr;
     validConquestMap = nullptr;
+    for (int i = 0; i < continents.size(); i++) {
+        delete continents.at(i);
+    }
+    continents.clear();
+    for (int i = 0; i < countries.size(); i++) {
+        delete countries.at(i);
+    }
+    countries.clear();
+    for (int i = 0; i < borders.size(); i++) {
+        if (!borders.at(i)->empty())delete borders.at(i);
+    }
+    borders.clear();
 
 }
 
@@ -615,9 +675,7 @@ ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader* conques
     this->conquest_map = conquest_map_reader;
 }
 
-
 void ConquestFileReaderAdapter::loadMap(std::string map_name) {
     cout << "Using File Reader Adapter to load a map\n" << endl;
     conquest_map->loadMap(map_name);
-
 }

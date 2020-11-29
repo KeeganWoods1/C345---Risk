@@ -20,14 +20,12 @@ int main() {
             cin >> map_name;
             cout << "" << endl;
             MapLoader* mapLoader = new MapLoader(map_name);
-            //testing toString method
-            //cout << *mapLoader;
+
         }
         else if(map_type == 2){
             cout << "Please enter the name of the Conquest map file:" << endl;
             cin >> map_name;
             cout << "" << endl;
-            bool yes = true;
             ConquestFileReader* conquestFileReader = new ConquestFileReader(map_name);
             if (conquestFileReader->getStatus()){
                 ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conquestFileReader);
