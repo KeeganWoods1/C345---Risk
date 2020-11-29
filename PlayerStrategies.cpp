@@ -582,7 +582,36 @@ vector<Territory*>* AggressivePlayerStrategy::toDefend(Map* m, Player* p) {
     delete terr;
     return  surroundingterr;
 }
+
 void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
+    if (curplayer->toDefend(*m)->size() > 1) {
+        int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
+        Territory* t = curplayer->toDefend(*m)->at(0);
+        // deploy order which deploys to weakest territories
+        curplayer->addOrder(new Deployorder(curplayer, reinforcementCounter, t));
+        Territory* sourceterr = toDefend(m, curplayer)->at(3);
+        Territory* destinationterr = toDefend(m, curplayer)->at(0);
+
+        for (int i = 1; i < curplayer->gettoDefend(*m)->size(); i++) {
+            if (curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() > 1 && m->isAdjacent(sourceterr, curplayer->gettoDefend(*m)->at(i))) {
+                int* armynum2 = new int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1);
+                curplayer->addOrder(new Advanceorder(armynum2, curplayer, sourceterr, curplayer->gettoDefend(*m)->at(i), m));
+            }
+        }
+        int* armynum = new int(*reinforcementCounter + t->getterritory_armycount() - 2);
+        // advance order which advances armies on players weakest countries and
+        // never advances to enemy territories
+        curplayer->addOrder(new Advanceorder(armynum, curplayer, destinationterr, sourceterr, m));
+
+        // deleting and emptying cards in benevolent players hand
+        // since this player cannot issue orders related to cards
+        vector<Card*> cards = curplayer->getHand()->getHandContainer();
+        for(int i = 0; i < cards.size(); i ++){
+            delete cards.at(i);
+            cards.at(i) = NULL;
+        }
+        cards.clear();
+    }
 }
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy() {}
@@ -599,15 +628,128 @@ ostream& operator << (ostream& out,  BenevolentPlayerStrategy& h)
 	out << "this is a Benevolent player strategy";
 	return out;
 }
+
 vector<Territory*>* BenevolentPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
-	return NULL;
+    vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
+    vector<Territory*>* territoriesToAttack = p->getterritoriesToAttack();
+    territoriesToAttack->clear();
+    vector<Territory*>* terr = p->surroundingterritories(*m, *t);
+    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
+    for (int i = 0; i < terr->size(); i++) {
+        if (terr->at(i)->getterritory_owner()->getName().compare(t->getterritory_owner()->getName()) != 0)terr2->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    terr = DBG_NEW vector<Territory*>();
+    int initialsize = terr2->size();
+    for (int k = 0; k < initialsize; k++) {
+        int min = 100000;
+        int index = -1;
+        for (int i = 0; i < terr2->size(); i++) {
+            if (terr2->at(i)->getterritory_armycount() < min) {
+                min = terr2->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        if (index == -1)cout << "error here";
+        terr->push_back(terr2->at(index));
+        terr2->erase(terr2->cbegin() + index);
+
+    }
+    terr2->clear();
+    delete terr2;
+    for (int i = 0; i < terr->size(); i++) {
+        territoriesToAttack->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    return  territoriesToAttack;
 }
 vector<Territory*>* BenevolentPlayerStrategy::toAttack(Map* m, Player* p) {
-	return NULL;
+    vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
+    vector<Territory*>* territoriesToAttack = p->getterritoriesToAttack();
+    territoriesToAttack->clear();
+    vector<Territory*>* result = DBG_NEW vector<Territory*>();
+    for (int i = 0; i < territoriesToDefend->size(); i++) {
+        vector<Territory*>* terr = p->surroundingterritories(*m, *territoriesToDefend->at(i));
+        for (int j = 0; j < terr->size(); j++) {
+            if (terr->at(j)->getterritory_owner()->getName().compare(territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
+                bool exists = false;
+                for (int k = 0; k < result->size(); k++) {
+                    if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
+                }
+                if (!exists) {
+                    result->push_back(terr->at(j));
+                    break;
+                }
+            }
+        }
+        terr->clear();
+        delete terr;
+    }
+    for (int k = 0; k < result->size(); k++) {
+        int max = -1;
+        int index = -1;
+        int i = k;
+        for (; i < result->size(); i++) {
+            if (result->at(i)->getterritory_armycount() > max) {
+                max = result->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        if (index != k) {
+            iter_swap(result->begin() + index, result->begin() + k);
+        }
+    }
+    for (int i = 0; i < result->size(); i++) {
+        territoriesToAttack->push_back(result->at(i));
+    }
+    result->clear();
+    delete result;
+    return territoriesToAttack;
 }
 vector<Territory*>* BenevolentPlayerStrategy::toDefend(Map* m, Player* p) {
-	return NULL;
+    vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
+    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
+    for (int j = 0; j < territoriesToDefend->size(); j++) {
+        Territory t = territoriesToDefend->at(j);
+        vector<Territory*>* terr = p->surroundingterritories(*m, t);
+        for (int i = 0; i < terr->size(); i++) {
+            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0) {
+                terr2->push_back(territoriesToDefend->at(j));
+                break;
+            }
+        }
+        terr->clear();
+        delete terr;
+    }
+    vector<Territory*>* terr = DBG_NEW vector<Territory*>();
+    int initialsize = terr2->size();
+    for (int k = 0; k < initialsize; k++) {
+        int min = 100000;
+        int index = -1;
+        for (int i = 0; i < terr2->size(); i++) {
+            if (terr2->at(i)->getterritory_armycount() < min) {
+                min = terr2->at(i)->getterritory_armycount();
+                index = i;
+            }
+        }
+        terr->push_back(terr2->at(index));
+        terr2->erase(terr2->cbegin() + index);
+
+    }
+    terr2->clear();
+    delete terr2;
+    vector<Territory*>* surroundingterr = p->getSurroundingterr();
+    surroundingterr->clear();
+    for (int i = 0; i < terr->size(); i++) {
+        surroundingterr->push_back(terr->at(i));
+    }
+    terr->clear();
+    delete terr;
+    return  surroundingterr;
 }
+
 void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
 }
 
