@@ -120,6 +120,8 @@ public:
     bool isNegotiatedFriend(string s);
     //For a given territory on a map returns all surrounding territories
     static vector<Territory*>* surroundingterritories(Map& m,Territory &l);
+    //find friendly territories that border a given territory
+    vector<Territory*>* friendlyAdjacentTerritories(Map &m,Territory &t);
     //updates the lsit of territories to defend
     void updatetoDefend(Map &m);
     //returns orderlist

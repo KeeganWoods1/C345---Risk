@@ -41,8 +41,8 @@ public:
 	//stream insertion ovveride
 	friend ostream& operator << (ostream& out,  HumanPlayerStrategy& o);
 	//to attack and to defend methods
-	vector<Territory*>* toAttack(Map* m, Player* p, Territory* t);
 	vector<Territory*>* toAttack(Map* m, Player* p);
+	vector<Territory*>* toAttack(Map* m, Player* p, Territory* t);
 	vector<Territory*>* toDefend(Map* m, Player* p);
 };
 //derived class that implements aggressive player strategy
