@@ -262,7 +262,7 @@ vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
 vector<Territory*>* Player::friendlyAdjacentTerritories(Map &m,Territory &t)
 {
     vector<Territory*>* surroundingTerr = surroundingterritories(m, t);
-    vector<Territory*>* friendlyAdjacentTerr = new vector<Territory*>();
+    vector<Territory*>* friendlyAdjacentTerr = DBG_NEW vector<Territory*>();
 
     if(surroundingTerr != NULL)
     {
@@ -274,6 +274,7 @@ vector<Territory*>* Player::friendlyAdjacentTerritories(Map &m,Territory &t)
             }
         }
     }
+    delete surroundingTerr;
     return friendlyAdjacentTerr;
 }
 

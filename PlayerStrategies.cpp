@@ -66,17 +66,19 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 cin >> territory;
                 cin.clear();
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                if (territory <= territoriesToDefend->size()) {
+                    sourceTerritory = territoriesToDefend->at(territory - 1);
 
-                sourceTerritory = territoriesToDefend->at(territory-1);
+                    cout << "Select number of troops to deploy (" << curplayer->getCurrentReinforcements() << " troops left in pool)" << endl;
+                    cin >> troopNum;
+                    cin.clear();
+                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                cout << "Select number of troops to deploy (" << curplayer->getCurrentReinforcements() << " troops left in pool)"<< endl;
-                cin >> troopNum;
-                cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    n = DBG_NEW int(troopNum);
 
-                n = new int(troopNum);
-
-                curplayer->addOrder(new Deployorder(curplayer, n, sourceTerritory));
+                    curplayer->addOrder(DBG_NEW Deployorder(curplayer, n, sourceTerritory));
+                }
+                else cout << "invlid input\n";
                 break;
             }
             case 2:
@@ -109,19 +111,23 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 cin >> territoryDest;
                 cin.clear();
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                if (territoryDest - 1 < territoriesToAttack->size()) {
+                    destTerritory = territoriesToAttack->at(territoryDest - 1);
 
-                destTerritory = territoriesToAttack->at(territoryDest-1);
-                
-                //get number of units to attack with
-                cout << "How many troops would you like to attack with? (" << sourceTerritory->getterritory_armycount() << " troop(s) available)"<< endl;
-                cin >> troopNum;
-                cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    //get number of units to attack with
+                    cout << "How many troops would you like to attack with? (" << sourceTerritory->getterritory_armycount() << " troop(s) available)" << endl;
+                    cin >> troopNum;
+                    cin.clear();
+                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                n = new int(troopNum);
+                    n = DBG_NEW int(troopNum);
 
-                //issue advance order
-                curplayer->addOrder(new Advanceorder(n, curplayer, destTerritory, sourceTerritory, m));   
+                    //issue advance order
+                    curplayer->addOrder(DBG_NEW Advanceorder(n, curplayer, destTerritory, sourceTerritory, m));
+                }
+                else {
+                    cout << "invalid input";
+                }
                 break;           
             }
             case 3:
@@ -162,11 +168,11 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 cin >> troopNum;
                 cin.clear();
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                n = new int(troopNum);
+                delete territoriesToMoveTo;
+                n = DBG_NEW int(troopNum);
 
                 //issue advance order
-                curplayer->addOrder(new Advanceorder(n, curplayer, destTerritory, sourceTerritory, m));   
+                curplayer->addOrder(DBG_NEW Advanceorder(n, curplayer, destTerritory, sourceTerritory, m));
                 break; 
             }
             case 4:
@@ -187,103 +193,110 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
 
                 //play card
-                Card* card = cards.at(cardIdx-1);
+                if (cardIdx  <= cards.size()) {
+                    Card* card = cards.at(cardIdx - 1);
 
-                if (card->getName() == "Blockade Card" && curplayer->gettoDefend(*m)->size() > 0)
-                {
-                    cout << "Select the territory you wish to Blockade:" << endl;
-                    for(int i=0; i<territoriesToDefend->size(); i++)
+                    if (card->getName() == "Blockade Card" && curplayer->gettoDefend(*m)->size() > 0)
                     {
-                        cout << i+1 << ". " << *territoriesToDefend->at(i) << endl;
-                    }                    
-                    cin >> territory;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
-                    sourceTerritory = territoriesToDefend->at(territory-1);
-                    // the play method adds the order to the player's orderlist
-                    dynamic_cast<BlockadeCard*>(card)->play(deckpointer, curplayer, sourceTerritory);
-                }
-                else if ((card->getName()) == "Bomb Card" && curplayer->toAttack(*m)->size() > 0) {
-
-                    vector<Territory*>* allHostileTerritories = toAttack(m, curplayer);
-
-                    cout << "Select the territory you wish to Bomb:" << endl;
-                    for(int i=0; i< allHostileTerritories->size(); i++)
-                    {
-                        cout << i+1 << ". " << *allHostileTerritories->at(i) << endl;
-                    }                    
-                    cin >> territory;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');    
-
-                    destTerritory = allHostileTerritories->at(territory-1);
-
-                    // the play method adds the order to the player's orderlist
-                    dynamic_cast<BombCard*>(card)->play(deckpointer, curplayer, destTerritory);
-                }
-                else if (card->getName() == "Reinforcement Card")
-                {
-                    // the play method adds the order to the player's orderlist
-                    dynamic_cast<ReinforcementCard*>(card)->play(deckpointer, curplayer);
-                }
-                else if (card->getName() == "Airlift Card" && curplayer->gettoDefend(*m)->size() > 1)
-                {
-                    cout << "Select the territory you wish to Airlift FROM:" << endl;
-                    for(int i=0; i<territoriesToDefend->size(); i++)
-                    {
-                        cout << i+1 << ". " << *territoriesToDefend->at(i) << endl;
-                    }                    
-                    cin >> territory;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
-                    sourceTerritory = territoriesToDefend->at(territory-1); 
-
-                    cout << "Select the territory you wish to Airlift TO:" << endl;
-                   
-                    cin >> territoryDest;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
-                    destTerritory = territoriesToDefend->at(territoryDest-1);  
-
-                    //get number of units to attack with
-                    cout << "How many troops would you like to Airlift out? (" << sourceTerritory->getterritory_armycount() << " troop(s) available)"<< endl;
-                    cin >> troopNum;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                    n = new int(troopNum);                                     
-                    // the play method adds the order to the player's orderlist
-                    int i = curplayer->gettoDefend(*m)->size() - 1;
-                    if (i >= 1) dynamic_cast<AirliftCard*>(card)->play(deckpointer, curplayer, sourceTerritory, destTerritory, n);
-                } 
-                else if (card->getName() == "Diplomacy Card")
-                {
-                    int enemyPlayerIdx;
-                    vector<Player*>* enemyPlayerList = new vector<Player*>();
-                    for(int i=0; i<pl->size(); i++)
-                    {
-                        if(curplayer->getName().compare(pl->at(i)->getName()) != 0)
+                        territoriesToDefend = toDefend(m, curplayer);
+                        cout << "Select the territory you wish to Blockade:" << endl;
+                        for (int i = 0; i < territoriesToDefend->size(); i++)
                         {
-                            enemyPlayerList->push_back(pl->at(i));
-                        }       
-                    }                    
-                    cout << "Which player would you like to negotiate with?" << endl;
-                    for(int i=0; i<pl->size(); i++)
-                    {
-                        cout << i+1 << ". " << enemyPlayerList->at(i)->getName() << endl;
+                            cout << i + 1 << ". " << *territoriesToDefend->at(i) << endl;
+                        }
+                        cin >> territory;
+                        cin.clear();
+                        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        if (territory - 1 < territoriesToDefend->size()) {
+                            sourceTerritory = territoriesToDefend->at(territory - 1);
+                            // the play method adds the order to the player's orderlist
+                            dynamic_cast<BlockadeCard*>(card)->play(deckpointer, curplayer, sourceTerritory);
+                        }
+                        else cout << "invalid input\n";
                     }
-                    cin >> enemyPlayerIdx;
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');                    
+                    else if ((card->getName()) == "Bomb Card" && curplayer->toAttack(*m)->size() > 0) {
+                        territoriesToDefend = toDefend(m, curplayer);
+                        vector<Territory*>* allHostileTerritories = toAttack(m, curplayer);
 
-                    Player* enemyPlayer = enemyPlayerList->at(enemyPlayerIdx-1);
-                    
-                    dynamic_cast<DiplomacyCard*>(card)->play(deckpointer, curplayer, enemyPlayer);
-                }
-                break;
+                        cout << "Select the territory you wish to Bomb:" << endl;
+                        for (int i = 0; i < allHostileTerritories->size(); i++)
+                        {
+                            cout << i + 1 << ". " << *allHostileTerritories->at(i) << endl;
+                        }
+                        cin >> territory;
+                        cin.clear();
+                        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        destTerritory = allHostileTerritories->at(territory - 1);
+
+                        // the play method adds the order to the player's orderlist
+                        dynamic_cast<BombCard*>(card)->play(deckpointer, curplayer, destTerritory);
+                    }
+                    else if (card->getName() == "Reinforcement Card")
+                    {
+                        // the play method adds the order to the player's orderlist
+                        dynamic_cast<ReinforcementCard*>(card)->play(deckpointer, curplayer);
+                    }
+                    else if (card->getName() == "Airlift Card" && curplayer->gettoDefend(*m)->size() > 1)
+                    {
+                        territoriesToDefend = toDefend(m, curplayer);
+                        cout << "Select the territory you wish to Airlift FROM:" << endl;
+                        for (int i = 0; i < territoriesToDefend->size(); i++)
+                        {
+                            cout << i + 1 << ". " << *territoriesToDefend->at(i) << endl;
+                        }
+                        cin >> territory;
+                        cin.clear();
+                        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        if (territory - 1 < territoriesToDefend->size()) {
+                            sourceTerritory = territoriesToDefend->at(territory - 1);
+
+                            cout << "Select the territory you wish to Airlift TO:" << endl;
+                            cin >> territoryDest;
+                            cin.clear();
+                            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            destTerritory = territoriesToDefend->at(territoryDest - 1);
+
+                            //get number of units to attack with
+                            cout << "How many troops would you like to Airlift out? (" << sourceTerritory->getterritory_armycount() << " troop(s) available)" << endl;
+                            cin >> troopNum;
+                            cin.clear();
+                            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                            n = DBG_NEW int(troopNum);
+                            // the play method adds the order to the player's orderlist
+                            int i = curplayer->gettoDefend(*m)->size() - 1;
+                            if (i >= 1) dynamic_cast<AirliftCard*>(card)->play(deckpointer, curplayer, sourceTerritory, destTerritory, n);
+                        }
+                        else cout << "invalid input";
+                    }
+                    else if (card->getName() == "Diplomacy Card")
+                    {
+                        int enemyPlayerIdx;
+                        vector<Player*>* enemyPlayerList = DBG_NEW vector<Player*>();
+                        for (int i = 0; i < pl->size(); i++)
+                        {
+                            if (curplayer->getName().compare(pl->at(i)->getName()) != 0)
+                            {
+                                enemyPlayerList->push_back(pl->at(i));
+                            }
+                        }
+                        cout << "Which player would you like to negotiate with?" << endl;
+                        for (int i = 0; i < enemyPlayerList->size(); i++)
+                        {
+                            cout << i + 1 << ". " << enemyPlayerList->at(i)->getName() << endl;
+                        }
+                        cin >> enemyPlayerIdx;
+                        cin.clear();
+                        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        Player* enemyPlayer = enemyPlayerList->at(enemyPlayerIdx - 1);
+                        delete enemyPlayerList;
+                        dynamic_cast<DiplomacyCard*>(card)->play(deckpointer, curplayer, enemyPlayer);
+                    }
+                } cout << "Invalid choice\n";
+                    break;
             }
             case 0:
             {
@@ -393,17 +406,17 @@ void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* c
     if (curplayer->toDefend(*m)->size() > 1) {
         int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
         Territory* t = curplayer->toDefend(*m)->at(0);
-        curplayer->addOrder(new Deployorder(curplayer, reinforcementCounter, t));
+        curplayer->addOrder(DBG_NEW Deployorder(curplayer, reinforcementCounter, t));
         Territory* defend = toDefend(m, curplayer)->at(0);
         Territory* attack = toAttack(m, curplayer, defend)->at(0);
         for (int i = 1; i < curplayer->gettoDefend(*m)->size(); i++) {
             if (curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() > 1 && m->isAdjacent(defend, curplayer->gettoDefend(*m)->at(i))) {
-                int* attacknum2 = new int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1);
-                curplayer->addOrder(new Advanceorder(attacknum2, curplayer, defend, curplayer->gettoDefend(*m)->at(i), m));
+                int* attacknum2 = DBG_NEW int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1);
+                curplayer->addOrder(DBG_NEW Advanceorder(attacknum2, curplayer, defend, curplayer->gettoDefend(*m)->at(i), m));
             }
         }
-        int* attacknum = new int(*reinforcementCounter + t->getterritory_armycount() - 2);
-        curplayer->addOrder(new Advanceorder(attacknum, curplayer, attack, defend, m));
+        int* attacknum = DBG_NEW int(*reinforcementCounter + t->getterritory_armycount() - 2);
+        curplayer->addOrder(DBG_NEW Advanceorder(attacknum, curplayer, attack, defend, m));
     }
     vector<Card*> cards = curplayer->getHand()->getHandContainer();
     for (int i = 0; i < cards.size(); i++) {

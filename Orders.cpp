@@ -245,6 +245,7 @@
 	}
 	bool Bomborder::validate() {
 	    if (destinationterritory->getterritory_owner()->getName().compare(orderplayer->getName())==0)return false;
+		if (destinationterritory->getterritory_armycount() < 2)return false;
 		return true;
 	}
 	bool Bomborder::execute() {
