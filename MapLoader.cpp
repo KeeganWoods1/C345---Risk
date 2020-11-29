@@ -45,6 +45,26 @@ MapLoader::MapLoader(const MapLoader &anotherMap) {
     validMap= anotherMap.validMap;
     isLoaded= anotherMap.isLoaded;
 }
+//Destructor
+MapLoader::~MapLoader(){
+    delete map;
+    if (validMap != NULL)
+//        delete validMap;
+    map = nullptr;
+    validMap = nullptr;
+    for (int i = 0; i < continents.size(); i++) {
+        delete continents.at(i);
+    }
+    continents.clear();
+    for (int i = 0; i < countries.size(); i++) {
+        delete countries.at(i);
+    }
+    countries.clear();
+    for (int i = 0; i < borders.size(); i++) {
+        if (!borders.at(i)->empty())delete borders.at(i);
+    }
+    borders.clear();
+}
 
 //getters
 Map* MapLoader::getMap() {

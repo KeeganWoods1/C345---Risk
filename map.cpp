@@ -92,7 +92,7 @@ Continent::Continent(const Continent* c) {
     bonus = c->bonus;
     id = c->id;
     for (int i = 0; i < c->territoriesInContinent.size(); i++) {
-        this->territoriesInContinent.push_back(DBG_NEW Territory (c->territoriesInContinent[i]));
+        this->territoriesInContinent.push_back(c->territoriesInContinent[i]);
     }
 
 }
@@ -102,7 +102,7 @@ Continent::Continent(string n, int i, int b, vector<Territory*> terr) {
     id = i;
     bonus = b;
     for (int i=0; i<terr.size(); i++) {
-        territoriesInContinent.push_back(DBG_NEW Territory( terr[i]));
+        territoriesInContinent.push_back( terr[i]);
     }
 }
 
@@ -127,9 +127,8 @@ int Continent::getBonus() {
     return bonus;
 }
 bool Continent::ownedByOnePlayer(Player* aPlayer, Map  *m){
-   vector<Territory*>* maps =  aPlayer->gettoDefend(*m);
-    for (int i=0; i<maps->size(); i++){
-        if (maps->at(i)->getterritory_owner()->getName().compare(aPlayer->getName()) != 0)
+    for (int i=0; i<territoriesInContinent.size(); i++){
+        if (territoriesInContinent.at(i)->getterritory_owner()->getName().compare(aPlayer->getName()) != 0)
         {
             return false;
         }
@@ -148,9 +147,6 @@ ostream& operator << (ostream& out, const Continent& c) {
 }
 
 Continent::~Continent() {
-    for (int i = 0; i < territoriesInContinent.size(); i++) {
-        delete territoriesInContinent[i];
-    }
 }
 
 //Class Map

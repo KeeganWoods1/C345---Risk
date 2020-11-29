@@ -17,23 +17,23 @@ Persia=8
 
 
 [Territories]
-Saudi Arabia,77,295,Arabian Peninsula,Yemen,Omen,United Arab Emigrants,Qatar,Buhrain,Kuwait,Iraq,Jordan
-Kuwait,105,251,Arabian Peninsula,Saudi Arabia,Iraq,Iran
+Saudi Arabia,77,295,Arabian Peninsula,
+Kuwait,105,251,Arabian Peninsula,
 Buhrain,120,277,Arabian Peninsula,Saudi Arabia,Qatar
 Qatar,119,301,Arabian Peninsula,Buhrain,Saudi Arabia,United Arab Emigrants
-United Arab Emigrants,146,311,Arabian Peninsula,Qatar,Saudi Arabia,Omen
-Omen,157,343,Arabian Peninsula,United Arab Emigrants,Saudi Arabia,Yemen
-Yemen,89,361,Arabian Peninsula,Saudi Arabia,Omen
+United Arab Emigrants,146,311,
+Omen,157,343,Arabian Peninsula,
+Yemen,89,361,Arabian Peninsula,
 
-Turkey,60,155,Asia Minor,Cyprus,Syria,Iraq,Iran,Armenia,Georgia
-Cyprus,27,191,Asia Minor,Turkey,Syria,Israel,Lebanon
-Syria,71,197,Asia Minor,Turkey,Iraq,Jordan,Israel,Lebanon,Cyprus
+Turkey,60,155,Asia Minor,
+Cyprus,27,191,Asia Minor,
+Syria,71,197,Asia Minor,
 Iraq,93,223,Asia Minor,Iran,Kuwait,Saudi Arabia,Jordan,Syria,Turkey
-Jordan,48,225,Asia Minor,Israel,Syria,Iraq,Saudi Arabia
+Jordan,48,225,Asia Minor,
 Lebanon,42,200,Asia Minor,Cyprus,Syria,Israel
-Israel,33,219,Asia Minor,Cyprus,Lebanon,Jordan,Syria
+Israel,33,219,Asia Minor,
 
-Russia,363,81,North Asia,Japan,North Korea,China,Mongolia,Kazakhstan,Georgia,Azerbaijan
+Russia,363,81,North Asia,
 Japan,678,141,North Asia,Russia,North Korea,South Korea
 North Korea,593,152,North Asia,China,Russia,Japan,South Korea
 South Korea,618,181,North Asia,North Korea,Japan

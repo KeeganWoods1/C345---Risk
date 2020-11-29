@@ -209,46 +209,6 @@ void Player::updatetoDefend(Map &m){
 vector<Territory*>* Player::toDefend(Map &m)
 {
     return playerstrategy->toDefend(&m, this);
-    /*
-    updatetoDefend(m);
-    vector<Territory *> *terr2 = DBG_NEW vector<Territory *>;
-    for (int j =0; j<territoriesToDefend->size(); j++) {
-        Territory t = territoriesToDefend->at(j);
-        vector<Territory *> *terr = surroundingterritories(m, t);
-        for (int i = 0; i < terr->size(); i++) {
-            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0) {
-                terr2->push_back(territoriesToDefend->at(j));
-                break;
-            }
-        }
-        terr->clear();
-        delete terr;
-    }
-    vector<Territory *>* terr = DBG_NEW vector<Territory*>();
-    int initialsize = terr2->size();
-    for (int k = 0; k<initialsize; k++) {
-        int min = 100000;
-        int index = -1;
-        for (int i = 0; i < terr2->size(); i++) {
-            if (terr2->at(i)->getterritory_armycount() < min) {
-                min = terr2->at(i)->getterritory_armycount();
-                index = i;
-            }
-        }
-        terr->push_back(terr2->at(index));
-        terr2->erase(terr2->cbegin() + index);
-
-    }
-    terr2->clear();
-    delete terr2;
-    surroundingterr->clear();
-    for (int i = 0; i < terr->size(); i++) {
-        surroundingterr->push_back(terr->at(i));
-    }
-    terr->clear();
-    delete terr;
-    return  surroundingterr;
-    */
 }
 
 // definition of method toAttack
@@ -256,87 +216,9 @@ vector<Territory*>* Player::toDefend(Map &m)
 vector<Territory*>* Player::toAttack(Map &m,Territory &t)
 {
     return playerstrategy->toAttack(&m, this, &t);
-    /*
-    updatetoDefend(m);
-    territoriesToAttack->clear();
-    vector<Territory*>* terr = surroundingterritories(m,t);
-    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
-    for (int i=0; i <terr->size(); i++){
-        if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName())!=0)terr2->push_back(terr->at(i));
-    }
-    terr->clear();
-    delete terr;
-    terr = DBG_NEW vector<Territory*>();
-    int initialsize = terr2->size();
-    for (int k = 0; k<initialsize; k++) {
-        int min = 100000;
-        int index = -1;
-        for (int i = 0; i < terr2->size(); i++) {
-            if (terr2->at(i)->getterritory_armycount() < min) {
-                min = terr2->at(i)->getterritory_armycount();
-                index = i;
-            }
-        }
-        if (index == -1)cout<<"error here";
-        terr->push_back(terr2->at(index));
-        terr2->erase(terr2->cbegin() + index);
-
-    }
-    terr2->clear();
-    delete terr2;
-    for (int i = 0; i < terr->size(); i++) {
-        territoriesToAttack->push_back(terr->at(i));
-    }
-    terr->clear();
-    delete terr;
-    return  territoriesToAttack;
-    */
 }
 vector<Territory*>* Player::toAttack(Map &m){
     return playerstrategy->toAttack(&m, this);
-    /*
-    updatetoDefend(m);
-    territoriesToAttack->clear();
-    vector<Territory*>* result = DBG_NEW vector<Territory*>();
-    for (int i=0; i<territoriesToDefend->size(); i++) {
-        vector<Territory *> *terr = surroundingterritories(m, *territoriesToDefend->at(i));
-        for (int j = 0; j < terr->size(); j++) {
-            if (terr->at(j)->getterritory_owner()->getName().compare(territoriesToDefend->at(i)->getterritory_owner()->getName()) != 0) {
-                bool exists = false;
-                for (int k = 0; k < result->size(); k++) {
-                    if (terr->at(j)->getterritory_name().compare(result->at(k)->getterritory_name()) == 0)exists = true;
-                }
-                if (!exists) {
-                    result->push_back(terr->at(j));
-                    break;
-                }
-            }
-        }
-        terr->clear();
-        delete terr;
-    }
-    for (int k = 0; k<result->size(); k++) {
-        int max = -1;
-        int index = -1;
-        int i = k;
-        for ( ;i < result->size(); i++) {
-            if (result->at(i)->getterritory_armycount() > max) {
-                max = result->at(i)->getterritory_armycount();
-                index = i;
-            }
-        }
-        if (index!= k){
-            iter_swap(result->begin()+index,result->begin()+k);
-        }
-    }
-    for (int i = 0; i < result->size(); i++) {
-        territoriesToAttack->push_back(result->at(i));
-    }
-    result->clear();
-    delete result;
-    return territoriesToAttack;
-    */
-
 }
 
 // definition of issueOrder which creates a specific Order
@@ -377,6 +259,24 @@ vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
     }
     return terr;
 }
+vector<Territory*>* Player::friendlyAdjacentTerritories(Map &m,Territory &t)
+{
+    vector<Territory*>* surroundingTerr = surroundingterritories(m, t);
+    vector<Territory*>* friendlyAdjacentTerr = new vector<Territory*>();
+
+    if(surroundingTerr != NULL)
+    {
+        for(Territory* t: *surroundingTerr)
+        {
+            if(this->getName().compare(t->getterritory_owner()->getName()) == 0)
+            {
+                friendlyAdjacentTerr->push_back(t);
+            }
+        }
+    }
+    return friendlyAdjacentTerr;
+}
+
 vector<Order*>* Player::getOrderList(){
    return(playerOlist->retirevelist());
 }
