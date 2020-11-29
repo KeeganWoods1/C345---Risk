@@ -377,6 +377,24 @@ vector<Territory*>* Player::surroundingterritories(Map& m, Territory &l) {
     }
     return terr;
 }
+vector<Territory*>* Player::friendlyAdjacentTerritories(Map &m,Territory &t)
+{
+    vector<Territory*>* surroundingTerr = surroundingterritories(m, t);
+    vector<Territory*>* friendlyAdjacentTerr = new vector<Territory*>();
+
+    if(surroundingTerr != NULL)
+    {
+        for(Territory* t: *surroundingTerr)
+        {
+            if(this->getName().compare(t->getterritory_owner()->getName()) == 0)
+            {
+                friendlyAdjacentTerr->push_back(t);
+            }
+        }
+    }
+    return friendlyAdjacentTerr;
+}
+
 vector<Order*>* Player::getOrderList(){
    return(playerOlist->retirevelist());
 }
