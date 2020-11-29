@@ -424,7 +424,8 @@ void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* c
         if (card->getName() == "Blockade Card" && curplayer->gettoDefend(*m)->size() > 0)
         {
             // the play method adds the order to the player's orderlist
-            dynamic_cast<BlockadeCard*>(card)->play(deckpointer, curplayer, curplayer->toDefend(*m)->at(0));
+             int end = curplayer->toDefend(*m)->size() - 1;
+            dynamic_cast<BlockadeCard*>(card)->play(deckpointer, curplayer, curplayer->toDefend(*m)->at(end));
         }
         else if ((card->getName()) == "Bomb Card" && curplayer->toAttack(*m)->size() > 0) {
             Territory* attack = curplayer->toAttack(*m)->at(0);
