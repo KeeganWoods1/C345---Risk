@@ -387,44 +387,8 @@ vector<Territory*>* HumanPlayerStrategy::toAttack(Map* m, Player* p, Territory* 
 vector<Territory*>* HumanPlayerStrategy::toDefend(Map* m, Player* p) 
 {
     vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
-    vector<Territory*>* terr2 = DBG_NEW vector<Territory*>;
-    for (int j = 0; j < territoriesToDefend->size(); j++) {
-        Territory t = territoriesToDefend->at(j);
-        vector<Territory*>* terr = p->surroundingterritories(*m, t);
-        for (int i = 0; i < terr->size(); i++) {
-            if (terr->at(i)->getterritory_owner()->getName().compare(t.getterritory_owner()->getName()) != 0) {
-                terr2->push_back(territoriesToDefend->at(j));
-                break;
-            }
-        }
-        terr->clear();
-        delete terr;
-    }
-    vector<Territory*>* terr = DBG_NEW vector<Territory*>();
-    int initialsize = terr2->size();
-    for (int k = 0; k < initialsize; k++) {
-        int max = -100000;
-        int index = -1;
-        for (int i = 0; i < terr2->size(); i++) {
-            if (terr2->at(i)->getterritory_armycount() > max) {
-                max = terr2->at(i)->getterritory_armycount();
-                index = i;
-            }
-        }
-        terr->push_back(terr2->at(index));
-        terr2->erase(terr2->cbegin() + index);
 
-    }
-    terr2->clear();
-    delete terr2;
-    vector<Territory*>* surroundingterr = p->getSurroundingterr();
-    surroundingterr->clear();
-    for (int i = 0; i < terr->size(); i++) {
-        surroundingterr->push_back(terr->at(i));
-    }
-    terr->clear();
-    delete terr;
-    return  surroundingterr;
+    return  territoriesToDefend;
 }
 void AggressivePlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
     if (curplayer->toDefend(*m)->size() > 1) {
