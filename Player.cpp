@@ -311,4 +311,7 @@ vector<Territory*>* Player::getterritoriesToAttack() {
 vector<Territory*>* Player::getSurroundingterr() {
     return surroundingterr;
 }
+PlayerStrategy* Player::getstartegy() {
+    return playerstrategy;
+}
 

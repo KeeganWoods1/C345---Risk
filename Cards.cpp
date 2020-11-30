@@ -125,6 +125,13 @@ void BombCard::play(Deck* deck, Player* player, Territory* territory)
     deck->setDeck(deckContainer);
 }
 
+void BombCard::deletecard(Deck* deck, Hand* hand, Player* player) {
+    vector<Card*> deckContainer = deck->getDeck();
+    //place card back in deck
+    deckContainer.push_back(find(player->getHand(), "Bomb Card"));
+    deck->setDeck(deckContainer);
+}
+
 //copy constructor
 BombCard::BombCard(const BombCard& c) : bombOrderPtr(c.bombOrderPtr) 
 {
@@ -170,6 +177,13 @@ void ReinforcementCard::play(Deck* deck, Player* player)
     player->addOrder(DBG_NEW Reinforcementorder(player));
 
     //remove card from the hand
+    //place card back in deck
+    deckContainer.push_back(find(player->getHand(), "Reinforcement Card"));
+    deck->setDeck(deckContainer);
+}
+
+void ReinforcementCard::deletecard(Deck* deck, Hand* hand, Player* player) {
+    vector<Card*> deckContainer = deck->getDeck();
     //place card back in deck
     deckContainer.push_back(find(player->getHand(), "Reinforcement Card"));
     deck->setDeck(deckContainer);
@@ -225,6 +239,14 @@ void BlockadeCard::play(Deck* deck, Player* player, Territory* territory)
     deck->setDeck(deckContainer);
 }
 
+void BlockadeCard::deletecard(Deck* deck, Hand* hand, Player* player) {
+
+    vector<Card*> deckContainer = deck->getDeck();
+    //place card back in deck
+    deckContainer.push_back(find(player->getHand(), "Blockade Card"));
+    deck->setDeck(deckContainer);
+}
+
 //copy ocnstructor
 BlockadeCard::BlockadeCard(const BlockadeCard& c) : blockadeOrderPtr(c.blockadeOrderPtr) 
 {
@@ -275,6 +297,14 @@ void AirliftCard::play( Deck* deck, Player* player, Territory* territorySource, 
     deck->setDeck(deckContainer);
 }
 
+void AirliftCard::deletecard(Deck* deck, Hand* hand, Player* player) {
+    vector<Card*> deckContainer = deck->getDeck();
+    //place card back in deck
+    deckContainer.push_back(find(player->getHand(), "Airlift Card"));
+    deck->setDeck(deckContainer);
+
+}
+
 //copy ocnstructor
 AirliftCard::AirliftCard(const AirliftCard& c) : airliftOrderPtr(c.airliftOrderPtr) 
 {
@@ -323,6 +353,14 @@ void DiplomacyCard::play(Deck* deck, Player* player, Player* targetPlayer)
     //place card back in deck
     deckContainer.push_back(find(player->getHand(), "Diplomacy Card"));
     deck->setDeck(deckContainer);
+}
+
+void DiplomacyCard::deletecard(Deck* deck, Hand* hand, Player* player) {
+    vector<Card*> deckContainer = deck->getDeck();
+    //place card back in deck
+    deckContainer.push_back(find(player->getHand(), "Diplomacy Card"));
+    deck->setDeck(deckContainer);
+
 }
 
 //copy ocnstructor

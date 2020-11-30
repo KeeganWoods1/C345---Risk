@@ -544,8 +544,8 @@ void WarzoneGame::mainGameLoop()
                 gameDeckPtr->draw(player->getHand());
                 //Player draws a card only if they conquered a territory in the previous turn
                 if (player->getName().compare("Neutral") != 0 && player->getcaptureTerritory()) {
-                    gameDeckPtr->draw(player->getHand());
-                    player->setcaptureTerritory(false);
+                     gameDeckPtr->draw(player->getHand());
+                     player->setcaptureTerritory(false);
                 }
                 reinforcementPhase(player, player->getNumTerrOwned());
                 player->clear();

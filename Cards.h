@@ -25,6 +25,7 @@ public:
     Card(string name);
     virtual ~Card();
     virtual void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    virtual void deletecard(Deck* deck, Hand* hand, Player* player) {};
     string getName();
     Card* find(Hand* hand, string cardName);
     //copy ocnstructor
@@ -43,6 +44,7 @@ public:
     BombCard(string name);
     ~BombCard();
     void play(Deck* deck, Player* player, Territory* territory);
+    void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	BombCard(const BombCard& c);
 	//assignment operator
@@ -57,6 +59,7 @@ public:
     ReinforcementCard(string name);
     ~ReinforcementCard();
     void play(Deck* deck, Player* player);
+    void deletecard(Deck* deck, Hand* hand,Player* player);
     //copy ocnstructor
 	ReinforcementCard(const ReinforcementCard& c);
 	//assignment operator
@@ -71,6 +74,7 @@ public:
     BlockadeCard(string name);
     ~BlockadeCard();
     void play(Deck* deck, Player* player, Territory* territory);
+    void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	BlockadeCard(const BlockadeCard& c);
 	//assignment operator
@@ -85,6 +89,7 @@ public:
     AirliftCard(string name);
     ~AirliftCard();
     void play( Deck* deck, Player* player, Territory* territorySource, Territory* territoryDestination, int* i);
+    void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	AirliftCard(const AirliftCard& c);
 	//assignment operator
@@ -99,6 +104,7 @@ public:
     DiplomacyCard(string name);
     ~DiplomacyCard();
     void play(Deck* deck, Player* player, Player* targetPlayer);
+    void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	DiplomacyCard(const DiplomacyCard& c);
 	//assignment operator

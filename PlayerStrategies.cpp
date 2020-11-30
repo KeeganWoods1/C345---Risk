@@ -601,12 +601,41 @@ void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* c
         // advance order which advances armies on players weakest countries and
         // never advances to enemy territories
         curplayer->addOrder(new Advanceorder(armynum, curplayer, destinationterr, sourceterr, m));
+    }
+    else if (curplayer->toDefend(*m)->size() > 2) {
+        int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
+        Territory* t = curplayer->toDefend(*m)->at(0);
+        // deploy order which deploys to weakest territories
+        curplayer->addOrder(new Deployorder(curplayer, reinforcementCounter, t));
+        Territory* sourceterr = toDefend(m, curplayer)->at(2);
+        Territory* destinationterr = toDefend(m, curplayer)->at(0);
 
-        // deleting and emptying cards in benevolent players hand
-        // since this player cannot issue orders related to cards    
-        curplayer->clearhand();
+        for (int i = 1; i < curplayer->gettoDefend(*m)->size(); i++) {
+            if (curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() > 1 && m->isAdjacent(sourceterr, curplayer->gettoDefend(*m)->at(i))) {
+                int* armynum2 = new int(curplayer->gettoDefend(*m)->at(i)->getterritory_armycount() - 1);
+                curplayer->addOrder(new Advanceorder(armynum2, curplayer, sourceterr, curplayer->gettoDefend(*m)->at(i), m));
+            }
+        }
+        int* armynum = new int(*reinforcementCounter + t->getterritory_armycount() - 2);
+        // advance order which advances armies on players weakest countries and
+        // never advances to enemy territories
+        curplayer->addOrder(new Advanceorder(armynum, curplayer, destinationterr, sourceterr, m));
+
         cout << "";
     }
+    else {
+        int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
+        Territory* t = curplayer->toDefend(*m)->at(0);
+        // deploy order which deploys to weakest territories
+        curplayer->addOrder(new Deployorder(curplayer, reinforcementCounter, t));
+    }
+    // deleting and emptying cards in benevolent players hand
+    // since this player cannot issue orders related to cards 
+    for (int i = 0; i < curplayer->getHand()->getHandContainer().size(); i++) {
+        curplayer->getHand()->getHandContainer().at(i)->deletecard(deckpointer, curplayer->getHand(), curplayer);
+    }
+    curplayer->clearhand();
+    cout << "";
 }
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy() {}
@@ -744,6 +773,13 @@ vector<Territory*>* BenevolentPlayerStrategy::toDefend(Map* m, Player* p) {
     return  surroundingterr;
 }
 void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
+    // deleting and emptying cards in benevolent players hand
+    // since this player cannot issue orders related to cards 
+    for (int i = 0; i < curplayer->getHand()->getHandContainer().size(); i++) {
+        curplayer->getHand()->getHandContainer().at(i)->deletecard(deckpointer, curplayer->getHand(), curplayer);
+    }
+    curplayer->clearhand();
+    cout << "";
 }
 
 NeutralPlayerStrategy::NeutralPlayerStrategy(){}

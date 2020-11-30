@@ -46,7 +46,8 @@ public:
     // default constructor
     Player();
     void clear();
-
+    //gettermethod
+    PlayerStrategy* getstartegy();
     // parametrized constructor
     Player(string, PlayerStrategy*);
 
