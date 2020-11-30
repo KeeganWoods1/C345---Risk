@@ -85,6 +85,8 @@ public:
     // get hand owned by player
     Hand* getHand();
 
+    //clear method
+    void clearhand();
     // get player's orderlist
     Orderlist* getPlayerlist();
 

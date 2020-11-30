@@ -46,7 +46,7 @@ void demoPart1_2()
 }
 
 int main() {
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     // demoPart1();
     demoPart1_2();
 

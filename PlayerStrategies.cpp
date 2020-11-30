@@ -582,7 +582,6 @@ vector<Territory*>* AggressivePlayerStrategy::toDefend(Map* m, Player* p) {
     delete terr;
     return  surroundingterr;
 }
-
 void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
     if (curplayer->toDefend(*m)->size() > 1) {
         int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
@@ -604,13 +603,9 @@ void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* c
         curplayer->addOrder(new Advanceorder(armynum, curplayer, destinationterr, sourceterr, m));
 
         // deleting and emptying cards in benevolent players hand
-        // since this player cannot issue orders related to cards
-        vector<Card*> cards = curplayer->getHand()->getHandContainer();
-        for(int i = 0; i < cards.size(); i ++){
-            delete cards.at(i);
-            cards.at(i) = NULL;
-        }
-        cards.clear();
+        // since this player cannot issue orders related to cards    
+        curplayer->clearhand();
+        cout << "";
     }
 }
 
@@ -628,7 +623,6 @@ ostream& operator << (ostream& out,  BenevolentPlayerStrategy& h)
 	out << "this is a Benevolent player strategy";
 	return out;
 }
-
 vector<Territory*>* BenevolentPlayerStrategy::toAttack(Map* m, Player* p, Territory* t) {
     vector<Territory*>* territoriesToDefend = p->gettoDefend(*m);
     vector<Territory*>* territoriesToAttack = p->getterritoriesToAttack();
@@ -749,7 +743,6 @@ vector<Territory*>* BenevolentPlayerStrategy::toDefend(Map* m, Player* p) {
     delete terr;
     return  surroundingterr;
 }
-
 void NeutralPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
 }
 

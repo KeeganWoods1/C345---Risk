@@ -105,6 +105,7 @@ public:
     ConquestFileReaderAdapter(ConquestFileReader* conquest_map_reader);
     //overriding the load map method from MapLoader class
     void loadMap(string);
+    ~ConquestFileReaderAdapter();
 
 private:
     ConquestFileReader* conquest_map;

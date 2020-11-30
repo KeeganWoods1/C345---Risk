@@ -129,7 +129,12 @@ int Player::getCurrentReinforcements()
 void Player::setCurrentReinforcements(int i){
     reinforcementPool = i;
 }
+//clars the players hand
+void Player::clearhand() {
+    delete playerHand;
+    playerHand = new Hand();
 
+}
 //stream insertion operator overload for printing a vector list of territory references
 string Player::toString(vector<Territory*>* t)
 {

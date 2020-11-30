@@ -183,9 +183,6 @@ void MapLoader::loadMap(std::string map_name) {
     }
     else
         cout << "Map file was loaded successfully, however, it's an invalid map" << endl;
-
-    //to avoid memory leak
-    delete str;
     //closes the stream
     map_stream.close();
 }//end of loadMap()
@@ -227,7 +224,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
             }
         }
         //creating territory and add to territories list
-        Player* neutralPlayer = DBG_NEW Player("Neutral", new NeutralPlayerStrategy());
+        Player* neutralPlayer = DBG_NEW Player("Neutral", DBG_NEW NeutralPlayerStrategy());
         Territory* territory = DBG_NEW Territory(continentID, name, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
@@ -275,12 +272,8 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     //create map object
     validMap = DBG_NEW Map(countries.size(), territoriesListPtr, continentsListPtr);
     //deleting territoriesListPtr and continentsListPtr to avoid memory leak
-    for (auto Terr : *territoriesListPtr){
-        delete Terr;
-    }
-    for (auto Cont : *continentsListPtr){
-        delete Cont;
-    }
+    delete territoriesListPtr;
+    delete continentsListPtr;
 
     vector<int> brdrsList;
     string nextBorder;
@@ -366,6 +359,7 @@ ConquestFileReader::ConquestFileReader(string conquest_map_Name) {
         isLoaded = false;
         cout << "Unable to open the map file!\n" << endl;
     }
+    delete conquest_map;
 }
 
 //Copy constructor
@@ -501,7 +495,6 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
         }
         rest = DBG_NEW string(word);
         borders.push_back(rest);
-
         //getting the id of the continent this Territory is in
         for(int i=0; i <continents.size(); i++){
             string temp = "";
@@ -521,7 +514,7 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
             }
         }
         //creating territory and add to territories list
-        Player* neutralPlayer = DBG_NEW Player("Neutral", new NeutralPlayerStrategy());
+        Player* neutralPlayer = DBG_NEW Player("Neutral", DBG_NEW NeutralPlayerStrategy());
         Territory* territory = DBG_NEW Territory(continentID, territoryName, neutralPlayer, 1);
         territoriesListPtr->push_back(territory);
     }
@@ -613,7 +606,10 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
     else {
         std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
     }
-
+    for (int i = 0; i < borders.size(); i++) {
+        delete borders.at(i);
+    }
+    borders.clear();
     return validConquestMap;
 }//end of CreateMap()
 
@@ -638,9 +634,9 @@ void ConquestFileReader::printContinents(vector<Continent*>* aVector){
 
 //Destructor
 ConquestFileReader::~ConquestFileReader(){
-    delete conquest_map;
+    //delete conquest_map;
     if (validConquestMap != NULL)
-        delete validConquestMap;
+       // delete validConquestMap;
     conquest_map = nullptr;
     validConquestMap = nullptr;
     for (int i = 0; i < continents.size(); i++) {
@@ -652,7 +648,7 @@ ConquestFileReader::~ConquestFileReader(){
     }
     countries.clear();
     for (int i = 0; i < borders.size(); i++) {
-        if (!borders.at(i)->empty())delete borders.at(i);
+      delete borders.at(i);
     }
     borders.clear();
 
@@ -661,6 +657,9 @@ ConquestFileReader::~ConquestFileReader(){
 //constructor
 ConquestFileReaderAdapter::ConquestFileReaderAdapter(ConquestFileReader* conquest_map_reader){
     this->conquest_map = conquest_map_reader;
+}
+ConquestFileReaderAdapter::~ConquestFileReaderAdapter() {
+    delete conquest_map;
 }
 
 void ConquestFileReaderAdapter::loadMap(std::string map_name) {
