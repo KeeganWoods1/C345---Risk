@@ -555,7 +555,7 @@ void WarzoneGame::mainGameLoop()
             executeOrdersPhase();
         }
         counter++;
-        if (counter > 3) break;
+        if (counter > 70) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner

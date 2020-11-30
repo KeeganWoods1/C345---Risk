@@ -583,7 +583,7 @@ vector<Territory*>* AggressivePlayerStrategy::toDefend(Map* m, Player* p) {
     return  surroundingterr;
 }
 void BenevolentPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curplayer, Deck* deckpointer) {
-    if (curplayer->toDefend(*m)->size() > 1) {
+    if (curplayer->toDefend(*m)->size() > 3) {
         int* reinforcementCounter = DBG_NEW int(curplayer->getCurrentReinforcements());
         Territory* t = curplayer->toDefend(*m)->at(0);
         // deploy order which deploys to weakest territories
