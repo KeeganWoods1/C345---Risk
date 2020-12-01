@@ -30,10 +30,6 @@ MapLoader::MapLoader(string mapName) {
         //closes the stream
         map_stream.close();
     }
-    //if map file was not opened successfully
-    else{
-        cout << "Unable to open the map file!\n" << endl;
-    }
 }
 //Copy constructor
 MapLoader::MapLoader(const MapLoader &anotherMap) {
@@ -351,10 +347,6 @@ ConquestFileReader::ConquestFileReader(string conquest_map_Name) {
         std::cout << "Map file was opened successfully\n" << std::endl;
         //closes the stream
         conquest_map_stream.close();
-    }
-    //if map file was not opened successfully
-    else{
-        cout << "Unable to open the map file!\n" << endl;
     }
     delete conquest_map;
 }

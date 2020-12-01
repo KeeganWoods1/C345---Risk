@@ -39,36 +39,26 @@ MapDirectoryInit::MapDirectoryInit()
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        cout << "Is this\n1. A Warzone Map File\n2. A Conquest Map File" << endl;
-        cin >> fileType;
-        cout << "" << endl;
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        if(fileType == 1)
+        //use user input as parameter to MapLoader() constructor
+        mapLoader = DBG_NEW MapLoader(selectedMapName);
+        //If it is a Warzone file
+        if(mapLoader->getStatus())
         {
-            //use user input as parameter to MapLoader() constructor
-            mapLoader = DBG_NEW MapLoader(selectedMapName);
-            if(mapLoader->getStatus())
+            if(mapLoader->getMap() != NULL)
             {
-                if(mapLoader->getMap() != NULL)
-                {
-                    gameMapPtr = mapLoader->getMap();
-                    delete mapLoader;
-                    break; 
-                }
-            }
-            else
-            {
+                gameMapPtr = mapLoader->getMap();
                 delete mapLoader;
-                exit(0);
-            }  
+                break; 
+            }
         }
-        if(fileType == 2)
+        else if(mapLoader->getMap() == NULL)
         {
+            //Try the input with Conquest adapter
+            delete mapLoader;
             conMapLoader =  DBG_NEW ConquestFileReader(selectedMapName);
             ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conMapLoader);
             conquestFileReaderAdapter->loadMap(selectedMapName);
+            //if it is a Conquest map file
             if (conMapLoader->getStatus())
             {
                 if(conMapLoader->getMap() != NULL)
@@ -77,18 +67,14 @@ MapDirectoryInit::MapDirectoryInit()
                     delete conquestFileReaderAdapter;
                     break;
                 }
-
             }
             else
             {
                 delete conquestFileReaderAdapter;
-                exit(0);
+                //exit(0);
             }
-        }
-        else
-        {
-            cout << "Invalid input" << endl;
-        }
+            //exit(0);
+        }  
     }    
 }
 
@@ -469,40 +455,22 @@ void WarzoneGame::reinforcementPhase(Player *player, int numTerrOwned)
     }
     //Place the reinforcements in the players' pools.
     player->addReinforcements(reinforcement);
-    //denstration of part 3
-    cout << "----------------------------------------------" << endl;
-    cout << "Demonstrating REINFORCEMENTS PHASE for " << *player << endl;
-    cout << "player owns " << player->getNumTerrOwned() << " territories." << endl;
-    cout << "Player receives " << continentBonus << " continent bonus troops" << endl;
-    cout << "Added " << reinforcement << " troops to reinforcement pool" << endl;
-    cout << "----------------------------------------------" << endl;    
-    
     //notify subscribers of change of phase to display the troops that were added on turn start.
-    
     Notify();
 }
 
 void WarzoneGame::issueOrdersPhase(Player* player)
 {
     setCurrentPhase(1);
-    cout << "----------------------------------------------" << endl;
-    cout << "Demonstrating ISSUE ORDERS PHASE for " << *player << endl;
-    player->issueOrder(gameMapPtr, playerListPtr,gameDeckPtr);
-    cout << "\nOrders Issued: " << endl;
-    cout << *player->getPlayerlist() << endl;
-    cout << "----------------------------------------------" << endl;
+    player->issueOrder(gameMapPtr, playerListPtr, gameDeckPtr);
 
-    Notify();
-    
+    Notify();  
 }
 
 void WarzoneGame::executeOrdersPhase()
 {
     setCurrentPhase(2);
     setExecutionQueue();
-
-    cout << "----------------------------------------------" << endl;
-    cout << "Demonstrating EXECUTE ORDERS PHASE\n" << endl;
 
     for(Order* order : executionQueue)
     {
@@ -521,7 +489,6 @@ void WarzoneGame::executeOrdersPhase()
             order->execute();
         }
     }
-    cout << "----------------------------------------------" << endl;
 
     Notify();    
     for (int i = 0; i < executionQueue.size(); i++) {
@@ -554,8 +521,6 @@ void WarzoneGame::mainGameLoop()
             for (Player* player : *playerListPtr)
             {
                 setCurrentPlayer(player);
-                //Draw a card regardless of previous turn (for demonstration only)
-                gameDeckPtr->draw(player->getHand());
                 //Player draws a card only if they conquered a territory in the previous turn
                 if (player->getName().compare("Neutral") != 0 && player->getcaptureTerritory()) {
                      gameDeckPtr->draw(player->getHand());
@@ -569,7 +534,7 @@ void WarzoneGame::mainGameLoop()
             executeOrdersPhase();
         }
         counter++;
-        if (counter > 70) break;
+        if (counter > 300) break;
         //End the game for domonstrative purposes
     }
     //Only one player remains in the playerList, declare a winner
