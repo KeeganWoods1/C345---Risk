@@ -34,7 +34,7 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
     //Make Switch Case Menu for each order
     int choice;
     bool isDone = false;
-
+    int reinforcements = curplayer->getCurrentReinforcements();
     while(!isDone)
     {
         vector<Territory*>* territoriesToDefend;
@@ -69,14 +69,14 @@ void HumanPlayerStrategy::issueorder(Map* m, vector<Player*>* pl, Player* curpla
                 if (territory <= territoriesToDefend->size()) {
                     sourceTerritory = territoriesToDefend->at(territory - 1);
 
-                    cout << "Select number of troops to deploy (" << curplayer->getCurrentReinforcements() << " troops left in pool)" << endl;
+                    cout << "Select number of troops to deploy (" << reinforcements << " troops left in pool)" << endl;
                     cin >> troopNum;
                     cin.clear();
                     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
                     n = DBG_NEW int(troopNum);
-
+                    reinforcements = reinforcements - *n;
                     curplayer->addOrder(DBG_NEW Deployorder(curplayer, n, sourceTerritory));
+
                 }
                 else cout << "invlid input\n";
                 break;
