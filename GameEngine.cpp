@@ -50,6 +50,7 @@ MapDirectoryInit::MapDirectoryInit()
                 delete mapLoader;
                 break; 
             }
+            delete mapLoader;
         }
         else if(mapLoader->getMap() == NULL)
         {

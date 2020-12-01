@@ -384,6 +384,7 @@ void ConquestFileReader::loadMap(std::string conquest_map_name) {
     if (!conquest_map_stream.is_open()) {
         cout << "this is an invalid map (or isnt a map)\n";
         isLoaded = false;
+        return;
     }
     string line;
     string* str = NULL;
