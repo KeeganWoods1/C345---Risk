@@ -381,7 +381,10 @@ ConquestFileReader& ConquestFileReader::operator=(const ConquestFileReader& aCon
 void ConquestFileReader::loadMap(std::string conquest_map_name) {
     fstream conquest_map_stream;
     conquest_map_stream.open("MapFiles/ConquestMaps/"+conquest_map_name, std::fstream::in | std::fstream::out);
-
+    if (!conquest_map_stream.is_open()) {
+        cout << "this is an invalid map (or isnt a map)\n";
+        isLoaded = false;
+    }
     string line;
     string* str = NULL;
     int counter;

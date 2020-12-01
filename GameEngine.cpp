@@ -50,7 +50,6 @@ MapDirectoryInit::MapDirectoryInit()
                 delete mapLoader;
                 break; 
             }
-            delete mapLoader;
         }
         else if(mapLoader->getMap() == NULL)
         {
@@ -58,10 +57,10 @@ MapDirectoryInit::MapDirectoryInit()
             delete mapLoader;
             conMapLoader =  DBG_NEW ConquestFileReader(selectedMapName);
             ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conMapLoader);
+            conquestFileReaderAdapter->loadMap(selectedMapName);
             //if it is a Conquest map file
             if (conMapLoader->getStatus())
             {
-                conquestFileReaderAdapter->loadMap(selectedMapName);
                 if(conMapLoader->getMap() != NULL)
                 {
                     gameMapPtr = conMapLoader->getMap();
