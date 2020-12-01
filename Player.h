@@ -29,7 +29,7 @@ private:
     bool* capturedTerritory;
     //the paleyrs stragety
     PlayerStrategy* playerstrategy;
-
+    // a vector of strings that hold the names of players negotiated with
     vector<string*>* negotiatedFriends;
     // player owns a collection of territories
     vector<Territory*>* territoriesToDefend;
@@ -104,12 +104,10 @@ public:
     vector<Territory*>* toAttack(Map &m);
     //returns all enemy territories
     vector<Territory*>* allnonFriendlies(Map &m);
-
+    //to string method
     string toString(vector<Territory*>* t);
 
-    // method issueOrder which creates an Order
-    // object and puts it in the player’s list
-    // of orders
+    //method issue order which begins the players issue order phase based on its player strategy
     void issueOrder(Map* m, vector<Player*>* pl,Deck* deckpointer);
     //Getter method for boolean capture territory
     bool getcaptureTerritory();

@@ -24,7 +24,9 @@ public:
     Card();
     Card(string name);
     virtual ~Card();
+    //creates an order based on the card
     virtual void play(Deck* deck, Hand* hand, Orderlist* orderList);
+    //just deletes the card and returns it to the deck
     virtual void deletecard(Deck* deck, Hand* hand, Player* player) {};
     string getName();
     Card* find(Hand* hand, string cardName);
@@ -43,7 +45,9 @@ private:
 public:
     BombCard(string name);
     ~BombCard();
+    //creates an order based on the card
     void play(Deck* deck, Player* player, Territory* territory);
+    //like play but doesnt create an order
     void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	BombCard(const BombCard& c);
@@ -58,7 +62,9 @@ private:
 public:
     ReinforcementCard(string name);
     ~ReinforcementCard();
+    //creates an order based on the card
     void play(Deck* deck, Player* player);
+    //like play but doesnt issue order
     void deletecard(Deck* deck, Hand* hand,Player* player);
     //copy ocnstructor
 	ReinforcementCard(const ReinforcementCard& c);
@@ -73,7 +79,9 @@ private:
 public:
     BlockadeCard(string name);
     ~BlockadeCard();
+    //creates an order based on the card
     void play(Deck* deck, Player* player, Territory* territory);
+    //like play but doesnt issue order
     void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	BlockadeCard(const BlockadeCard& c);
@@ -88,7 +96,9 @@ private:
 public:
     AirliftCard(string name);
     ~AirliftCard();
+    //creates an order based on the card
     void play( Deck* deck, Player* player, Territory* territorySource, Territory* territoryDestination, int* i);
+    //like player but it doesnt issue the order, only returns the card to the deck
     void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	AirliftCard(const AirliftCard& c);
@@ -103,7 +113,9 @@ private:
 public:
     DiplomacyCard(string name);
     ~DiplomacyCard();
+    //creates an order based on the card
     void play(Deck* deck, Player* player, Player* targetPlayer);
+    //like player but it doesnt issue the order, only returns the card to the deck
     void deletecard(Deck* deck, Hand* hand, Player* player);
     //copy ocnstructor
 	DiplomacyCard(const DiplomacyCard& c);
