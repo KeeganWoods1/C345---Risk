@@ -25,7 +25,6 @@ MapLoader::MapLoader(string mapName) {
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
     if (map_stream.is_open()) {
-        isLoaded = true;
         std::cout << "Map file was opened successfully\n" << std::endl;
         loadMap(*map);
         //closes the stream
@@ -33,7 +32,6 @@ MapLoader::MapLoader(string mapName) {
     }
     //if map file was not opened successfully
     else{
-        isLoaded = false;
         cout << "Unable to open the map file!\n" << endl;
     }
 }
@@ -312,6 +310,7 @@ Map* MapLoader::CreateMap(vector<string *> continents, vector<string *> countrie
     }
     else {
         std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
+        isLoaded = false;
     }
     return validMap;
 }//end of CreateMap()
@@ -349,14 +348,12 @@ ConquestFileReader::ConquestFileReader(string conquest_map_Name) {
     conquest_map_stream.open("MapFiles/ConquestMaps/"+*conquest_map, std::fstream::in | std::fstream::out);
     //if map file was found
     if (conquest_map_stream.is_open()) {
-        isLoaded = true;
         std::cout << "Map file was opened successfully\n" << std::endl;
         //closes the stream
         conquest_map_stream.close();
     }
     //if map file was not opened successfully
     else{
-        isLoaded = false;
         cout << "Unable to open the map file!\n" << endl;
     }
     delete conquest_map;
@@ -605,6 +602,7 @@ Map* ConquestFileReader::CreateMap(vector<string *> continents, vector<string *>
     }
     else {
         std::cout << "Map is invalid because it is NOT a connected graph.\n" << std::endl;
+        isLoaded = false;
     }
     for (int i = 0; i < borders.size(); i++) {
         delete borders.at(i);

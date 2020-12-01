@@ -18,6 +18,8 @@ namespace fs = std::filesystem;
 
 MapDirectoryInit::MapDirectoryInit()
 {
+    cout << "--Welcome to Warzone Game--" << endl;
+
     //display map files in folder
     std::string path = "MapFiles";
     MapLoader* mapLoader;
@@ -27,7 +29,6 @@ MapDirectoryInit::MapDirectoryInit()
     {
         std::cout << entry.path().filename() << std::endl;
     }
-
     while(1)
     {
         int fileType;
@@ -59,22 +60,35 @@ MapDirectoryInit::MapDirectoryInit()
             }
             else
             {
-                cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 delete mapLoader;
+                exit(0);
             }  
+        }
+        if(fileType == 2)
+        {
+            conMapLoader =  DBG_NEW ConquestFileReader(selectedMapName);
+            ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conMapLoader);
+            conquestFileReaderAdapter->loadMap(selectedMapName);
+            if (conMapLoader->getStatus())
+            {
+                if(conMapLoader->getMap() != NULL)
+                {
+                    gameMapPtr = conMapLoader->getMap();
+                    delete conquestFileReaderAdapter;
+                    break;
+                }
+
+            }
+            else
+            {
+                delete conquestFileReaderAdapter;
+                exit(0);
+            }
         }
         else
         {
-            conMapLoader =  DBG_NEW ConquestFileReader(selectedMapName);
-            if (conMapLoader->getStatus()){
-                ConquestFileReaderAdapter* conquestFileReaderAdapter = new ConquestFileReaderAdapter(conMapLoader);
-                conquestFileReaderAdapter->loadMap(selectedMapName);
-                gameMapPtr = conMapLoader->getMap();
-                delete conquestFileReaderAdapter;   
-                break;
-            }   
-        }     
+            cout << "Invalid input" << endl;
+        }
     }    
 }
 
@@ -179,7 +193,7 @@ PlayerListInit::PlayerListInit()
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
-        playerListPtr->push_back(player); 
+        playerListPtr->push_back(player);
     }
     //Generate deck as a function of the number of players
     deckPtr = DBG_NEW Deck(numOfPlayers);
@@ -286,6 +300,10 @@ GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, PlayerListInit* pli)
     startupPhase(playerListPtr, gameMapPtr);
 }
 GameInit::~GameInit() {
+    delete pliPtr;
+    delete gameMapPtr;
+    delete gameDeckPtr;
+    delete playerListPtr;
 }
 void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
 {
