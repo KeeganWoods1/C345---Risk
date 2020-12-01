@@ -300,10 +300,6 @@ GameInit::GameInit(vector<Player*>* plPtr, Map* gmPtr, PlayerListInit* pli)
     startupPhase(playerListPtr, gameMapPtr);
 }
 GameInit::~GameInit() {
-    delete pliPtr;
-    delete gameMapPtr;
-    delete gameDeckPtr;
-    delete playerListPtr;
 }
 void GameInit::startupPhase(vector<Player*>* playerListPtr, Map* gameMapPtr)
 {
