@@ -22,6 +22,7 @@ MapLoader::MapLoader() {
 MapLoader::MapLoader(string mapName) {
     map = DBG_NEW string(mapName);
     fstream map_stream;
+    validMap = NULL;
     map_stream.open("MapFiles/"+*map, std::fstream::in | std::fstream::out);
     //if map file was found
     if (map_stream.is_open()) {
