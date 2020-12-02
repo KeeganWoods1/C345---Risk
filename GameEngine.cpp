@@ -72,9 +72,7 @@ MapDirectoryInit::MapDirectoryInit()
             else
             {
                 delete conquestFileReaderAdapter;
-                //exit(0);
             }
-            //exit(0);
         } 
     }    
 }
