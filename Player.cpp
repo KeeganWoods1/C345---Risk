@@ -129,7 +129,7 @@ int Player::getCurrentReinforcements()
 void Player::setCurrentReinforcements(int i){
     reinforcementPool = i;
 }
-//clars the players hand
+//clears the players hand
 void Player::clearhand() {
     delete playerHand;
     playerHand = new Hand();
