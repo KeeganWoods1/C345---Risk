@@ -46,7 +46,6 @@ void demoPart1_2()
 }
 
 int main() {
-    
     demoPart1_2();
 
     return 0;

@@ -477,11 +477,8 @@ void WarzoneGame::executeOrdersPhase()
 
         if(dynamic_cast<Advanceorder*>(order))
         {
-            if(order->execute())
-            {
-                //Notify as soon as a territory is conquered
-               // Notify();
-            }   
+            order->execute();
+             
         }
         else
         {
