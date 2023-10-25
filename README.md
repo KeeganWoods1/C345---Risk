@@ -13,3 +13,5 @@ Development workflow steps:
   
     *Make sure the tasks.json uses "${workspaceFolder}/*.cpp" instead of ${file}.
 
+Deliverable for COMP345 with Joey Paquet in Fall 2021
+Project description can be found here: https://users.encs.concordia.ca/~paquet/wiki/images/f/fb/Project.COMP345.2021.2.pdf
